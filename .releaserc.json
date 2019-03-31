@@ -1,7 +1,7 @@
 {
   "branch": "master",
   "tagFormat": "${version}",
-  "dryRun": true,
+  "dryRun": false,
   "ci": false,
   "plugins": [
     ["@semantic-release/commit-analyzer", {
