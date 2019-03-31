@@ -35,11 +35,20 @@ var simpleSetPredicateTests = []struct {
 
 func TestSimpleSetPredicate(t *testing.T) {
 
-	for _, tt := range simpleSetPredicateTests {
+	for i := range simpleSetPredicateTests {
+		tt := simpleSetPredicateTests[i]
 		var predicate pmml.SimpleSetPredicate
-		xml.Unmarshal(tt.predicate, &predicate)
+		err := xml.Unmarshal(tt.predicate, &predicate)
+		if err != nil {
+			t.Error(err.Error())
+			return
+		}
 
-		predicate.Compile()
+		err = predicate.Compile()
+		if err != nil {
+			t.Error(err.Error())
+			return
+		}
 
 		actual := predicate.Execute(tt.features)
 		if actual != tt.expected {
@@ -56,9 +65,13 @@ func TestSimpleSetPredicate(t *testing.T) {
 
 func BenchmarkSimpleSetPredicate(b *testing.B) {
 	var predicate pmml.SimpleSetPredicate
-	xml.Unmarshal([]byte(simpleSetPredicate1), &predicate)
+	err := xml.Unmarshal([]byte(simpleSetPredicate1), &predicate)
+	if err != nil {
+		b.Error(err.Error())
+		return
+	}
 
-	err := predicate.Compile()
+	err = predicate.Compile()
 	if err != nil {
 		b.Error(err.Error())
 		return

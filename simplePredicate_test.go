@@ -37,12 +37,17 @@ var simplePredicateTests = []struct {
 }
 
 func TestSimplePredicate(t *testing.T) {
-	for _, tt := range simplePredicateTests {
+	for i := range simplePredicateTests {
+		tt := simplePredicateTests[i]
 		t.Run(tt.name, func(t *testing.T) {
 			var predicate pmml.SimplePredicate
-			xml.Unmarshal(tt.predicate, &predicate)
+			err := xml.Unmarshal(tt.predicate, &predicate)
+			if err != nil {
+				t.Error(err.Error())
+				return
+			}
 
-			err := predicate.Compile()
+			err = predicate.Compile()
 			if err != nil {
 				t.Error(err.Error())
 				return
@@ -66,9 +71,13 @@ var benchVal pmml.PredicateResult
 
 func BenchmarkSimplePredicate(b *testing.B) {
 	var predicate pmml.SimplePredicate
-	xml.Unmarshal([]byte(`<SimplePredicate field="f33" operator="lessOrEqual" value="18.85"/>`), &predicate)
+	err := xml.Unmarshal([]byte(`<SimplePredicate field="f33" operator="lessOrEqual" value="18.85"/>`), &predicate)
+	if err != nil {
+		b.Error(err.Error())
+		return
+	}
 
-	err := predicate.Compile()
+	err = predicate.Compile()
 	if err != nil {
 		b.Error(err.Error())
 		return

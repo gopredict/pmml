@@ -116,7 +116,8 @@ func TestTreeModel(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases {
+	for i := range testCases {
+		tc := testCases[i]
 		t.Run(tc.name, func(t *testing.T) {
 			result, score, _ := m.Node.Execute(tc.features)
 			if result != tc.expectedResult {
@@ -319,7 +320,8 @@ func TestTreeModelComplex(t *testing.T) {
 		},*/
 	}
 
-	for _, tc := range testCases {
+	for i := range testCases {
+		tc := testCases[i]
 		t.Run(tc.name, func(t *testing.T) {
 			result, score, confidence := m.Node.Execute(tc.features)
 			if result != tc.expectedResult {
