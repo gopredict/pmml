@@ -5,6 +5,10 @@ import (
 	"strconv"
 )
 
+// TreeModel in PMML allows for defining either a classification or prediction
+// structure. Each Node holds a logical predicate expression that defines the
+// rule for choosing the Node or any of the branching Nodes.
+// http://dmg.org/pmml/v4-3/TreeModel.html#xsdElement_TreeModel
 type TreeModel struct {
 	MiningSchema         MiningSchema `xml:"MiningSchema"`
 	Node                 *Node        `xml:"Node"`
@@ -22,29 +26,8 @@ func (m *TreeModel) Compile() error {
 	return m.Node.Compile(m.MissingValueStrategy, m.MissingValuePenalty, m.NoTrueChildStrategy, m.SplitCharacteristic)
 }
 
-type MiningSchema struct {
-	MiningFields []MiningField `xml:"MiningField"`
-}
-
-type MiningField struct {
-	Name                    string `xml:"name,attr"`
-	UsageType               string `xml:"usageType,attr"`
-	OpType                  string `xml:"optype,attr"`
-	Importance              string `xml:"importance,attr"`
-	Outliers                string `xml:"outliers,attr"`
-	LowValue                string `xml:"lowValue,attr"`
-	HighValue               string `xml:"highValue,attr"`
-	MissingValueReplacement string `xml:"missingValueReplacement,attr"`
-	MissingValueTreatment   string `xml:"missingValueTreatment,attr"`
-	InvalidValueTreatment   string `xml:"invalidValueTreatment,attr"`
-}
-
-type Output struct {
-	OutputFields []OutputField `xml:"OutputField"`
-}
-
-type OutputField struct {
-	Name string `xml:"name,attr"`
+func (m *TreeModel) Execute(features map[string]interface{}) (PredicateResult, string, float64) {
+	return m.Node.Execute(features)
 }
 
 type Node struct {
