@@ -18,6 +18,9 @@ setup:
 go-test:
 	@go test $(GO_FOLDERS)
 
+go-bench:
+	@go test -benchmem -run='^$$' . -bench '.'
+
 go-lint:
 	@golangci-lint run \
 	--enable golint --enable gosec --enable interfacer --enable unconvert \
