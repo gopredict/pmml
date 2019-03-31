@@ -1,6 +1,9 @@
 # pmml
 Predictive Model Markup Language package for go
 
+This project is still in its infancy and should NOT be used at this time. If you
+would like to contribute, please reach out.
+
 ## Resources
 
 * http://dmg.org/pmml/pmml-v4-3.html
