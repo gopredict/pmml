@@ -195,3 +195,13 @@ type SequenceGroup struct {
   </xs:group>
 */
 type StringArray Array
+
+/*
+   <xs:choice>
+     <xs:element ref="InlineTable"/>
+     <xs:element ref="TableLocator"/>
+   </xs:choice>
+*/
+type Table interface {
+	table()
+}

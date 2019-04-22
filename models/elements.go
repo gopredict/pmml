@@ -1,6 +1,10 @@
 package models
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+
+	"github.com/pkg/errors"
+)
 
 type Error string
 
@@ -785,7 +789,83 @@ type Characteristics struct {
   </xs:element>
 */
 type ChildParent struct {
-	Extensions []Extension `xml:"Extension"`
+	ChildField       string `xml:"childField,attr"`
+	IsRecursive      bool   `xml:"isRecursive,attr"`
+	ParentField      string `xml:"parentField,attr"`
+	ParentLevelField string `xml:"parentLevelField,attr"`
+
+	Table            Table
+	Extensions       []Extension       `xml:"Extension"`
+	FieldColumnPairs []FieldColumnPair `xml:"FieldColumnPair"`
+}
+
+// UnmarshalXML implements the xml.Unmarshaler interface.
+func (x *ChildParent) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+	var err error
+
+	for _, attr := range start.Attr {
+		switch attr.Name.Local {
+		case "childField":
+			x.ChildField = attr.Value
+		case "isRecursive":
+			if attr.Value == "yes" {
+				x.IsRecursive = true
+			} else if attr.Value == "no" {
+				x.IsRecursive = false
+			} else {
+				return errors.Errorf("invalid value for isRecursive: %s", attr.Value)
+			}
+		case "parentField":
+			x.ParentField = attr.Value
+		case "parentLevelField":
+			x.ParentLevelField = attr.Value
+		}
+	}
+
+	for {
+		var token xml.Token
+
+		token, err = decoder.Token()
+		if err != nil {
+			return err
+		}
+		switch tok := token.(type) {
+		case xml.StartElement:
+			var item Table
+
+			switch tok.Name.Local {
+			case "Extension":
+				var e Extension
+				err = decoder.DecodeElement(&e, &tok)
+				if err != nil {
+					return err
+				}
+				x.Extensions = append(x.Extensions, e)
+			case "FieldColumnPair":
+				var e FieldColumnPair
+				err = decoder.DecodeElement(&e, &tok)
+				if err != nil {
+					return err
+				}
+				x.FieldColumnPairs = append(x.FieldColumnPairs, e)
+			case "InlineTable":
+				item = &InlineTable{}
+			case "TableLocator":
+				item = &TableLocator{}
+			}
+
+			if item != nil {
+				err = decoder.DecodeElement(item, &tok)
+				if err != nil {
+					return err
+				}
+
+				x.Table = item
+			}
+		case xml.EndElement:
+			return nil
+		}
+	}
 }
 
 /*
@@ -1313,7 +1393,11 @@ type CovariateList struct {
   </xs:element>
 */
 type DataDictionary struct {
+	NumberOfFields uint `xml:"numberOfFields,attr"`
+
+	DataFields []DataField `xml:"DataField"`
 	Extensions []Extension `xml:"Extension"`
+	Taxonomies []Taxonomy  `xml:"Taxonomy"`
 }
 
 /*
@@ -1343,7 +1427,16 @@ type DataDictionary struct {
   </xs:element>
 */
 type DataField struct {
+	DataType    DataType  `xml:"dataType,attr"`
+	DisplayName string    `xml:"displayName,attr"`
+	IsCyclic    bool      `xml:"isCyclic,attr"`
+	Name        FieldName `xml:"name,attr"`
+	OpType      OpType    `xml:"optype,attr"`
+	Taxonomy    string    `xml:"taxonomy,attr"`
+
 	Extensions []Extension `xml:"Extension"`
+	Intervals  []Interval  `xml:"Interval"`
+	Values     []Value     `xml:"Value"`
 }
 
 /*
@@ -1426,7 +1519,90 @@ type Decisions struct {
   </xs:element>
 */
 type DefineFunction struct {
-	Extensions []Extension `xml:"Extension"`
+	DataType DataType `xml:"dataType,attr"`
+	Name     string   `xml:"name,attr"`
+	OpType   OpType   `xml:"optype,attr"`
+
+	Extensions      []Extension      `xml:"Extension"`
+	ParameterFields []ParameterField `xml:"ParameterField"`
+	Expression      Expression
+}
+
+// UnmarshalXML implements the xml.Unmarshaler interface.
+func (x *DefineFunction) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+	var err error
+
+	for _, attr := range start.Attr {
+		switch attr.Name.Local {
+		case "dataType":
+			x.DataType = DataType(attr.Value)
+		case "name":
+			x.Name = attr.Value
+		case "optype":
+			x.OpType = OpType(attr.Value)
+		}
+	}
+
+	for {
+		var token xml.Token
+
+		token, err = decoder.Token()
+		if err != nil {
+			return err
+		}
+		switch tok := token.(type) {
+		case xml.StartElement:
+			var item Expression
+
+			switch tok.Name.Local {
+			case "Extension":
+				var e Extension
+				err = decoder.DecodeElement(&e, &tok)
+				if err != nil {
+					return err
+				}
+				x.Extensions = append(x.Extensions, e)
+			case "ParameterField":
+				var e ParameterField
+				err = decoder.DecodeElement(&e, &tok)
+				if err != nil {
+					return err
+				}
+				x.ParameterFields = append(x.ParameterFields, e)
+			case "Aggregate":
+				item = &Aggregate{}
+			case "Apply":
+				item = &Apply{}
+			case "Constant":
+				item = &Constant{}
+			case "Discretize":
+				item = &Discretize{}
+			case "FieldRef":
+				item = &FieldRef{}
+			case "Lag":
+				item = &Lag{}
+			case "MapValues":
+				item = &MapValues{}
+			case "NormContinuous":
+				item = &NormContinuous{}
+			case "NormDiscrete":
+				item = &NormDiscrete{}
+			case "TextIndex":
+				item = &TextIndex{}
+			}
+
+			if item != nil {
+				err = decoder.DecodeElement(item, &tok)
+				if err != nil {
+					return err
+				}
+
+				x.Expression = item
+			}
+		case xml.EndElement:
+			return nil
+		}
+	}
 }
 
 /*
@@ -1460,7 +1636,93 @@ type Delimiter struct {
   </xs:element>
 */
 type DerivedField struct {
+	DataType    DataType `xml:"dataType,attr"`
+	DisplayName string   `xml:"displayName,attr"`
+	Name        string   `xml:"name,attr"`
+	OpType      OpType   `xml:"optype,attr"`
+
 	Extensions []Extension `xml:"Extension"`
+	Values     []Value     `xml:"Value"`
+	Expression Expression
+}
+
+// UnmarshalXML implements the xml.Unmarshaler interface.
+func (x *DerivedField) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
+	var err error
+
+	for _, attr := range start.Attr {
+		switch attr.Name.Local {
+		case "dataType":
+			x.DataType = DataType(attr.Value)
+		case "displayName":
+			x.DisplayName = attr.Value
+		case "name":
+			x.Name = attr.Value
+		case "optype":
+			x.OpType = OpType(attr.Value)
+		}
+	}
+
+	for {
+		var token xml.Token
+
+		token, err = decoder.Token()
+		if err != nil {
+			return err
+		}
+		switch tok := token.(type) {
+		case xml.StartElement:
+			var item Expression
+
+			switch tok.Name.Local {
+			case "Extension":
+				var e Extension
+				err = decoder.DecodeElement(&e, &tok)
+				if err != nil {
+					return err
+				}
+				x.Extensions = append(x.Extensions, e)
+			case "Value":
+				var e Value
+				err = decoder.DecodeElement(&e, &tok)
+				if err != nil {
+					return err
+				}
+				x.Values = append(x.Values, e)
+			case "Aggregate":
+				item = &Aggregate{}
+			case "Apply":
+				item = &Apply{}
+			case "Constant":
+				item = &Constant{}
+			case "Discretize":
+				item = &Discretize{}
+			case "FieldRef":
+				item = &FieldRef{}
+			case "Lag":
+				item = &Lag{}
+			case "MapValues":
+				item = &MapValues{}
+			case "NormContinuous":
+				item = &NormContinuous{}
+			case "NormDiscrete":
+				item = &NormDiscrete{}
+			case "TextIndex":
+				item = &TextIndex{}
+			}
+
+			if item != nil {
+				err = decoder.DecodeElement(item, &tok)
+				if err != nil {
+					return err
+				}
+
+				x.Expression = item
+			}
+		case xml.EndElement:
+			return nil
+		}
+	}
 }
 
 /*
@@ -1886,7 +2148,14 @@ type GeneralizedExponentialKernel struct {
   </xs:element>
 */
 type Header struct {
-	Extensions []Extension `xml:"Extension"`
+	Copyright    string `xml:"copyright,attr"`
+	Description  string `xml:"description,attr"`
+	ModelVersion string `xml:"modelVersion,attr"`
+
+	Annotations []Annotation `xml:"Annotation"`
+	Application *Application `xml:"Application"`
+	Extensions  []Extension  `xml:"Extension"`
+	Timestamp   *Timestamp   `xml:"Timestamp"`
 }
 
 /*
@@ -1938,6 +2207,8 @@ type InlineTable struct {
 	Extensions []Extension `xml:"Extension"`
 }
 
+func (*InlineTable) table() {}
+
 /*
   <xs:element name="InstanceField">
     <xs:complexType>
@@ -1967,6 +2238,15 @@ type InstanceFields struct {
 	Extensions []Extension `xml:"Extension"`
 }
 
+type IntervalType string
+
+const (
+	IntervalTypeClosedClosed = IntervalType("closedClosed")
+	IntervalTypeClosedOpen   = IntervalType("closedOpen")
+	IntervalTypeOpenClosed   = IntervalType("openClosed")
+	IntervalTypeOpenOpen     = IntervalType("openOpen")
+)
+
 /*
   <xs:element name="Interval">
     <xs:complexType>
@@ -1989,6 +2269,10 @@ type InstanceFields struct {
   </xs:element>
 */
 type Interval struct {
+	Closure     IntervalType `xml:"closure,attr"`
+	LeftMargin  Number       `xml:"leftMargin,attr"`
+	RightMargin Number       `xml:"rightMargin,attr"`
+
 	Extensions []Extension `xml:"Extension"`
 }
 
@@ -4108,6 +4392,8 @@ type TableLocator struct {
 	Extensions []Extension `xml:"Extension"`
 }
 
+func (*TableLocator) table() {}
+
 /*
   <xs:element name="Target">
     <xs:complexType>
@@ -4239,7 +4525,10 @@ type Targets struct {
   </xs:element>
 */
 type Taxonomy struct {
-	Extensions []Extension `xml:"Extension"`
+	Name string `xml:"name,attr"`
+
+	ChildParents []ChildParent `xml:"ChildParent"`
+	Extensions   []Extension   `xml:"Extension"`
 }
 
 /*
@@ -4645,8 +4934,17 @@ type TrainingInstances struct {
   </xs:element>
 */
 type TransformationDictionary struct {
-	Extensions []Extension `xml:"Extension"`
+	DefineFunctions []DefineFunction `xml:"DefineFunction"`
+	DerivedFields   []DerivedField   `xml:"DerivedField"`
+	Extensions      []Extension      `xml:"Extension"`
 }
+
+type TreeModelSplitCharacteristic string
+
+const (
+	TreeModelSplitCharacteristicBinarySplit = TreeModelSplitCharacteristic("binarySplit")
+	TreeModelSplitCharacteristicMultiSplit  = TreeModelSplitCharacteristic("multiSplit")
+)
 
 /*
   <xs:element name="TreeModel">
@@ -4682,7 +4980,24 @@ type TransformationDictionary struct {
   </xs:element>
 */
 type TreeModel struct {
-	Extensions []Extension `xml:"Extension"`
+	AlgorithmName        string                       `xml:"algorithmName,attr"`
+	FunctionName         MiningFunction               `xml:"functionName,attr"`
+	IsScorable           bool                         `xml:"isScorable,attr"`
+	MissingValuePenalty  ProbNumber                   `xml:"missingValuePenalty,attr"`
+	MissingValueStrategy MissingValueStrategy         `xml:"missingValueStrategy,attr"`
+	ModelName            string                       `xml:"modelName,attr"`
+	NoTrueChildStrategy  NoTrueChildStrategy          `xml:"noTrueChildStrategy,attr"`
+	SplitCharacteristic  TreeModelSplitCharacteristic `xml:"splitCharacteristic,attr"`
+
+	Extensions           []Extension          `xml:"Extension"`
+	LocalTransformations LocalTransformations `xml:"LocalTransformations"`
+	MiningSchema         MiningSchema         `xml:"MiningSchema"`
+	ModelExplanation     *ModelExplanation    `xml:"ModelExplanation"`
+	ModelStats           *ModelStats          `xml:"ModelStats"`
+	ModelVerification    *ModelVerification   `xml:"ModelVerification"`
+	Node                 Node                 `xml:"Node"`
+	Output               *Output              `xml:"Output"`
+	Targets              *Targets             `xml:"Targets"`
 }
 
 func (*TreeModel) modelElement() {}
@@ -4815,6 +5130,14 @@ type Upper struct {
 	Extensions []Extension `xml:"Extension"`
 }
 
+type ValueValid string
+
+const (
+	ValueValidInvalid = ValueValid("invalid")
+	ValueValidMissing = ValueValid("missing")
+	ValueValidValid   = ValueValid("valid")
+)
+
 /*
   <xs:element name="Value">
     <xs:complexType>
@@ -4836,6 +5159,10 @@ type Upper struct {
   </xs:element>
 */
 type Value struct {
+	DisplayValue string     `xml:"displayValue,attr"`
+	Valid        ValueValid `xml:"valid,attr"`
+	Value        string     `xml:"value,attr"`
+
 	Extensions []Extension `xml:"Extension"`
 }
 
