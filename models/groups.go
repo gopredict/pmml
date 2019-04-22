@@ -147,7 +147,7 @@ type NumArray Array
     </xs:choice>
   </xs:group>
 */
-type Predicate struct {
+type Predicate interface {
 }
 
 /*

@@ -1214,7 +1214,12 @@ type Constraints struct {
   </xs:element>
 */
 type ContStats struct {
-	Extensions []Extension `xml:"Extension"`
+	TotalSquaresSum Number `xml:"totalSquaresSum,attr"`
+	TotalValuesSum  Number `xml:"totalValuesSum,attr"`
+
+	Extensions  []Extension `xml:"Extension"`
+	Intervals   []Interval  `xml:"Interval"`
+	Frequencies []Array     `xml:"Array"`
 }
 
 /*
@@ -1349,6 +1354,11 @@ type CountTable CountTableType
   </xs:element>
 */
 type Counts struct {
+	Cardinality uint   `xml:"cardinality,attr"`
+	InvalidFreq Number `xml:"invalidFreq,attr"`
+	MissingFreq Number `xml:"missingFreq,attr"`
+	TotalFreq   Number `xml:"totalFreq,attr"`
+
 	Extensions []Extension `xml:"Extension"`
 }
 
@@ -1737,6 +1747,9 @@ func (x *DerivedField) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement
   </xs:element>
 */
 type DiscrStats struct {
+	ModalValue string `xml:"modalValue,attr"`
+
+	Arrays     []Array     `xml:"Array"`
 	Extensions []Extension `xml:"Extension"`
 }
 
@@ -2205,6 +2218,7 @@ type Indices struct {
 */
 type InlineTable struct {
 	Extensions []Extension `xml:"Extension"`
+	Rows       []Row       `xml:"row"`
 }
 
 func (*InlineTable) table() {}
@@ -2492,7 +2506,8 @@ type LinearNorm struct {
   </xs:element>
 */
 type LocalTransformations struct {
-	Extensions []Extension `xml:"Extension"`
+	DerivedFields []DerivedField `xml:"DerivedField"`
+	Extensions    []Extension    `xml:"Extension"`
 }
 
 /*
@@ -2636,6 +2651,17 @@ type MiningBuildTask struct {
   </xs:element>
 */
 type MiningField struct {
+	HighValue               Number                      `xml:"highValue,attr"`
+	Importance              ProbNumber                  `xml:"importance,attr"`
+	InvalidValueTreatment   InvalidValueTreatmentMethod `xml:"invalidValueTreatment,attr"`
+	LowValue                Number                      `xml:"lowValue,attr"`
+	MissingValueReplacement string                      `xml:"missingValueReplacement"`
+	MissingValueTreatment   MissingValueTreatmentMethod `xml:"missingValueTreatment,attr"`
+	Name                    FieldName                   `xml:"name,attr"`
+	OpType                  OpType                      `xml:"optype,attr"`
+	Outliers                OutlierTreatmentMethod      `xml:"outliers,attr"`
+	UsageType               FieldUsageType              `xml:"usageType,attr"`
+
 	Extensions []Extension `xml:"Extension"`
 }
 
@@ -2682,7 +2708,8 @@ func (*MiningModel) modelElement() {}
   </xs:element>
 */
 type MiningSchema struct {
-	Extensions []Extension `xml:"Extension"`
+	Extensions   []Extension   `xml:"Extension"`
+	MiningFields []MiningField `xml:"MiningField"`
 }
 
 /*
@@ -2714,7 +2741,9 @@ type MissingValueWeights struct {
   </xs:element>
 */
 type ModelExplanation struct {
-	Extensions []Extension `xml:"Extension"`
+	// TODO: ModelQuality
+	Correlations *Correlations `xml:"Correlations"`
+	Extensions   []Extension   `xml:"Extension"`
 }
 
 /*
@@ -2743,7 +2772,9 @@ type ModelLiftGraph struct {
   </xs:element>
 */
 type ModelStats struct {
-	Extensions []Extension `xml:"Extension"`
+	Extensions        []Extension         `xml:"Extension"`
+	MultivariateStats []MultivariateStats `xml:"MultivariateStats"`
+	UnivariateStats   []UnivariateStats   `xml:"UnivariateStats"`
 }
 
 /*
@@ -2760,7 +2791,12 @@ type ModelStats struct {
   </xs:element>
 */
 type ModelVerification struct {
-	Extensions []Extension `xml:"Extension"`
+	FieldCount  IntegerNumber `xml:"fieldCount,attr"`
+	RecordCount IntegerNumber `xml:"recordCount,attr"`
+
+	Extensions         []Extension        `xml:"Extension"`
+	InlineTable        InlineTable        `xml:"InlineTable"`
+	VerificationFields VerificationFields `xml:"VerificationFields"`
 }
 
 /*
@@ -2804,7 +2840,10 @@ type MultivariateStat struct {
   </xs:element>
 */
 type MultivariateStats struct {
-	Extensions []Extension `xml:"Extension"`
+	TargetCategory string `xml:"targetCategory,attr"`
+
+	MultivariateStats []MultivariateStat `xml:"MultivariateStat"`
+	Extensions        []Extension        `xml:"Extension"`
 }
 
 /*
@@ -3029,7 +3068,17 @@ type Neuron struct {
   </xs:element>
 */
 type Node struct {
-	Extensions []Extension `xml:"Extension"`
+	DefaultChild string `xml:"defaultChild,attr"`
+	ID           string `xml:"id,attr"`
+	RecordCount  Number `xml:"recordCount,attr"`
+	Score        string `xml:"score,attr"`
+
+	EmbeddedModel      EmbeddedModel       // TODO: EmbeddedModel
+	Nodes              []Node              `xml:"Node"`
+	Partition          *Partition          `xml:"Partition"`
+	ScoreDistributions []ScoreDistribution `xml:"ScoreDistribution"`
+	Extensions         []Extension         `xml:"Extension"`
+	Predicate          Predicate           // TODO: Predicate
 }
 
 /*
@@ -3106,7 +3155,15 @@ type NormalizedCountTable CountTableType
   </xs:element>
 */
 type NumericInfo struct {
+	InterQuartileRange Number `xml:"interQuartileRange,attr"`
+	Maximum            Number `xml:"maximum,attr"`
+	Mean               Number `xml:"mean,attr"`
+	Median             Number `xml:"median,attr"`
+	Minimum            Number `xml:"minimum,attr"`
+	StandardDeviation  Number `xml:"standardDeviation"`
+
 	Extensions []Extension `xml:"Extension"`
+	Quantiles  []Quantile  `xml:"Quantile"`
 }
 
 /*
@@ -3150,7 +3207,8 @@ type OptimumLiftGraph struct {
   </xs:element>
 */
 type Output struct {
-	Extensions []Extension `xml:"Extension"`
+	Extensions []Extension   `xml:"Extension"`
+	Fields     []OutputField `xml:"OutputField"`
 }
 
 /*
@@ -3663,6 +3721,9 @@ type PredictorTerm struct {
   </xs:element>
 */
 type Quantile struct {
+	QuantileLimit PercentageNumber `xml:"quantileLimit,attr"`
+	QuantileValue Number           `xml:"quantileValue,attr"`
+
 	Extensions []Extension `xml:"Extension"`
 }
 
@@ -4394,6 +4455,14 @@ type TableLocator struct {
 
 func (*TableLocator) table() {}
 
+type CastIntegerType string
+
+const (
+	CastIntegerTypeCeiling = CastIntegerType("ceiling")
+	CastIntegerTypeFloor   = CastIntegerType("floor")
+	CastIntegerTypeRound   = CastIntegerType("round")
+)
+
 /*
   <xs:element name="Target">
     <xs:complexType>
@@ -4420,7 +4489,16 @@ func (*TableLocator) table() {}
   </xs:element>
 */
 type Target struct {
-	Extensions []Extension `xml:"Extension"`
+	CastInteger     CastIntegerType `xml:"castInteger,attr"`
+	Field           FieldName       `xml:"field,attr"`
+	Max             float64         `xml:"max,attr"`
+	Min             float64         `xml:"min,attr"`
+	OpType          OpType          `xml:"optype,attr"`
+	RescaleConstant *float64        `xml:"rescaleConstant,attr"`
+	RescaleFactor   *float64        `xml:"rescaleFactor,attr"`
+
+	Extensions   []Extension   `xml:"Extension"`
+	TargetValues []TargetValue `xml:"TargetValue"`
 }
 
 /*
@@ -4511,6 +4589,7 @@ type TargetValueStats struct {
 */
 type Targets struct {
 	Extensions []Extension `xml:"Extension"`
+	Targets    []Target    `xml:"Target"`
 }
 
 /*
@@ -5113,7 +5192,15 @@ type UniformDistributionForBN struct {
   </xs:element>
 */
 type UnivariateStats struct {
-	Extensions []Extension `xml:"Extension"`
+	Field    FieldName `xml:"field,attr"`
+	Weighted bool      `xml:"weighted,attr"`
+
+	Anova       *Anova       `xml:"Anova"`
+	ContStats   *ContStats   `xml:"ContStats"`
+	Counts      *Counts      `xml:"Counts"`
+	DiscrStats  *DiscrStats  `xml:"DiscrStats"`
+	Extensions  []Extension  `xml:"Extension"`
+	NumericInfo *NumericInfo `xml:"NumericInfo"`
 }
 
 /*
@@ -5275,7 +5362,8 @@ type VerificationField struct {
   </xs:element>
 */
 type VerificationFields struct {
-	Extensions []Extension `xml:"Extension"`
+	Extensions []Extension         `xml:"Extension"`
+	Fields     []VerificationField `xml:"VerificationField"`
 }
 
 /*
