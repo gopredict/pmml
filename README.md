@@ -8,6 +8,7 @@ would like to contribute, please reach out.
 
 * http://dmg.org/pmml/pmml-v4-3.html
 * http://dmg.org/pmml/v4-3/pmml-4-3.xsd
+* http://dmg.org/pmml/products.html
 
 ## Goals
 
