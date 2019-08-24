@@ -10,14 +10,6 @@
   version = "v1.1.1"
 
 [[projects]]
-  digest = "1:a310b34fdb4af778ac92cdc961165fa4d994ea9753c3da99bd9e5285b94cde6a"
-  name = "github.com/mattn/go-shellwords"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "a72fbe27a1b0ed0df2f02754945044ce1456608b"
-  version = "v1.0.5"
-
-[[projects]]
   digest = "1:cf31692c14422fa27c83a05292eb5cbe0fb2775972e8f1f8446a71549bd8980b"
   name = "github.com/pkg/errors"
   packages = ["."]
@@ -48,7 +40,6 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/mattn/go-shellwords",
     "github.com/pkg/errors",
     "github.com/stretchr/testify/assert",
     "github.com/stretchr/testify/require",

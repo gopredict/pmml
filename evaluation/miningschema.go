@@ -44,7 +44,7 @@ func (v Value) Int64() int64 {
 		return int64(f)
 	}
 	if f, ok := v.val.(int64); ok {
-		return int64(f)
+		return f
 	}
 	if f, ok := v.val.(uint); ok {
 		return int64(f)

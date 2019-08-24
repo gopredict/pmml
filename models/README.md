@@ -2,6 +2,7 @@
 --
     import "github.com/gopredict/pmml/models"
 
+### nolint
 
 ## Usage
 

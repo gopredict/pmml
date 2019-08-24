@@ -1,6 +1,6 @@
-GO_FOLDERS=.
+GO_FOLDERS=./evaluation/... ./models/...
 
-pre-commit: go-test go-lint go-dep-ensure
+pre-commit: go-test go-lint go-doc go-dep-ensure
 
 commit:
 	@git cz

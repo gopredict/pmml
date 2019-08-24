@@ -135,6 +135,7 @@ func getRawValue(dt models.DataType, val string) (interface{}, error) {
 	return nil, errors.New("invalid data type")
 }
 
+//nolint:gocyclo
 func evaluateSimplePredicate(p *models.SimplePredicate, input evaluation.DataRow, fieldTypes map[models.FieldName]models.DataType) predicateResult {
 	predicateValueType, ok := fieldTypes[p.Field]
 	if !ok {
