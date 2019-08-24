@@ -28,5 +28,13 @@ go-lint:
 	--enable scopelint \
 	$(GO_FOLDERS)
 
+go-doc:
+	@gfind -type d -printf '%d\t%P\n' | sort -r -nk1 | cut -f2- | \
+		grep -v '^\.' | \
+		grep -v '\/\.' | \
+		grep -v '^docs$$' | \
+		grep -v '^vendor' | \
+		xargs -I{} bash -c "godocdown {} > {}/README.md"
+
 go-dep-ensure:
 	@dep ensure

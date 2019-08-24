@@ -52,6 +52,31 @@ const (
 
 ```go
 const (
+	RankOrderAscending  = RankOrder("ascending")
+	RankOrderDescending = RankOrder("descending")
+)
+```
+
+```go
+const (
+	RankBasisAffinity   = RankBasis("affinity")
+	RankBasisConfidence = RankBasis("confidence")
+	RankBasisLeverage   = RankBasis("leverage")
+	RankBasisLift       = RankBasis("lift")
+	RankBasisSupport    = RankBasis("support")
+)
+```
+
+```go
+const (
+	OutputFieldAlgorithmExclusiveRecommendation = OutputFieldAlgorithm("exclusiveRecommendation")
+	OutputFieldAlgorithmRecommendation          = OutputFieldAlgorithm("recommendation")
+	OutputFieldAlgorithmRuleAssociation         = OutputFieldAlgorithm("ruleAssociation")
+)
+```
+
+```go
+const (
 	SimplePredicateOperatorEqual          = SimplePredicateOperator("equal")
 	SimplePredicateOperatorGreaterOrEqual = SimplePredicateOperator("greaterOrEqual")
 	SimplePredicateOperatorGreaterThan    = SimplePredicateOperator("greaterThan")
@@ -159,23 +184,23 @@ const (
 
 ```go
 const (
-	DataTypeboolean                  = DataType("boolean")
-	DataTypedate                     = DataType("date")
-	DataTypedateDaysSince0           = DataType("dateDaysSince[0]")
-	DataTypedateDaysSince1960        = DataType("dateDaysSince[1960]")
-	DataTypedateDaysSince1970        = DataType("dateDaysSince[1970]")
-	DataTypedateDaysSince1980        = DataType("dateDaysSince[1980]")
-	DataTypedateTime                 = DataType("dateTime")
-	DataTypedateTimeSecondsSince0    = DataType("dateTimeSecondsSince[0]")
-	DataTypedateTimeSecondsSince1960 = DataType("dateTimeSecondsSince[1960]")
-	DataTypedateTimeSecondsSince1970 = DataType("dateTimeSecondsSince[1970]")
-	DataTypedateTimeSecondsSince1980 = DataType("dateTimeSecondsSince[1980]")
-	DataTypedouble                   = DataType("double")
-	DataTypefloat                    = DataType("float")
-	DataTypeinteger                  = DataType("integer")
-	DataTypestring                   = DataType("string")
-	DataTypetime                     = DataType("time")
-	DataTypetimeSeconds              = DataType("timeSeconds")
+	DataTypeBoolean                  = DataType("boolean")
+	DataTypeDate                     = DataType("date")
+	DataTypeDateDaysSince0           = DataType("dateDaysSince[0]")
+	DataTypeDateDaysSince1960        = DataType("dateDaysSince[1960]")
+	DataTypeDateDaysSince1970        = DataType("dateDaysSince[1970]")
+	DataTypeDateDaysSince1980        = DataType("dateDaysSince[1980]")
+	DataTypeDateTime                 = DataType("dateTime")
+	DataTypeDateTimeSecondsSince0    = DataType("dateTimeSecondsSince[0]")
+	DataTypeDateTimeSecondsSince1960 = DataType("dateTimeSecondsSince[1960]")
+	DataTypeDateTimeSecondsSince1970 = DataType("dateTimeSecondsSince[1970]")
+	DataTypeDateTimeSecondsSince1980 = DataType("dateTimeSecondsSince[1980]")
+	DataTypeDouble                   = DataType("double")
+	DataTypeFloat                    = DataType("float")
+	DataTypeInteger                  = DataType("integer")
+	DataTypeString                   = DataType("string")
+	DataTypeTime                     = DataType("time")
+	DataTypeTimeSeconds              = DataType("timeSeconds")
 )
 ```
 
@@ -516,19 +541,23 @@ type AbsoluteExponentialKernel struct {
 }
 ```
 
-<xs:element name="AbsoluteExponentialKernel">
+AbsoluteExponentialKernel is the absolute exponential basis function:
 
-    <xs:complexType>
-      <xs:attribute name="description" type="xs:string" use="optional"/>
-      <xs:attribute default="1" name="gamma" type="REAL-NUMBER" use="optional"/>
-      <xs:attribute default="1" name="noiseVariance" type="REAL-NUMBER" use="optional"/>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Lambda"/>
-      </xs:sequence>
-    </xs:complexType>
+    k(x,z)=γ exp(-1/2 (Sum[(i=1)to p]( |xi-zi| /λi))
 
-</xs:element>
+    <xs:element name="AbsoluteExponentialKernel">
+      <xs:complexType>
+        <xs:attribute name="description" type="xs:string" use="optional"/>
+        <xs:attribute default="1" name="gamma" type="REAL-NUMBER" use="optional"/>
+        <xs:attribute default="1" name="noiseVariance" type="REAL-NUMBER" use="optional"/>
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+          <xs:element maxOccurs="unbounded" minOccurs="0" ref="Lambda"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:element>
+
+http://dmg.org/pmml/v4-3/GaussianProcess.html#xsdElement_AbsoluteExponentialKernel
 
 #### type ActivationFunction
 
@@ -570,30 +599,38 @@ type Aggregate struct {
 }
 ```
 
-<xs:element name="Aggregate">
+Aggregate: Association rules and sequences refer to sets of items. These sets
+can be defined by an aggregation over sets of input records. The records are
+grouped together by one of the fields and the values in this grouping field
+partition the sets of records for an aggregation. This corresponds to the
+conventional aggregation in SQL with a GROUP BY clause. Input records with
+missing value in the groupField are simply ignored. This behavior is similar to
+the aggregate functions in the presence of NULL values in SQL.
 
-    <xs:complexType>
-      <xs:attribute name="field" type="FIELD-NAME" use="required"/>
-      <xs:attribute name="function" use="required">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:enumeration value="average"/>
-            <xs:enumeration value="count"/>
-            <xs:enumeration value="max"/>
-            <xs:enumeration value="min"/>
-            <xs:enumeration value="multiset"/>
-            <xs:enumeration value="sum"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:attribute>
-      <xs:attribute name="groupField" type="FIELD-NAME"/>
-      <xs:attribute name="sqlWhere" type="xs:string"/>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
-      </xs:sequence>
-    </xs:complexType>
+    <xs:element name="Aggregate">
+      <xs:complexType>
+        <xs:attribute name="field" type="FIELD-NAME" use="required"/>
+        <xs:attribute name="function" use="required">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="average"/>
+              <xs:enumeration value="count"/>
+              <xs:enumeration value="max"/>
+              <xs:enumeration value="min"/>
+              <xs:enumeration value="multiset"/>
+              <xs:enumeration value="sum"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="groupField" type="FIELD-NAME"/>
+        <xs:attribute name="sqlWhere" type="xs:string"/>
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:element>
 
-</xs:element>
+http://dmg.org/pmml/v4-3/Transformations.html#xsdElement_Aggregate
 
 #### type AggregateFunctionType
 
@@ -610,15 +647,17 @@ type Alternate struct {
 }
 ```
 
-<xs:element name="Alternate">
+Alternate indicates an alternate model in a BaselineModel TestDistribution.
 
-    <xs:complexType>
-      <xs:choice>
-        <xs:group minOccurs="1" ref="CONTINUOUS-DISTRIBUTION-TYPES"/>
-      </xs:choice>
-    </xs:complexType>
+    <xs:element name="Alternate">
+      <xs:complexType>
+        <xs:choice>
+          <xs:group minOccurs="1" ref="CONTINUOUS-DISTRIBUTION-TYPES"/>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
 
-</xs:element>
+http://dmg.org/pmml/v4-3/BaselineModel.html#xsdElement_Alternate
 
 #### func (*Alternate) UnmarshalXML
 
@@ -635,15 +674,19 @@ type Annotation struct {
 }
 ```
 
-<xs:element name="Annotation">
+Annotation is where document modification history is embedded. Each annotation
+is free text and, like the description attribute in the head element, makes
+sense to the human eye only. Users can store their own remarks.
 
-    <xs:complexType mixed="true">
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
-      </xs:sequence>
-    </xs:complexType>
+    <xs:element name="Annotation">
+      <xs:complexType mixed="true">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:element>
 
-</xs:element>
+http://dmg.org/pmml/v4-3/Header.html#xsdElement_Annotation
 
 #### type Anova
 
@@ -656,17 +699,24 @@ type Anova struct {
 }
 ```
 
-<xs:element name="Anova">
+Anova represents Analysis of Variance information that, while descriptive in
+nature, can help understand the relationship between certain independent
+variables and the target (dependent) variable. Specifically, the analysis is
+performed using one independent categorical variable, X, and a continuous target
+(dependent) variable, Y (usually found in types of regression and time series
+models).
 
-    <xs:complexType>
-      <xs:attribute name="target" type="FIELD-NAME"/>
-      <xs:sequence>
-        <xs:element maxOccurs="3" minOccurs="3" ref="AnovaRow"/>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
-      </xs:sequence>
-    </xs:complexType>
+    <xs:element name="Anova">
+      <xs:complexType>
+        <xs:attribute name="target" type="FIELD-NAME"/>
+        <xs:sequence>
+          <xs:element maxOccurs="3" minOccurs="3" ref="AnovaRow"/>
+          <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:element>
 
-</xs:element>
+http://dmg.org/pmml/v4-3/Statistics.html#xsdElement_Anova
 
 #### type AnovaRow
 
@@ -683,29 +733,29 @@ type AnovaRow struct {
 }
 ```
 
-<xs:element name="AnovaRow">
 
-    <xs:complexType>
-      <xs:attribute name="degreesOfFreedom" type="NUMBER" use="required"/>
-      <xs:attribute name="fValue" type="NUMBER"/>
-      <xs:attribute name="meanOfSquares" type="NUMBER"/>
-      <xs:attribute name="pValue" type="PROB-NUMBER"/>
-      <xs:attribute name="sumOfSquares" type="NUMBER" use="required"/>
-      <xs:attribute name="type" use="required">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:enumeration value="Error"/>
-            <xs:enumeration value="Model"/>
-            <xs:enumeration value="Total"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:attribute>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
-      </xs:sequence>
-    </xs:complexType>
-
-</xs:element>
+    <xs:element name="AnovaRow">
+      <xs:complexType>
+        <xs:attribute name="degreesOfFreedom" type="NUMBER" use="required"/>
+        <xs:attribute name="fValue" type="NUMBER"/>
+        <xs:attribute name="meanOfSquares" type="NUMBER"/>
+        <xs:attribute name="pValue" type="PROB-NUMBER"/>
+        <xs:attribute name="sumOfSquares" type="NUMBER" use="required"/>
+        <xs:attribute name="type" use="required">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="Error"/>
+              <xs:enumeration value="Model"/>
+              <xs:enumeration value="Total"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:element>
+http://dmg.org/pmml/v4-3/Statistics.html#xsdElement_AnovaRow
 
 #### type AnovaRowType
 
@@ -720,15 +770,15 @@ type AnovaRowType string
 type AntecedentSequence SequenceGroup
 ```
 
-<xs:element name="AntecedentSequence">
 
-    <xs:complexType>
-      <xs:sequence>
-        <xs:group ref="SEQUENCE"/>
-      </xs:sequence>
-    </xs:complexType>
-
-</xs:element>
+    <xs:element name="AntecedentSequence">
+      <xs:complexType>
+        <xs:sequence>
+          <xs:group ref="SEQUENCE"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:element>
+http://dmg.org/pmml/v4-3/Sequence.html#xsdElement_AntecedentSequence
 
 #### type AnyDistribution
 
@@ -856,7 +906,28 @@ type ArrayTypeType string
 
 ```go
 type AssociationModel struct {
-	Extensions []Extension `xml:"Extension"`
+	AlgorithmName         string               `xml:"algorithmName,attr"`
+	AvgNumberOfItemsPerTA float64              `xml:"avgNumberOfItemsPerTA,attr"`
+	FunctionName          MiningFunction       `xml:"functionName,attr"`
+	IsScorable            bool                 `xml:"isScorable,attr"`
+	LengthLimit           int                  `xml:"lengthLimit,attr"`
+	MaxNumberOfItemsPerTA int                  `xml:"maxNumberOfItemsTA,attr"`
+	MinimumConfidence     float64              `xml:"minimumConfidence,attr"`
+	MinimumSupport        float64              `xml:"minimumSupport,attr"`
+	ModelName             string               `xml:"modelName,attr"`
+	NumberOfItems         int                  `xml:"numberOfItems,attr"`
+	NumberOfItemsets      int                  `xml:"numberOfItemsets,attr"`
+	NumberOfRules         int                  `xml:"numberOfRules,attr"`
+	NumberOfTransactions  int                  `xml:"numberOfTransactions,attr"`
+	AssociationRules      []AssociationRule    `xml:"AssociationRule"`
+	Items                 []Item               `xml:"Item"`
+	Itemsets              []Itemset            `xml:"Itemset"`
+	LocalTransformations  LocalTransformations `xml:"LocalTransformations"`
+	MiningSchema          MiningSchema         `xml:"MiningSchema"`
+	ModelStats            ModelStats           `xml:"ModelStats"`
+	ModelVerification     ModelVerification    `xml:"ModelVerification"`
+	Output                Output               `xml:"Output"`
+	Extensions            []Extension          `xml:"Extension"`
 }
 ```
 
@@ -896,6 +967,14 @@ type AssociationModel struct {
 
 ```go
 type AssociationRule struct {
+	Affinity   float64     `xml:"affinity,attr"`
+	Antecedent string      `xml:"antecedent,attr"`
+	Confidence float64     `xml:"confidence,attr"`
+	Consequent string      `xml:"consequent,attr"`
+	ID         string      `xml:"id,attr"`
+	Leverage   float64     `xml:"leverage,attr"`
+	Lift       float64     `xml:"lift,attr"`
+	Support    float64     `xml:"support,attr"`
 	Extensions []Extension `xml:"Extension"`
 }
 ```
@@ -922,7 +1001,11 @@ type AssociationRule struct {
 
 ```go
 type Attribute struct {
-	Extensions []Extension `xml:"Extension"`
+	PartialScore        float64             `xml:"partialScore,attr"`
+	ReasonCode          string              `xml:"reasonCode,attr"`
+	ComplexPartialScore ComplexPartialScore `xml:"ComplexPartialScore"`
+	Predicate           Predicate           `xml:"Predicate"`
+	Extensions          []Extension         `xml:"Extension"`
 }
 ```
 
@@ -944,7 +1027,10 @@ type Attribute struct {
 
 ```go
 type BaseCumHazardTables struct {
-	Extensions []Extension `xml:"Extension"`
+	MaxTime          float64           `xml:"maxTime,attr"`
+	BaselineCells    []BaselineCell    `xml:"BaselineCell"`
+	BaselineStratums []BaselineStratum `xml:"BaselineStratum"`
+	Extensions       []Extension       `xml:"Extension"`
 }
 ```
 
@@ -985,6 +1071,8 @@ type Baseline struct {
 
 ```go
 type BaselineCell struct {
+	CumHazard  float64     `xml:"cumHazard,attr"`
+	Time       float64     `xml:"time"`
 	Extensions []Extension `xml:"Extension"`
 }
 ```
@@ -4936,7 +5024,21 @@ type Output struct {
 
 ```go
 type OutputField struct {
-	Extensions []Extension `xml:"Extension"`
+	Algorithm     OutputFieldAlgorithm `xml:"algorithm,attr"`
+	DataType      DataType             `xml:"dataType,attr"`
+	DisplayName   string               `xml:"displayName,attr"`
+	Feature       ResultFeature        `xml:"feature,attr"`
+	IsMultiValued int                  `xml:"isMultiValued,attr"`
+	Name          FieldName            `xml:"name,attr"`
+	OpType        OpType               `xml:"opType,attr"`
+	Rank          int                  `xml:"rank,attr"`
+	RankBasis     RankBasis            `xml:"rankBasis,attr"`
+	RankOrder     RankOrder            `xml:"rankOrder,attr"`
+	RuleFeature   RuleFeature          `xml:"ruleFeature,attr"`
+	SegmentID     string               `xml:"segmentId,attr"`
+	TargetField   FieldName            `xml:"targetField,attr"`
+	Value         string               `xml:"value,attr"`
+	Extensions    []Extension          `xml:"Extension"`
 }
 ```
 
@@ -4992,6 +5094,13 @@ type OutputField struct {
     </xs:complexType>
 
 </xs:element>
+
+#### type OutputFieldAlgorithm
+
+```go
+type OutputFieldAlgorithm string
+```
+
 
 #### type PCell
 
@@ -5622,6 +5731,20 @@ type RandomLiftGraph struct {
     </xs:complexType>
 
 </xs:element>
+
+#### type RankBasis
+
+```go
+type RankBasis string
+```
+
+
+#### type RankOrder
+
+```go
+type RankOrder string
+```
+
 
 #### type RealArray
 
