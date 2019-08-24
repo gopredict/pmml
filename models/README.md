@@ -1,92 +1,19 @@
-package models
+# models
+--
+    import "github.com/gopredict/pmml/models"
 
-import (
-	"encoding/xml"
-	"strconv"
 
-	"github.com/pkg/errors"
-)
+## Usage
 
-type Error string
-
-func (err Error) Error() string {
-	return string(err)
-}
-
+```go
 const (
-	ErrNotImplemented = Error("models: not implemented")
+	ArrayTypeTypeInt    = ArrayTypeType("int")
+	ArrayTypeTypeReal   = ArrayTypeType("real")
+	ArrayTypeTypeString = ArrayTypeType("string")
 )
+```
 
-/*
-ARDSquaredExponentialKernel is the Automatic Relevance Determination (ARD) squared exponential basis
-function. This covariance function is the squared exponential kernel function with a separate
-lengthscale hyper-parameter, λi, for each predictor, i.e. input dimension xi:
-
-  k(x,z)=γ exp(-1/2 (Sum[(i=1)to p]( |xi-zi| /λi)2))
-
-  <xs:element name="ARDSquaredExponentialKernel">
-    <xs:complexType>
-      <xs:attribute name="description" type="xs:string" use="optional"/>
-      <xs:attribute default="1" name="gamma" type="REAL-NUMBER" use="optional"/>
-      <xs:attribute default="1" name="noiseVariance" type="REAL-NUMBER" use="optional"/>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Lambda"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-
-http://dmg.org/pmml/v4-3/GaussianProcess.html#xsdElement_ARDSquaredExponentialKernel
-*/
-type ARDSquaredExponentialKernel struct {
-	Description   *string     `xml:"description,attr"`
-	Gamma         *RealNumber `xml:"gamma,attr"`
-	NoiseVariance *RealNumber `xml:"noiseVariance,attr"`
-
-	Extensions []Extension `xml:"Extension"`
-	Lambda     *Lambda     `xml:"Lambda"`
-}
-
-/*
-ARIMA may contain one or more ARIMA(p,d,q,P,D,Q) models of the time series.
-
-  <xs:element name="ARIMA"/>
-
-http://dmg.org/pmml/v4-3/TimeSeriesModel.html#xsdElement_ARIMA
-*/
-type ARIMA struct {
-}
-
-/*
-AbsoluteExponentialKernel is the absolute exponential basis function:
-
-  k(x,z)=γ exp(-1/2 (Sum[(i=1)to p]( |xi-zi| /λi))
-
-  <xs:element name="AbsoluteExponentialKernel">
-    <xs:complexType>
-      <xs:attribute name="description" type="xs:string" use="optional"/>
-      <xs:attribute default="1" name="gamma" type="REAL-NUMBER" use="optional"/>
-      <xs:attribute default="1" name="noiseVariance" type="REAL-NUMBER" use="optional"/>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Lambda"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-
-http://dmg.org/pmml/v4-3/GaussianProcess.html#xsdElement_AbsoluteExponentialKernel
-*/
-type AbsoluteExponentialKernel struct {
-	Description   *string     `xml:"description,attr"`
-	Gamma         *RealNumber `xml:"gamma,attr"`
-	NoiseVariance *RealNumber `xml:"noiseVariance,attr"`
-
-	Extensions []Extension `xml:"Extension"`
-	Lambda     *Lambda     `xml:"Lambda"`
-}
-
-type AggregateFunctionType string
-
+```go
 const (
 	AggregateFunctionTypeAverage  = AggregateFunctionType("average")
 	AggregateFunctionTypeCount    = AggregateFunctionType("count")
@@ -95,16 +22,556 @@ const (
 	AggregateFunctionTypeMultiset = AggregateFunctionType("multiset")
 	AggregateFunctionTypeSum      = AggregateFunctionType("sum")
 )
+```
 
-/*
-Aggregate: Association rules and sequences refer to sets of items. These sets can be defined by an
-aggregation over sets of input records. The records are grouped together by one of the fields and
-the values in this grouping field partition the sets of records for an aggregation. This corresponds
-to the conventional aggregation in SQL with a GROUP BY clause. Input records with missing value in
-the groupField are simply ignored. This behavior is similar to the aggregate functions in the
-presence of NULL values in SQL.
+```go
+const (
+	AnovaRowTypeError = AnovaRowType("Error")
+	AnovaRowTypeModel = AnovaRowType("Model")
+	AnovaRowTypeTotal = AnovaRowType("Total")
+)
+```
 
-  <xs:element name="Aggregate">
+```go
+const (
+	CompoundPredicateOperatorAnd       = CompoundPredicateOperator("and")
+	CompoundPredicateOperatorOr        = CompoundPredicateOperator("or")
+	CompoundPredicateOperatorSurrogate = CompoundPredicateOperator("surrogate")
+	CompoundPredicateOperatorXor       = CompoundPredicateOperator("xor")
+)
+```
+
+```go
+const (
+	IntervalTypeClosedClosed = IntervalType("closedClosed")
+	IntervalTypeClosedOpen   = IntervalType("closedOpen")
+	IntervalTypeOpenClosed   = IntervalType("openClosed")
+	IntervalTypeOpenOpen     = IntervalType("openOpen")
+)
+```
+
+```go
+const (
+	SimplePredicateOperatorEqual          = SimplePredicateOperator("equal")
+	SimplePredicateOperatorGreaterOrEqual = SimplePredicateOperator("greaterOrEqual")
+	SimplePredicateOperatorGreaterThan    = SimplePredicateOperator("greaterThan")
+	SimplePredicateOperatorIsMissing      = SimplePredicateOperator("isMissing")
+	SimplePredicateOperatorIsNotMissing   = SimplePredicateOperator("isNotMissing")
+	SimplePredicateOperatorLessOrEqual    = SimplePredicateOperator("lessOrEqual")
+	SimplePredicateOperatorLessThan       = SimplePredicateOperator("lessThan")
+	SimplePredicateOperatorNotEqual       = SimplePredicateOperator("notEqual")
+)
+```
+
+```go
+const (
+	SimpleSetPredicateOperatorIsIn    = SimpleSetPredicateOperator("isIn")
+	SimpleSetPredicateOperatorIsNotIn = SimpleSetPredicateOperator("isNotIn")
+)
+```
+
+```go
+const (
+	CastIntegerTypeCeiling = CastIntegerType("ceiling")
+	CastIntegerTypeFloor   = CastIntegerType("floor")
+	CastIntegerTypeRound   = CastIntegerType("round")
+)
+```
+
+```go
+const (
+	TreeModelSplitCharacteristicBinarySplit = TreeModelSplitCharacteristic("binarySplit")
+	TreeModelSplitCharacteristicMultiSplit  = TreeModelSplitCharacteristic("multiSplit")
+)
+```
+
+```go
+const (
+	ValueValidInvalid = ValueValid("invalid")
+	ValueValidMissing = ValueValid("missing")
+	ValueValidValid   = ValueValid("valid")
+)
+```
+
+```go
+const (
+	ActivationFunctionElliott     = ActivationFunction("Elliott")
+	ActivationFunctionGauss       = ActivationFunction("Gauss")
+	ActivationFunctionArctan      = ActivationFunction("arctan")
+	ActivationFunctionCosine      = ActivationFunction("cosine")
+	ActivationFunctionExponential = ActivationFunction("exponential")
+	ActivationFunctionIdentity    = ActivationFunction("identity")
+	ActivationFunctionLogistic    = ActivationFunction("logistic")
+	ActivationFunctionRadialBasis = ActivationFunction("radialBasis")
+	ActivationFunctionReciprocal  = ActivationFunction("reciprocal")
+	ActivationFunctionRectifier   = ActivationFunction("rectifier")
+	ActivationFunctionSine        = ActivationFunction("sine")
+	ActivationFunctionSquare      = ActivationFunction("square")
+	ActivationFunctionTanh        = ActivationFunction("tanh")
+	ActivationFunctionThreshold   = ActivationFunction("threshold")
+)
+```
+
+```go
+const (
+	BaselineTestStatisticCUSUM                 = BaselineTestStatistic("CUSUM")
+	BaselineTestStatisticChiSquareDistribution = BaselineTestStatistic("chiSquareDistribution")
+	BaselineTestStatisticChiSquareIndependence = BaselineTestStatistic("chiSquareIndependence")
+	BaselineTestStatisticScalarProduct         = BaselineTestStatistic("scalarProduct")
+	BaselineTestStatisticZValue                = BaselineTestStatistic("zValue")
+)
+```
+
+```go
+const (
+	CatScoringMethodMajorityVote         = CatScoringMethod("majorityVote")
+	CatScoringMethodWeightedMajorityVote = CatScoringMethod("weightedMajorityVote")
+)
+```
+
+```go
+const (
+	CompareFunctionAbsDiff  = CompareFunction("absDiff")
+	CompareFunctionDelta    = CompareFunction("delta")
+	CompareFunctionEqual    = CompareFunction("equal")
+	CompareFunctionGaussSim = CompareFunction("gaussSim")
+	CompareFunctionTable    = CompareFunction("table")
+)
+```
+
+```go
+const (
+	ContScoringMethodAverage         = ContScoringMethod("average")
+	ContScoringMethodMedian          = ContScoringMethod("median")
+	ContScoringMethodWeightedAverage = ContScoringMethod("weightedAverage")
+)
+```
+
+```go
+const (
+	CumulativeLinkFunctionCauchit = CumulativeLinkFunction("cauchit")
+	CumulativeLinkFunctionCloglog = CumulativeLinkFunction("cloglog")
+	CumulativeLinkFunctionLogit   = CumulativeLinkFunction("logit")
+	CumulativeLinkFunctionLoglog  = CumulativeLinkFunction("loglog")
+	CumulativeLinkFunctionProbit  = CumulativeLinkFunction("probit")
+)
+```
+
+```go
+const (
+	DataTypeboolean                  = DataType("boolean")
+	DataTypedate                     = DataType("date")
+	DataTypedateDaysSince0           = DataType("dateDaysSince[0]")
+	DataTypedateDaysSince1960        = DataType("dateDaysSince[1960]")
+	DataTypedateDaysSince1970        = DataType("dateDaysSince[1970]")
+	DataTypedateDaysSince1980        = DataType("dateDaysSince[1980]")
+	DataTypedateTime                 = DataType("dateTime")
+	DataTypedateTimeSecondsSince0    = DataType("dateTimeSecondsSince[0]")
+	DataTypedateTimeSecondsSince1960 = DataType("dateTimeSecondsSince[1960]")
+	DataTypedateTimeSecondsSince1970 = DataType("dateTimeSecondsSince[1970]")
+	DataTypedateTimeSecondsSince1980 = DataType("dateTimeSecondsSince[1980]")
+	DataTypedouble                   = DataType("double")
+	DataTypefloat                    = DataType("float")
+	DataTypeinteger                  = DataType("integer")
+	DataTypestring                   = DataType("string")
+	DataTypetime                     = DataType("time")
+	DataTypetimeSeconds              = DataType("timeSeconds")
+)
+```
+
+```go
+const (
+	DelimiterTypeAcrossTimeWindows = DelimiterType("acrossTimeWindows")
+	DelimiterTypeSameTimeWindow    = DelimiterType("sameTimeWindow")
+)
+```
+
+```go
+const (
+	FieldUsageTypeActive          = FieldUsageType("active")
+	FieldUsageTypeAnalysisWeight  = FieldUsageType("analysisWeight")
+	FieldUsageTypeFrequencyWeight = FieldUsageType("frequencyWeight")
+	FieldUsageTypeGroup           = FieldUsageType("group")
+	FieldUsageTypeOrder           = FieldUsageType("order")
+	FieldUsageTypePredicted       = FieldUsageType("predicted")
+	FieldUsageTypeSupplementary   = FieldUsageType("supplementary")
+	FieldUsageTypeTarget          = FieldUsageType("target")
+)
+```
+
+```go
+const (
+	GapFalse   = Gap("false")
+	GapTrue    = Gap("true")
+	GapUnknown = Gap("unknown")
+)
+```
+
+```go
+const (
+	InterpolationMethodCubicSpline       = InterpolationMethod("cubicSpline")
+	InterpolationMethodExponentialSpline = InterpolationMethod("exponentialSpline")
+	InterpolationMethodLinear            = InterpolationMethod("linear")
+	InterpolationMethodNone              = InterpolationMethod("none")
+)
+```
+
+```go
+const (
+	InvalidValueTreatmentMethodAsIs          = InvalidValueTreatmentMethod("asIs")
+	InvalidValueTreatmentMethodAsMissing     = InvalidValueTreatmentMethod("asMissing")
+	InvalidValueTreatmentMethodReturnInvalid = InvalidValueTreatmentMethod("returnInvalid")
+)
+```
+
+```go
+const (
+	LinkFunctionCloglog   = LinkFunction("cloglog")
+	LinkFunctionIdentity  = LinkFunction("identity")
+	LinkFunctionLog       = LinkFunction("log")
+	LinkFunctionLogc      = LinkFunction("logc")
+	LinkFunctionLogit     = LinkFunction("logit")
+	LinkFunctionLoglog    = LinkFunction("loglog")
+	LinkFunctionNegbin    = LinkFunction("negbin")
+	LinkFunctionOddspower = LinkFunction("oddspower")
+	LinkFunctionPower     = LinkFunction("power")
+	LinkFunctionProbit    = LinkFunction("probit")
+)
+```
+
+```go
+const (
+	MiningFunctionAssociationRules = MiningFunction("associationRules")
+	MiningFunctionClassification   = MiningFunction("classification")
+	MiningFunctionClustering       = MiningFunction("clustering")
+	MiningFunctionMixed            = MiningFunction("mixed")
+	MiningFunctionRegression       = MiningFunction("regression")
+	MiningFunctionSequences        = MiningFunction("sequences")
+	MiningFunctionTimeSeries       = MiningFunction("timeSeries")
+)
+```
+
+```go
+const (
+	MissingValueStrategyAggregateNodes     = MissingValueStrategy("aggregateNodes")
+	MissingValueStrategyDefaultChild       = MissingValueStrategy("defaultChild")
+	MissingValueStrategyLastPrediction     = MissingValueStrategy("lastPrediction")
+	MissingValueStrategyNone               = MissingValueStrategy("none")
+	MissingValueStrategyNullPrediction     = MissingValueStrategy("nullPrediction")
+	MissingValueStrategyWeightedConfidence = MissingValueStrategy("weightedConfidence")
+)
+```
+
+```go
+const (
+	MissingValueTreatmentMethodAsIs     = MissingValueTreatmentMethod("asIs")
+	MissingValueTreatmentMethodAsMean   = MissingValueTreatmentMethod("asMean")
+	MissingValueTreatmentMethodAsMedian = MissingValueTreatmentMethod("asMedian")
+	MissingValueTreatmentMethodAsMode   = MissingValueTreatmentMethod("asMode")
+	MissingValueTreatmentMethodAsValue  = MissingValueTreatmentMethod("asValue")
+)
+```
+
+```go
+const (
+	MultipleModelMethodAverage              = MultipleModelMethod("average")
+	MultipleModelMethodMajorityVote         = MultipleModelMethod("majorityVote")
+	MultipleModelMethodMax                  = MultipleModelMethod("max")
+	MultipleModelMethodMedian               = MultipleModelMethod("median")
+	MultipleModelMethodModelChain           = MultipleModelMethod("modelChain")
+	MultipleModelMethodSelectAll            = MultipleModelMethod("selectAll")
+	MultipleModelMethodSelectFirst          = MultipleModelMethod("selectFirst")
+	MultipleModelMethodSum                  = MultipleModelMethod("sum")
+	MultipleModelMethodWeightedAverage      = MultipleModelMethod("weightedAverage")
+	MultipleModelMethodWeightedMajorityVote = MultipleModelMethod("weightedMajorityVote")
+)
+```
+
+```go
+const (
+	NNNormalizationMethodNone      = NNNormalizationMethod("none")
+	NNNormalizationMethodSimplemax = NNNormalizationMethod("simplemax")
+	NNNormalizationMethodSoftmax   = NNNormalizationMethod("softmax")
+)
+```
+
+```go
+const (
+	NoTrueChildStrategyReturnLastPrediction = NoTrueChildStrategy("returnLastPrediction")
+	NoTrueChildStrategyReturnNullPrediction = NoTrueChildStrategy("returnNullPrediction")
+)
+```
+
+```go
+const (
+	OpTypeCategorical = OpType("categorical")
+	OpTypeContinuous  = OpType("continuous")
+	OpTypeOrdinal     = OpType("ordinal")
+)
+```
+
+```go
+const (
+	OutlierTreatmentMethodAsExtremeValues = OutlierTreatmentMethod("asExtremeValues")
+	OutlierTreatmentMethodAsIs            = OutlierTreatmentMethod("asIs")
+	OutlierTreatmentMethodAsMissingValues = OutlierTreatmentMethod("asMissingValues")
+)
+```
+
+```go
+const (
+	RegressionNormalizationMethodCauchit   = RegressionNormalizationMethod("cauchit")
+	RegressionNormalizationMethodCloglog   = RegressionNormalizationMethod("cloglog")
+	RegressionNormalizationMethodExp       = RegressionNormalizationMethod("exp")
+	RegressionNormalizationMethodLogit     = RegressionNormalizationMethod("logit")
+	RegressionNormalizationMethodLoglog    = RegressionNormalizationMethod("loglog")
+	RegressionNormalizationMethodNone      = RegressionNormalizationMethod("none")
+	RegressionNormalizationMethodProbit    = RegressionNormalizationMethod("probit")
+	RegressionNormalizationMethodSimplemax = RegressionNormalizationMethod("simplemax")
+	RegressionNormalizationMethodSoftmax   = RegressionNormalizationMethod("softmax")
+)
+```
+
+```go
+const (
+	ResultFeatureAffinity              = ResultFeature("affinity")
+	ResultFeatureAntecedent            = ResultFeature("antecedent")
+	ResultFeatureClusterAffinity       = ResultFeature("clusterAffinity")
+	ResultFeatureClusterID             = ResultFeature("clusterId")
+	ResultFeatureConfidence            = ResultFeature("confidence")
+	ResultFeatureConsequent            = ResultFeature("consequent")
+	ResultFeatureDecision              = ResultFeature("decision")
+	ResultFeatureEntityAffinity        = ResultFeature("entityAffinity")
+	ResultFeatureEntityID              = ResultFeature("entityId")
+	ResultFeatureLeverage              = ResultFeature("leverage")
+	ResultFeatureLift                  = ResultFeature("lift")
+	ResultFeaturePredictedDisplayValue = ResultFeature("predictedDisplayValue")
+	ResultFeaturePredictedValue        = ResultFeature("predictedValue")
+	ResultFeatureProbability           = ResultFeature("probability")
+	ResultFeatureReasonCode            = ResultFeature("reasonCode")
+	ResultFeatureResidual              = ResultFeature("residual")
+	ResultFeatureRule                  = ResultFeature("rule")
+	ResultFeatureRuleID                = ResultFeature("ruleId")
+	ResultFeatureRuleValue             = ResultFeature("ruleValue")
+	ResultFeatureStandardError         = ResultFeature("standardError")
+	ResultFeatureSupport               = ResultFeature("support")
+	ResultFeatureTransformedValue      = ResultFeature("transformedValue")
+	ResultFeatureWarning               = ResultFeature("warning")
+)
+```
+
+```go
+const (
+	RuleFeatureSffinity   = RuleFeature("affinity")
+	RuleFeatureAntecedent = RuleFeature("antecedent")
+	RuleFeatureConfidence = RuleFeature("confidence")
+	RuleFeatureConsequent = RuleFeature("consequent")
+	RuleFeatureLeverage   = RuleFeature("leverage")
+	RuleFeatureLift       = RuleFeature("lift")
+	RuleFeatureRule       = RuleFeature("rule")
+	RuleFeatureRuleID     = RuleFeature("ruleId")
+	RuleFeatureSupport    = RuleFeature("support")
+)
+```
+
+```go
+const (
+	SVMClassificationMethodOneAgainstAll = SVMClassificationMethod("OneAgainstAll")
+	SVMClassificationMethodOneAgainstOne = SVMClassificationMethod("OneAgainstOne")
+)
+```
+
+```go
+const (
+	SVMRepresentationCoefficients   = SVMRepresentation("Coefficients")
+	SVMRepresentationSupportVectors = SVMRepresentation("SupportVectors")
+)
+```
+
+```go
+const (
+	TimeAnchorTypedateDaysSince0                = TimeAnchorType("dateDaysSince[0]")
+	TimeAnchorTypedateDaysSince1960             = TimeAnchorType("dateDaysSince[1960]")
+	TimeAnchorTypedateDaysSince1970             = TimeAnchorType("dateDaysSince[1970]")
+	TimeAnchorTypedateDaysSince1980             = TimeAnchorType("dateDaysSince[1980]")
+	TimeAnchorTypedateMonthsSince0              = TimeAnchorType("dateMonthsSince[0]")
+	TimeAnchorTypedateMonthsSince1960           = TimeAnchorType("dateMonthsSince[1960]")
+	TimeAnchorTypedateMonthsSince1970           = TimeAnchorType("dateMonthsSince[1970]")
+	TimeAnchorTypedateMonthsSince1980           = TimeAnchorType("dateMonthsSince[1980]")
+	TimeAnchorTypedateTimeMillisecondsSince0    = TimeAnchorType("dateTimeMillisecondsSince[0]")
+	TimeAnchorTypedateTimeMillisecondsSince1960 = TimeAnchorType("dateTimeMillisecondsSince[1960]")
+	TimeAnchorTypedateTimeMillisecondsSince1970 = TimeAnchorType("dateTimeMillisecondsSince[1970]")
+	TimeAnchorTypedateTimeMillisecondsSince1980 = TimeAnchorType("dateTimeMillisecondsSince[1980]")
+	TimeAnchorTypedateTimeSecondsSince0         = TimeAnchorType("dateTimeSecondsSince[0]")
+	TimeAnchorTypedateTimeSecondsSince1960      = TimeAnchorType("dateTimeSecondsSince[1960]")
+	TimeAnchorTypedateTimeSecondsSince1970      = TimeAnchorType("dateTimeSecondsSince[1970]")
+	TimeAnchorTypedateTimeSecondsSince1980      = TimeAnchorType("dateTimeSecondsSince[1980]")
+	TimeAnchorTypedateYearsSince0               = TimeAnchorType("dateYearsSince[0]")
+)
+```
+
+```go
+const (
+	TimeExceptionTypeExclude = TimeExceptionType("exclude")
+	TimeExceptionTypeInclude = TimeExceptionType("include")
+)
+```
+
+```go
+const (
+	TimeSeriesAlgorithmARIMA                      = TimeSeriesAlgorithm("ARIMA")
+	TimeSeriesAlgorithmExponentialSmoothing       = TimeSeriesAlgorithm("ExponentialSmoothing")
+	TimeSeriesAlgorithmSeasonalTrendDecomposition = TimeSeriesAlgorithm("SeasonalTrendDecomposition")
+	TimeSeriesAlgorithmSpectralAnalysis           = TimeSeriesAlgorithm("SpectralAnalysis")
+)
+```
+
+```go
+const (
+	TimeSeriesUsageLogical    = TimeSeriesUsage("logical")
+	TimeSeriesUsageOriginal   = TimeSeriesUsage("original")
+	TimeSeriesUsagePrediction = TimeSeriesUsage("prediction")
+)
+```
+
+```go
+const (
+	ValidTimeSpecExcludeFromTo = ValidTimeSpec("excludeFromTo")
+	ValidTimeSpecExcludeSet    = ValidTimeSpec("excludeSet")
+	ValidTimeSpecIncludeAll    = ValidTimeSpec("includeAll")
+	ValidTimeSpecIncludeFromTo = ValidTimeSpec("includeFromTo")
+	ValidTimeSpecIncludeSet    = ValidTimeSpec("includeSet")
+)
+```
+
+```go
+const (
+	ErrNotImplemented = Error("models: not implemented")
+)
+```
+
+#### func  String
+
+```go
+func String(v string) *string
+```
+
+#### type ARDSquaredExponentialKernel
+
+```go
+type ARDSquaredExponentialKernel struct {
+	Description   *string     `xml:"description,attr"`
+	Gamma         *RealNumber `xml:"gamma,attr"`
+	NoiseVariance *RealNumber `xml:"noiseVariance,attr"`
+
+	Extensions []Extension `xml:"Extension"`
+	Lambda     *Lambda     `xml:"Lambda"`
+}
+```
+
+ARDSquaredExponentialKernel is the Automatic Relevance Determination (ARD)
+squared exponential basis function. This covariance function is the squared
+exponential kernel function with a separate lengthscale hyper-parameter, λi, for
+each predictor, i.e. input dimension xi:
+
+    k(x,z)=γ exp(-1/2 (Sum[(i=1)to p]( |xi-zi| /λi)2))
+
+    <xs:element name="ARDSquaredExponentialKernel">
+      <xs:complexType>
+        <xs:attribute name="description" type="xs:string" use="optional"/>
+        <xs:attribute default="1" name="gamma" type="REAL-NUMBER" use="optional"/>
+        <xs:attribute default="1" name="noiseVariance" type="REAL-NUMBER" use="optional"/>
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+          <xs:element maxOccurs="unbounded" minOccurs="0" ref="Lambda"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:element>
+
+http://dmg.org/pmml/v4-3/GaussianProcess.html#xsdElement_ARDSquaredExponentialKernel
+
+#### type ARIMA
+
+```go
+type ARIMA struct {
+}
+```
+
+ARIMA may contain one or more ARIMA(p,d,q,P,D,Q) models of the time series.
+
+    <xs:element name="ARIMA"/>
+
+http://dmg.org/pmml/v4-3/TimeSeriesModel.html#xsdElement_ARIMA
+
+#### type AbsoluteExponentialKernel
+
+```go
+type AbsoluteExponentialKernel struct {
+	Description   *string     `xml:"description,attr"`
+	Gamma         *RealNumber `xml:"gamma,attr"`
+	NoiseVariance *RealNumber `xml:"noiseVariance,attr"`
+
+	Extensions []Extension `xml:"Extension"`
+	Lambda     *Lambda     `xml:"Lambda"`
+}
+```
+
+<xs:element name="AbsoluteExponentialKernel">
+
+    <xs:complexType>
+      <xs:attribute name="description" type="xs:string" use="optional"/>
+      <xs:attribute default="1" name="gamma" type="REAL-NUMBER" use="optional"/>
+      <xs:attribute default="1" name="noiseVariance" type="REAL-NUMBER" use="optional"/>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Lambda"/>
+      </xs:sequence>
+    </xs:complexType>
+
+</xs:element>
+
+#### type ActivationFunction
+
+```go
+type ActivationFunction string
+```
+
+<xs:simpleType name="ACTIVATION-FUNCTION">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Elliott"/>
+      <xs:enumeration value="Gauss"/>
+      <xs:enumeration value="arctan"/>
+      <xs:enumeration value="cosine"/>
+      <xs:enumeration value="exponential"/>
+      <xs:enumeration value="identity"/>
+      <xs:enumeration value="logistic"/>
+      <xs:enumeration value="radialBasis"/>
+      <xs:enumeration value="reciprocal"/>
+      <xs:enumeration value="rectifier"/>
+      <xs:enumeration value="sine"/>
+      <xs:enumeration value="square"/>
+      <xs:enumeration value="tanh"/>
+      <xs:enumeration value="threshold"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type Aggregate
+
+```go
+type Aggregate struct {
+	Field      FieldName             `xml:"field,attr"`
+	Function   AggregateFunctionType `xml:"function,attr"`
+	GroupField FieldName             `xml:"groupField,attr"`
+	SQLWhere   string                `xml:"sqlWhere,attr"`
+
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="Aggregate">
+
     <xs:complexType>
       <xs:attribute name="field" type="FIELD-NAME" use="required"/>
       <xs:attribute name="function" use="required">
@@ -125,95 +592,72 @@ presence of NULL values in SQL.
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
 
-http://dmg.org/pmml/v4-3/Transformations.html#xsdElement_Aggregate
-*/
-type Aggregate struct {
-	Field      FieldName             `xml:"field,attr"`
-	Function   AggregateFunctionType `xml:"function,attr"`
-	GroupField FieldName             `xml:"groupField,attr"`
-	SQLWhere   string                `xml:"sqlWhere,attr"`
+</xs:element>
 
-	Extensions []Extension `xml:"Extension"`
+#### type AggregateFunctionType
+
+```go
+type AggregateFunctionType string
+```
+
+
+#### type Alternate
+
+```go
+type Alternate struct {
+	Distribution ContinuousDistributionType
 }
+```
 
-func (Aggregate) expression() {}
+<xs:element name="Alternate">
 
-/*
-Alternate indicates an alternate model in a BaselineModel TestDistribution.
-
-  <xs:element name="Alternate">
     <xs:complexType>
       <xs:choice>
         <xs:group minOccurs="1" ref="CONTINUOUS-DISTRIBUTION-TYPES"/>
       </xs:choice>
     </xs:complexType>
-  </xs:element>
 
-http://dmg.org/pmml/v4-3/BaselineModel.html#xsdElement_Alternate
-*/
-type Alternate struct {
-	Distribution ContinuousDistributionType
+</xs:element>
+
+#### func (*Alternate) UnmarshalXML
+
+```go
+func (x *Alternate) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error
+```
+
+#### type Annotation
+
+```go
+type Annotation struct {
+	Data       string      `xml:",chardata"`
+	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (x *Alternate) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
-	var err error
+<xs:element name="Annotation">
 
-	for {
-		var token xml.Token
-
-		token, err = decoder.Token()
-		if err != nil {
-			return err
-		}
-
-		switch tok := token.(type) {
-		case xml.StartElement:
-			switch tok.Name.Local {
-			default:
-				if item, ok := GetContinuousDistributionType(tok.Name.Local); ok {
-					err = decoder.DecodeElement(item, &tok)
-					if err != nil {
-						return err
-					}
-					x.Distribution = item
-				}
-			}
-		case xml.EndElement:
-			return nil
-		}
-	}
-}
-
-/*
-Annotation is where document modification history is embedded. Each annotation is free text and,
-like the description attribute in the head element, makes sense to the human eye only. Users can
-store their own remarks.
-
-  <xs:element name="Annotation">
     <xs:complexType mixed="true">
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
 
-http://dmg.org/pmml/v4-3/Header.html#xsdElement_Annotation
-*/
-type Annotation struct {
-	Data       string      `xml:",chardata"`
+</xs:element>
+
+#### type Anova
+
+```go
+type Anova struct {
+	Taget FieldName `xml:"target,attr"`
+
+	Rows       []AnovaRow  `xml:"AnovaRow"`
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-Anova represents Analysis of Variance information that, while descriptive in nature, can help
-understand the relationship between certain independent variables and the target (dependent)
-variable. Specifically, the analysis is performed using one independent categorical variable, X,
-and a continuous target (dependent) variable, Y (usually found in types of regression and time
-series models).
+<xs:element name="Anova">
 
-  <xs:element name="Anova">
     <xs:complexType>
       <xs:attribute name="target" type="FIELD-NAME"/>
       <xs:sequence>
@@ -221,27 +665,26 @@ series models).
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
 
-http://dmg.org/pmml/v4-3/Statistics.html#xsdElement_Anova
-*/
-type Anova struct {
-	Taget FieldName `xml:"target,attr"`
+</xs:element>
 
-	Rows       []AnovaRow  `xml:"AnovaRow"`
+#### type AnovaRow
+
+```go
+type AnovaRow struct {
+	DegreesOfFreedom Number       `xml:"degreesOfFreedom,attr"`
+	FValue           Number       `xml:"fValue,attr"`
+	MeanOfSquares    Number       `xml:"meanOfSquares,attr"`
+	PValue           ProbNumber   `xml:"pValue,attr"`
+	SumOfSquares     Number       `xml:"sumOfSquares,attr"`
+	Type             AnovaRowType `xml:"type,attr"`
+
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-type AnovaRowType string
+<xs:element name="AnovaRow">
 
-const (
-	AnovaRowTypeError = AnovaRowType("Error")
-	AnovaRowTypeModel = AnovaRowType("Model")
-	AnovaRowTypeTotal = AnovaRowType("Total")
-)
-
-/*
-  <xs:element name="AnovaRow">
     <xs:complexType>
       <xs:attribute name="degreesOfFreedom" type="NUMBER" use="required"/>
       <xs:attribute name="fValue" type="NUMBER"/>
@@ -261,36 +704,45 @@ const (
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
 
-http://dmg.org/pmml/v4-3/Statistics.html#xsdElement_AnovaRow
-*/
-type AnovaRow struct {
-	DegreesOfFreedom Number       `xml:"degreesOfFreedom,attr"`
-	FValue           Number       `xml:"fValue,attr"`
-	MeanOfSquares    Number       `xml:"meanOfSquares,attr"`
-	PValue           ProbNumber   `xml:"pValue,attr"`
-	SumOfSquares     Number       `xml:"sumOfSquares,attr"`
-	Type             AnovaRowType `xml:"type,attr"`
+</xs:element>
 
-	Extensions []Extension `xml:"Extension"`
-}
+#### type AnovaRowType
 
-/*
-  <xs:element name="AntecedentSequence">
+```go
+type AnovaRowType string
+```
+
+
+#### type AntecedentSequence
+
+```go
+type AntecedentSequence SequenceGroup
+```
+
+<xs:element name="AntecedentSequence">
+
     <xs:complexType>
       <xs:sequence>
         <xs:group ref="SEQUENCE"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
 
-http://dmg.org/pmml/v4-3/Sequence.html#xsdElement_AntecedentSequence
-*/
-type AntecedentSequence SequenceGroup
+</xs:element>
 
-/*
-  <xs:element name="AnyDistribution">
+#### type AnyDistribution
+
+```go
+type AnyDistribution struct {
+	Mean     RealNumber `xml:"mean,attr"`
+	Variance RealNumber `xml:"variance,attr"`
+
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="AnyDistribution">
+
     <xs:complexType>
       <xs:attribute name="mean" type="REAL-NUMBER" use="required"/>
       <xs:attribute name="variance" type="REAL-NUMBER" use="required"/>
@@ -298,19 +750,22 @@ type AntecedentSequence SequenceGroup
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type AnyDistribution struct {
-	Mean     RealNumber `xml:"mean,attr"`
-	Variance RealNumber `xml:"variance,attr"`
+
+</xs:element>
+
+#### type Application
+
+```go
+type Application struct {
+	Name    string `xml:"name,attr"`
+	Version string `xml:"version,attr"`
 
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*AnyDistribution) continuousDistributionType() {}
+<xs:element name="Application">
 
-/*
-  <xs:element name="Application">
     <xs:complexType>
       <xs:attribute name="name" type="xs:string" use="required"/>
       <xs:attribute name="version" type="xs:string"/>
@@ -318,17 +773,25 @@ func (*AnyDistribution) continuousDistributionType() {}
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Application struct {
-	Name    string `xml:"name,attr"`
-	Version string `xml:"version,attr"`
 
-	Extensions []Extension `xml:"Extension"`
+</xs:element>
+
+#### type Apply
+
+```go
+type Apply struct {
+	DefaultValue          string                      `xml:"defaultValue,attr"`
+	Function              string                      `xml:"function,attr"`
+	InvalidValueTreatment InvalidValueTreatmentMethod `xml:"returnInvalid,attr"`
+	MapMissingTo          string                      `xml:"mapMissingTo,attr"`
+
+	Extensions  []Extension `xml:"Extension"`
+	Expressions []Expression
 }
+```
 
-/*
-  <xs:element name="Apply">
+<xs:element name="Apply">
+
     <xs:complexType>
       <xs:attribute name="defaultValue" type="xs:string"/>
       <xs:attribute name="function" type="xs:string" use="required"/>
@@ -339,98 +802,66 @@ type Application struct {
         <xs:group maxOccurs="unbounded" minOccurs="0" ref="EXPRESSION"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Apply struct {
-	DefaultValue          string                      `xml:"defaultValue,attr"`
-	Function              string                      `xml:"function,attr"`
-	InvalidValueTreatment InvalidValueTreatmentMethod `xml:"returnInvalid,attr"`
-	MapMissingTo          string                      `xml:"mapMissingTo,attr"`
 
-	Extensions  []Extension `xml:"Extension"`
-	Expressions []Expression
-}
+</xs:element>
 
-func (*Apply) expression() {}
+#### func (*Apply) UnmarshalXML
 
-func (x *Apply) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
-	var err error
+```go
+func (x *Apply) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error
+```
 
-	for _, attr := range start.Attr {
-		switch attr.Name.Local {
-		case "defaultValue":
-			x.DefaultValue = attr.Value
-		case "function":
-			x.Function = attr.Value
-		case "returnInvalid":
-			x.InvalidValueTreatment = InvalidValueTreatmentMethod(attr.Value)
-		case "mapMissingTo":
-			x.MapMissingTo = attr.Value
-		}
-	}
+#### type Array
 
-	for {
-		var token xml.Token
-
-		token, err = decoder.Token()
-		if err != nil {
-			return err
-		}
-		switch tok := token.(type) {
-		case xml.StartElement:
-			var item Expression
-
-			switch tok.Name.Local {
-			case "Extension":
-				var e Extension
-				err = decoder.DecodeElement(&e, &tok)
-				if err != nil {
-					return err
-				}
-				x.Extensions = append(x.Extensions, e)
-			case "Aggregate":
-				item = &Aggregate{}
-			case "Apply":
-				item = &Apply{}
-			case "Constant":
-				item = &Constant{}
-			case "Discretize":
-				item = &Discretize{}
-			case "FieldRef":
-				item = &FieldRef{}
-			case "Lag":
-				item = &Lag{}
-			case "MapValues":
-				item = &MapValues{}
-			case "NormContinuous":
-				item = &NormContinuous{}
-			case "NormDiscrete":
-				item = &NormDiscrete{}
-			case "TextIndex":
-				item = &TextIndex{}
-			}
-
-			if item != nil {
-				err = decoder.DecodeElement(item, &tok)
-				if err != nil {
-					return err
-				}
-
-				x.Expressions = append(x.Expressions, item)
-			}
-		case xml.EndElement:
-			return nil
-		}
-	}
-}
-
-/*
-  <xs:element name="Array" type="ArrayType"/>
-*/
+```go
 type Array ArrayType
+```
 
-/*
-  <xs:element name="AssociationModel">
+<xs:element name="Array" type="ArrayType"/>
+
+#### type ArrayType
+
+```go
+type ArrayType struct {
+	N    *int          `xml:"n,attr"`
+	Type ArrayTypeType `xml:"type,attr"`
+
+	RawValue string `xml:",innerxml"`
+}
+```
+
+<xs:complexType mixed="true" name="ArrayType">
+
+    <xs:attribute name="n" type="INT-NUMBER" use="optional"/>
+    <xs:attribute name="type" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="int"/>
+          <xs:enumeration value="real"/>
+          <xs:enumeration value="string"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+
+</xs:complexType>
+
+#### type ArrayTypeType
+
+```go
+type ArrayTypeType string
+```
+
+
+#### type AssociationModel
+
+```go
+type AssociationModel struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="AssociationModel">
+
     <xs:complexType>
       <xs:attribute name="algorithmName" type="xs:string"/>
       <xs:attribute name="avgNumberOfItemsPerTA" type="REAL-NUMBER"/>
@@ -458,37 +889,19 @@ type Array ArrayType
         <xs:element minOccurs="0" ref="Output"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type AssociationModel struct {
-	AlgorithmName         string               `xml:"algorithmName,attr"`
-	AvgNumberOfItemsPerTA float64              `xml:"avgNumberOfItemsPerTA,attr"`
-	FunctionName          MiningFunction       `xml:"functionName,attr"`
-	IsScorable            bool                 `xml:"isScorable,attr"`
-	LengthLimit           int                  `xml:"lengthLimit,attr"`
-	MaxNumberOfItemsPerTA int                  `xml:"maxNumberOfItemsTA,attr"`
-	MinimumConfidence     float64              `xml:"minimumConfidence,attr"`
-	MinimumSupport        float64              `xml:"minimumSupport,attr"`
-	ModelName             string               `xml:"modelName,attr"`
-	NumberOfItems         int                  `xml:"numberOfItems,attr"`
-	NumberOfItemsets      int                  `xml:"numberOfItemsets,attr"`
-	NumberOfRules         int                  `xml:"numberOfRules,attr"`
-	NumberOfTransactions  int                  `xml:"numberOfTransactions,attr"`
-	AssociationRules      []AssociationRule    `xml:"AssociationRule"`
-	Items                 []Item               `xml:"Item"`
-	Itemsets              []Itemset            `xml:"Itemset"`
-	LocalTransformations  LocalTransformations `xml:"LocalTransformations"`
-	MiningSchema          MiningSchema         `xml:"MiningSchema"`
-	ModelStats            ModelStats           `xml:"ModelStats"`
-	ModelVerification     ModelVerification    `xml:"ModelVerification"`
-	Output                Output               `xml:"Output"`
-	Extensions            []Extension          `xml:"Extension"`
+
+</xs:element>
+
+#### type AssociationRule
+
+```go
+type AssociationRule struct {
+	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*AssociationModel) modelElement() {}
+<xs:element name="AssociationRule">
 
-/*
-  <xs:element name="AssociationRule">
     <xs:complexType>
       <xs:attribute name="affinity" type="PROB-NUMBER" use="optional"/>
       <xs:attribute name="antecedent" type="xs:string" use="required"/>
@@ -502,22 +915,19 @@ func (*AssociationModel) modelElement() {}
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type AssociationRule struct {
-	Affinity   float64     `xml:"affinity,attr"`
-	Antecedent string      `xml:"antecedent,attr"`
-	Confidence float64     `xml:"confidence,attr"`
-	Consequent string      `xml:"consequent,attr"`
-	ID         string      `xml:"id,attr"`
-	Leverage   float64     `xml:"leverage,attr"`
-	Lift       float64     `xml:"lift,attr"`
-	Support    float64     `xml:"support,attr"`
+
+</xs:element>
+
+#### type Attribute
+
+```go
+type Attribute struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Attribute">
+<xs:element name="Attribute">
+
     <xs:complexType>
       <xs:attribute name="partialScore" type="NUMBER" use="optional"/>
       <xs:attribute name="reasonCode" type="xs:string"/>
@@ -527,18 +937,19 @@ type AssociationRule struct {
         <xs:group ref="PREDICATE"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Attribute struct {
-	PartialScore        float64             `xml:"partialScore,attr"`
-	ReasonCode          string              `xml:"reasonCode,attr"`
-	ComplexPartialScore ComplexPartialScore `xml:"ComplexPartialScore"`
-	Predicate           Predicate           `xml:"Predicate"`
-	Extensions          []Extension         `xml:"Extension"`
-}
 
-/*
-  <xs:element name="BaseCumHazardTables">
+</xs:element>
+
+#### type BaseCumHazardTables
+
+```go
+type BaseCumHazardTables struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="BaseCumHazardTables">
+
     <xs:complexType>
       <xs:attribute name="maxTime" type="REAL-NUMBER" use="optional"/>
       <xs:sequence>
@@ -549,17 +960,37 @@ type Attribute struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type BaseCumHazardTables struct {
-	MaxTime          float64           `xml:"maxTime,attr"`
-	BaselineCells    []BaselineCell    `xml:"BaselineCell"`
-	BaselineStratums []BaselineStratum `xml:"BaselineStratum"`
-	Extensions       []Extension       `xml:"Extension"`
-}
 
-/*
-  <xs:element name="BaselineCell">
+</xs:element>
+
+#### type Baseline
+
+```go
+type Baseline struct {
+}
+```
+
+<xs:element name="Baseline">
+
+    <xs:complexType>
+      <xs:choice>
+        <xs:group minOccurs="1" ref="CONTINUOUS-DISTRIBUTION-TYPES"/>
+        <xs:group minOccurs="1" ref="DISCRETE-DISTRIBUTION-TYPES"/>
+      </xs:choice>
+    </xs:complexType>
+
+</xs:element>
+
+#### type BaselineCell
+
+```go
+type BaselineCell struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="BaselineCell">
+
     <xs:complexType>
       <xs:attribute name="cumHazard" type="REAL-NUMBER" use="required"/>
       <xs:attribute name="time" type="REAL-NUMBER" use="required"/>
@@ -567,16 +998,19 @@ type BaseCumHazardTables struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type BaselineCell struct {
-	CumHazard  float64     `xml:"cumHazard,attr"`
-	Time       float64     `xml:"time"`
+
+</xs:element>
+
+#### type BaselineModel
+
+```go
+type BaselineModel struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="BaselineModel">
+<xs:element name="BaselineModel">
+
     <xs:complexType>
       <xs:attribute name="algorithmName" type="xs:string" use="optional"/>
       <xs:attribute name="functionName" type="MINING-FUNCTION" use="required"/>
@@ -595,16 +1029,19 @@ type BaselineCell struct {
         <xs:element ref="TestDistributions"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type BaselineModel struct {
+
+</xs:element>
+
+#### type BaselineStratum
+
+```go
+type BaselineStratum struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*BaselineModel) modelElement() {}
+<xs:element name="BaselineStratum">
 
-/*
-  <xs:element name="BaselineStratum">
     <xs:complexType>
       <xs:attribute name="label" type="xs:string"/>
       <xs:attribute name="maxTime" type="REAL-NUMBER" use="required"/>
@@ -614,27 +1051,37 @@ func (*BaselineModel) modelElement() {}
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type BaselineStratum struct {
+
+</xs:element>
+
+#### type BaselineTestStatistic
+
+```go
+type BaselineTestStatistic string
+```
+
+<xs:simpleType name="BASELINE-TEST-STATISTIC">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="CUSUM"/>
+      <xs:enumeration value="chiSquareDistribution"/>
+      <xs:enumeration value="chiSquareIndependence"/>
+      <xs:enumeration value="scalarProduct"/>
+      <xs:enumeration value="zValue"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type BayesInput
+
+```go
+type BayesInput struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Baseline">
-    <xs:complexType>
-      <xs:choice>
-        <xs:group minOccurs="1" ref="CONTINUOUS-DISTRIBUTION-TYPES"/>
-        <xs:group minOccurs="1" ref="DISCRETE-DISTRIBUTION-TYPES"/>
-      </xs:choice>
-    </xs:complexType>
-  </xs:element>
-*/
-type Baseline struct {
-}
+<xs:element name="BayesInput">
 
-/*
-  <xs:element name="BayesInput">
     <xs:complexType>
       <xs:attribute name="fieldName" type="xs:string" use="required"/>
       <xs:sequence>
@@ -648,28 +1095,38 @@ type Baseline struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type BayesInput struct {
+
+</xs:element>
+
+#### type BayesInputs
+
+```go
+type BayesInputs struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="BayesInputs">
+<xs:element name="BayesInputs">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" ref="BayesInput"/>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type BayesInputs struct {
+
+</xs:element>
+
+#### type BayesOutput
+
+```go
+type BayesOutput struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="BayesOutput">
+<xs:element name="BayesOutput">
+
     <xs:complexType>
       <xs:attribute name="fieldName" type="xs:string" use="required"/>
       <xs:sequence>
@@ -677,14 +1134,19 @@ type BayesInputs struct {
         <xs:element ref="TargetValueCounts"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type BayesOutput struct {
+
+</xs:element>
+
+#### type BayesianNetworkModel
+
+```go
+type BayesianNetworkModel struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="BayesianNetworkModel">
+<xs:element name="BayesianNetworkModel">
+
     <xs:complexType>
       <xs:attribute name="algorithmName" type="xs:string"/>
       <xs:attribute name="functionName" type="MINING-FUNCTION" use="required"/>
@@ -703,16 +1165,19 @@ type BayesOutput struct {
         <xs:element minOccurs="0" ref="Targets"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type BayesianNetworkModel struct {
+
+</xs:element>
+
+#### type BayesianNetworkNodes
+
+```go
+type BayesianNetworkNodes struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*BayesianNetworkModel) modelElement() {}
+<xs:element name="BayesianNetworkNodes">
 
-/*
-  <xs:element name="BayesianNetworkNodes">
     <xs:complexType>
       <xs:sequence>
         <xs:choice maxOccurs="unbounded">
@@ -722,52 +1187,120 @@ func (*BayesianNetworkModel) modelElement() {}
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type BayesianNetworkNodes struct {
+
+</xs:element>
+
+#### type BinarySimilarity
+
+```go
+type BinarySimilarity struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="BlockIndicator">
+<xs:element name="binarySimilarity">
+
+    <xs:complexType>
+      <xs:attribute name="c00-parameter" type="NUMBER" use="required"/>
+      <xs:attribute name="c01-parameter" type="NUMBER" use="required"/>
+      <xs:attribute name="c10-parameter" type="NUMBER" use="required"/>
+      <xs:attribute name="c11-parameter" type="NUMBER" use="required"/>
+      <xs:attribute name="d00-parameter" type="NUMBER" use="required"/>
+      <xs:attribute name="d01-parameter" type="NUMBER" use="required"/>
+      <xs:attribute name="d10-parameter" type="NUMBER" use="required"/>
+      <xs:attribute name="d11-parameter" type="NUMBER" use="required"/>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+      </xs:sequence>
+    </xs:complexType>
+
+</xs:element>
+
+#### type BlockIndicator
+
+```go
+type BlockIndicator struct {
+}
+```
+
+<xs:element name="BlockIndicator">
+
     <xs:complexType>
       <xs:attribute name="field" type="FIELD-NAME" use="required"/>
     </xs:complexType>
-  </xs:element>
-*/
-type BlockIndicator struct {
-}
 
-/*
-  <xs:element name="BoundaryValueMeans">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
-        <xs:group ref="NUM-ARRAY"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-*/
+</xs:element>
+
+#### type BoundaryValueMeans
+
+```go
 type BoundaryValueMeans struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="BoundaryValues">
+<xs:element name="BoundaryValueMeans">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:group ref="NUM-ARRAY"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
+
+</xs:element>
+
+#### type BoundaryValues
+
+```go
 type BoundaryValues struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="CategoricalPredictor">
+<xs:element name="BoundaryValues">
+
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+        <xs:group ref="NUM-ARRAY"/>
+      </xs:sequence>
+    </xs:complexType>
+
+</xs:element>
+
+#### type CastIntegerType
+
+```go
+type CastIntegerType string
+```
+
+
+#### type CatScoringMethod
+
+```go
+type CatScoringMethod string
+```
+
+<xs:simpleType name="CAT-SCORING-METHOD">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="majorityVote"/>
+      <xs:enumeration value="weightedMajorityVote"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type CategoricalPredictor
+
+```go
+type CategoricalPredictor struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="CategoricalPredictor">
+
     <xs:complexType>
       <xs:attribute name="coefficient" type="REAL-NUMBER" use="required"/>
       <xs:attribute name="name" type="FIELD-NAME" use="required"/>
@@ -776,42 +1309,57 @@ type BoundaryValues struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type CategoricalPredictor struct {
+
+</xs:element>
+
+#### type Categories
+
+```go
+type Categories struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Categories">
+<xs:element name="Categories">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="1" ref="Category"/>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Categories struct {
+
+</xs:element>
+
+#### type Category
+
+```go
+type Category struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Category">
+<xs:element name="Category">
+
     <xs:complexType>
       <xs:attribute name="value" type="xs:string" use="required"/>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Category struct {
+
+</xs:element>
+
+#### type Characteristic
+
+```go
+type Characteristic struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Characteristic">
+<xs:element name="Characteristic">
+
     <xs:complexType>
       <xs:attribute name="baselineScore" type="NUMBER"/>
       <xs:attribute name="name" type="FIELD-NAME" use="optional"/>
@@ -821,28 +1369,63 @@ type Category struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Characteristic struct {
+
+</xs:element>
+
+#### type Characteristics
+
+```go
+type Characteristics struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Characteristics">
+<xs:element name="Characteristics">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" ref="Characteristic"/>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Characteristics struct {
+
+</xs:element>
+
+#### type Chebychev
+
+```go
+type Chebychev struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="ChildParent">
+<xs:element name="chebychev">
+
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+      </xs:sequence>
+    </xs:complexType>
+
+</xs:element>
+
+#### type ChildParent
+
+```go
+type ChildParent struct {
+	ChildField       string `xml:"childField,attr"`
+	IsRecursive      bool   `xml:"isRecursive,attr"`
+	ParentField      string `xml:"parentField,attr"`
+	ParentLevelField string `xml:"parentLevelField,attr"`
+
+	Table            Table
+	Extensions       []Extension       `xml:"Extension"`
+	FieldColumnPairs []FieldColumnPair `xml:"FieldColumnPair"`
+}
+```
+
+<xs:element name="ChildParent">
+
     <xs:complexType>
       <xs:attribute name="childField" type="xs:string" use="required"/>
       <xs:attribute default="no" name="isRecursive" use="optional">
@@ -864,104 +1447,63 @@ type Characteristics struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="FieldColumnPair"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ChildParent struct {
-	ChildField       string `xml:"childField,attr"`
-	IsRecursive      bool   `xml:"isRecursive,attr"`
-	ParentField      string `xml:"parentField,attr"`
-	ParentLevelField string `xml:"parentLevelField,attr"`
 
-	Table            Table
-	Extensions       []Extension       `xml:"Extension"`
-	FieldColumnPairs []FieldColumnPair `xml:"FieldColumnPair"`
+</xs:element>
+
+#### func (*ChildParent) UnmarshalXML
+
+```go
+func (x *ChildParent) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error
+```
+UnmarshalXML implements the xml.Unmarshaler interface.
+
+#### type CityBlock
+
+```go
+type CityBlock struct {
+	Extensions []Extension `xml:"Extension"`
 }
+```
 
-// UnmarshalXML implements the xml.Unmarshaler interface.
-func (x *ChildParent) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
-	var err error
+<xs:element name="cityBlock">
 
-	for _, attr := range start.Attr {
-		switch attr.Name.Local {
-		case "childField":
-			x.ChildField = attr.Value
-		case "isRecursive":
-			if attr.Value == "yes" {
-				x.IsRecursive = true
-			} else if attr.Value == "no" {
-				x.IsRecursive = false
-			} else {
-				return errors.Errorf("invalid value for isRecursive: %s", attr.Value)
-			}
-		case "parentField":
-			x.ParentField = attr.Value
-		case "parentLevelField":
-			x.ParentLevelField = attr.Value
-		}
-	}
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+      </xs:sequence>
+    </xs:complexType>
 
-	for {
-		var token xml.Token
+</xs:element>
 
-		token, err = decoder.Token()
-		if err != nil {
-			return err
-		}
-		switch tok := token.(type) {
-		case xml.StartElement:
-			var item Table
+#### type ClassLabels
 
-			switch tok.Name.Local {
-			case "Extension":
-				var e Extension
-				err = decoder.DecodeElement(&e, &tok)
-				if err != nil {
-					return err
-				}
-				x.Extensions = append(x.Extensions, e)
-			case "FieldColumnPair":
-				var e FieldColumnPair
-				err = decoder.DecodeElement(&e, &tok)
-				if err != nil {
-					return err
-				}
-				x.FieldColumnPairs = append(x.FieldColumnPairs, e)
-			case "InlineTable":
-				item = &InlineTable{}
-			case "TableLocator":
-				item = &TableLocator{}
-			}
-
-			if item != nil {
-				err = decoder.DecodeElement(item, &tok)
-				if err != nil {
-					return err
-				}
-
-				x.Table = item
-			}
-		case xml.EndElement:
-			return nil
-		}
-	}
+```go
+type ClassLabels struct {
+	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="ClassLabels">
+<xs:element name="ClassLabels">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:group ref="STRING-ARRAY"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ClassLabels struct {
+
+</xs:element>
+
+#### type Cluster
+
+```go
+type Cluster struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Cluster">
+<xs:element name="Cluster">
+
     <xs:complexType>
       <xs:attribute name="id" type="xs:string" use="optional"/>
       <xs:attribute name="name" type="xs:string" use="optional"/>
@@ -974,14 +1516,19 @@ type ClassLabels struct {
         <xs:group minOccurs="0" ref="NUM-ARRAY"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Cluster struct {
+
+</xs:element>
+
+#### type ClusteringField
+
+```go
+type ClusteringField struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="ClusteringField">
+<xs:element name="ClusteringField">
+
     <xs:complexType>
       <xs:attribute name="compareFunction" type="COMPARE-FUNCTION" use="optional"/>
       <xs:attribute name="field" type="FIELD-NAME" use="required"/>
@@ -1000,14 +1547,19 @@ type Cluster struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ClusteringField struct {
+
+</xs:element>
+
+#### type ClusteringModel
+
+```go
+type ClusteringModel struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="ClusteringModel">
+<xs:element name="ClusteringModel">
+
     <xs:complexType>
       <xs:attribute name="algorithmName" type="xs:string" use="optional"/>
       <xs:attribute name="functionName" type="MINING-FUNCTION" use="required"/>
@@ -1037,42 +1589,55 @@ type ClusteringField struct {
         <xs:element minOccurs="0" ref="Output"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ClusteringModel struct {
-	Extensions []Extension `xml:"Extension"`
+
+</xs:element>
+
+#### type ClusteringModelQuality
+
+```go
+type ClusteringModelQuality struct {
 }
+```
 
-func (*ClusteringModel) modelElement() {}
+<xs:element name="ClusteringModelQuality">
 
-/*
-  <xs:element name="ClusteringModelQuality">
     <xs:complexType>
       <xs:attribute name="SSB" type="NUMBER" use="optional"/>
       <xs:attribute name="SSE" type="NUMBER" use="optional"/>
       <xs:attribute name="dataName" type="xs:string" use="optional"/>
     </xs:complexType>
-  </xs:element>
-*/
-type ClusteringModelQuality struct {
-}
 
-/*
-  <xs:element name="Coefficient">
+</xs:element>
+
+#### type Coefficient
+
+```go
+type Coefficient struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="Coefficient">
+
     <xs:complexType>
       <xs:attribute default="0" name="value" type="REAL-NUMBER" use="optional"/>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Coefficient struct {
+
+</xs:element>
+
+#### type Coefficients
+
+```go
+type Coefficients struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Coefficients">
+<xs:element name="Coefficients">
+
     <xs:complexType>
       <xs:attribute default="0" name="absoluteValue" type="REAL-NUMBER" use="optional"/>
       <xs:attribute name="numberOfCoefficients" type="INT-NUMBER" use="optional"/>
@@ -1081,14 +1646,37 @@ type Coefficient struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Coefficients struct {
+
+</xs:element>
+
+#### type CompareFunction
+
+```go
+type CompareFunction string
+```
+
+<xs:simpleType name="COMPARE-FUNCTION">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="absDiff"/>
+      <xs:enumeration value="delta"/>
+      <xs:enumeration value="equal"/>
+      <xs:enumeration value="gaussSim"/>
+      <xs:enumeration value="table"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type ComparisonMeasure
+
+```go
+type ComparisonMeasure struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="ComparisonMeasure">
+<xs:element name="ComparisonMeasure">
+
     <xs:complexType>
       <xs:attribute default="absDiff" name="compareFunction" type="COMPARE-FUNCTION"/>
       <xs:attribute name="kind" use="required">
@@ -1116,51 +1704,60 @@ type Coefficients struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ComparisonMeasure struct {
+
+</xs:element>
+
+#### type Comparisons
+
+```go
+type Comparisons struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Comparisons">
+<xs:element name="Comparisons">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:element ref="Matrix"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Comparisons struct {
+
+</xs:element>
+
+#### type ComplexPartialScore
+
+```go
+type ComplexPartialScore struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="ComplexPartialScore">
+<xs:element name="ComplexPartialScore">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:group maxOccurs="1" minOccurs="1" ref="EXPRESSION"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ComplexPartialScore struct {
+
+</xs:element>
+
+#### type CompoundPredicate
+
+```go
+type CompoundPredicate struct {
+	BooleanOperator CompoundPredicateOperator `xml:"booleanOperator,attr"`
+
 	Extensions []Extension `xml:"Extension"`
+	Predicates []Predicate
 }
+```
 
-type CompoundPredicateOperator string
+<xs:element name="CompoundPredicate">
 
-const (
-	CompoundPredicateOperatorAnd       = CompoundPredicateOperator("and")
-	CompoundPredicateOperatorOr        = CompoundPredicateOperator("or")
-	CompoundPredicateOperatorSurrogate = CompoundPredicateOperator("surrogate")
-	CompoundPredicateOperatorXor       = CompoundPredicateOperator("xor")
-)
-
-/*
-  <xs:element name="CompoundPredicate">
     <xs:complexType>
       <xs:attribute name="booleanOperator" use="required">
         <xs:simpleType>
@@ -1179,64 +1776,33 @@ const (
         </xs:sequence>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type CompoundPredicate struct {
-	BooleanOperator CompoundPredicateOperator `xml:"booleanOperator,attr"`
 
+</xs:element>
+
+#### func (*CompoundPredicate) UnmarshalXML
+
+```go
+func (x *CompoundPredicate) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error
+```
+UnmarshalXML implements the xml.Unmarshaler interface.
+
+#### type CompoundPredicateOperator
+
+```go
+type CompoundPredicateOperator string
+```
+
+
+#### type CompoundRule
+
+```go
+type CompoundRule struct {
 	Extensions []Extension `xml:"Extension"`
-	Predicates []Predicate
 }
+```
 
-func (*CompoundPredicate) predicate() {}
+<xs:element name="CompoundRule">
 
-// UnmarshalXML implements the xml.Unmarshaler interface.
-func (x *CompoundPredicate) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
-	var err error
-
-	for _, attr := range start.Attr {
-		switch attr.Name.Local {
-		case "booleanOperator":
-			x.BooleanOperator = CompoundPredicateOperator(attr.Value)
-		}
-	}
-
-	for {
-		var token xml.Token
-
-		token, err = decoder.Token()
-		if err != nil {
-			return err
-		}
-		switch tok := token.(type) {
-		case xml.StartElement:
-			switch tok.Name.Local {
-			case "Extension":
-				var e Extension
-				err = decoder.DecodeElement(&e, &tok)
-				if err != nil {
-					return err
-				}
-				x.Extensions = append(x.Extensions, e)
-			default:
-				if item, ok := GetPredicate(tok.Name.Local); ok {
-					err = decoder.DecodeElement(item, &tok)
-					if err != nil {
-						return err
-					}
-
-					x.Predicates = append(x.Predicates, item)
-				}
-			}
-
-		case xml.EndElement:
-			return nil
-		}
-	}
-}
-
-/*
-  <xs:element name="CompoundRule">
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
@@ -1244,14 +1810,19 @@ func (x *CompoundPredicate) UnmarshalXML(decoder *xml.Decoder, start xml.StartEl
         <xs:group maxOccurs="unbounded" minOccurs="1" ref="Rule"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type CompoundRule struct {
+
+</xs:element>
+
+#### type Con
+
+```go
+type Con struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Con">
+<xs:element name="Con">
+
     <xs:complexType>
       <xs:attribute name="from" type="NN-NEURON-IDREF" use="required"/>
       <xs:attribute name="weight" type="REAL-NUMBER" use="required"/>
@@ -1259,14 +1830,19 @@ type CompoundRule struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Con struct {
+
+</xs:element>
+
+#### type ConfusionMatrix
+
+```go
+type ConfusionMatrix struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="ConfusionMatrix">
+<xs:element name="ConfusionMatrix">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="ClassLabels"/>
@@ -1274,27 +1850,36 @@ type Con struct {
         <xs:element ref="Matrix"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ConfusionMatrix struct {
+
+</xs:element>
+
+#### type ConsequentSequence
+
+```go
+type ConsequentSequence struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="ConsequentSequence">
+<xs:element name="ConsequentSequence">
+
     <xs:complexType>
       <xs:sequence>
         <xs:group ref="SEQUENCE"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ConsequentSequence struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-/*
-  <xs:element name="Constant">
+</xs:element>
+
+#### type Constant
+
+```go
+type Constant struct {
+}
+```
+
+<xs:element name="Constant">
+
     <xs:complexType>
       <xs:simpleContent>
         <xs:extension base="xs:string">
@@ -1302,15 +1887,19 @@ type ConsequentSequence struct {
         </xs:extension>
       </xs:simpleContent>
     </xs:complexType>
-  </xs:element>
-*/
-type Constant struct {
+
+</xs:element>
+
+#### type Constraints
+
+```go
+type Constraints struct {
+	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*Constant) expression() {}
+<xs:element name="Constraints">
 
-/*
-  <xs:element name="Constraints">
     <xs:complexType>
       <xs:attribute name="maximumAntConsSeparationTime" type="REAL-NUMBER"/>
       <xs:attribute name="maximumItemsetSeparationTime" type="REAL-NUMBER"/>
@@ -1331,14 +1920,40 @@ func (*Constant) expression() {}
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Constraints struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-/*
-  <xs:element name="ContStats">
+</xs:element>
+
+#### type ContScoringMethod
+
+```go
+type ContScoringMethod string
+```
+
+<xs:simpleType name="CONT-SCORING-METHOD">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="average"/>
+      <xs:enumeration value="median"/>
+      <xs:enumeration value="weightedAverage"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type ContStats
+
+```go
+type ContStats struct {
+	TotalSquaresSum Number `xml:"totalSquaresSum,attr"`
+	TotalValuesSum  Number `xml:"totalValuesSum,attr"`
+
+	Extensions  []Extension `xml:"Extension"`
+	Intervals   []Interval  `xml:"Interval"`
+	Frequencies []Array     `xml:"Array"`
+}
+```
+
+<xs:element name="ContStats">
+
     <xs:complexType>
       <xs:attribute name="totalSquaresSum" type="NUMBER"/>
       <xs:attribute name="totalValuesSum" type="NUMBER"/>
@@ -1348,19 +1963,19 @@ type Constraints struct {
         <xs:group minOccurs="0" ref="FrequenciesType"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ContStats struct {
-	TotalSquaresSum Number `xml:"totalSquaresSum,attr"`
-	TotalValuesSum  Number `xml:"totalValuesSum,attr"`
 
-	Extensions  []Extension `xml:"Extension"`
-	Intervals   []Interval  `xml:"Interval"`
-	Frequencies []Array     `xml:"Array"`
+</xs:element>
+
+#### type ContinuousConditionalProbability
+
+```go
+type ContinuousConditionalProbability struct {
+	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="ContinuousConditionalProbability">
+<xs:element name="ContinuousConditionalProbability">
+
     <xs:complexType>
       <xs:attribute name="count" type="REAL-NUMBER" use="optional"/>
       <xs:sequence>
@@ -1369,14 +1984,19 @@ type ContStats struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="ParentValue"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ContinuousConditionalProbability struct {
+
+</xs:element>
+
+#### type ContinuousDistribution
+
+```go
+type ContinuousDistribution struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="ContinuousDistribution">
+<xs:element name="ContinuousDistribution">
+
     <xs:complexType>
       <xs:sequence>
         <xs:choice>
@@ -1388,14 +2008,47 @@ type ContinuousConditionalProbability struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ContinuousDistribution struct {
+
+</xs:element>
+
+#### type ContinuousDistributionType
+
+```go
+type ContinuousDistributionType interface {
+	// contains filtered or unexported methods
+}
+```
+
+<xs:group name="CONTINUOUS-DISTRIBUTION-TYPES">
+
+    <xs:sequence>
+      <xs:choice>
+        <xs:element ref="AnyDistribution"/>
+        <xs:element ref="GaussianDistribution"/>
+        <xs:element ref="PoissonDistribution"/>
+        <xs:element ref="UniformDistribution"/>
+      </xs:choice>
+      <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+    </xs:sequence>
+
+</xs:group>
+
+#### func  GetContinuousDistributionType
+
+```go
+func GetContinuousDistributionType(name string) (ContinuousDistributionType, bool)
+```
+
+#### type ContinuousNode
+
+```go
+type ContinuousNode struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="ContinuousNode">
+<xs:element name="ContinuousNode">
+
     <xs:complexType>
       <xs:attribute name="count" type="REAL-NUMBER" use="optional"/>
       <xs:attribute name="name" type="FIELD-NAME" use="required"/>
@@ -1408,56 +2061,76 @@ type ContinuousDistribution struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ContinuousNode struct {
+
+</xs:element>
+
+#### type CorrelationFields
+
+```go
+type CorrelationFields struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="CorrelationFields">
+<xs:element name="CorrelationFields">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:group ref="STRING-ARRAY"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type CorrelationFields struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-/*
-  <xs:element name="CorrelationMethods">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
-        <xs:element ref="Matrix"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-*/
+</xs:element>
+
+#### type CorrelationMethods
+
+```go
 type CorrelationMethods struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="CorrelationValues">
+<xs:element name="CorrelationMethods">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:element ref="Matrix"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
+
+</xs:element>
+
+#### type CorrelationValues
+
+```go
 type CorrelationValues struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Correlations">
+<xs:element name="CorrelationValues">
+
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+        <xs:element ref="Matrix"/>
+      </xs:sequence>
+    </xs:complexType>
+
+</xs:element>
+
+#### type Correlations
+
+```go
+type Correlations struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="Correlations">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="CorrelationFields"/>
@@ -1466,19 +2139,58 @@ type CorrelationValues struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Correlations struct {
+
+</xs:element>
+
+#### type CountTable
+
+```go
+type CountTable CountTableType
+```
+
+<xs:element name="CountTable" type="COUNT-TABLE-TYPE"/>
+
+#### type CountTableType
+
+```go
+type CountTableType struct {
+	Sample *Number `xml:"sample,attr"`
+
+	FieldValues      []FieldValue      `xml:"FieldValue"`
+	FieldValueCounts []FieldValueCount `xml:"FieldValueCount"`
+
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="CountTable" type="COUNT-TABLE-TYPE"/>
-*/
-type CountTable CountTableType
+<xs:complexType name="COUNT-TABLE-TYPE">
 
-/*
-  <xs:element name="Counts">
+    <xs:attribute name="sample" type="NUMBER" use="optional"/>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element maxOccurs="unbounded" minOccurs="1" ref="FieldValue"/>
+        <xs:element maxOccurs="unbounded" minOccurs="1" ref="FieldValueCount"/>
+      </xs:choice>
+      <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+    </xs:sequence>
+
+</xs:complexType>
+
+#### type Counts
+
+```go
+type Counts struct {
+	Cardinality uint   `xml:"cardinality,attr"`
+	InvalidFreq Number `xml:"invalidFreq,attr"`
+	MissingFreq Number `xml:"missingFreq,attr"`
+	TotalFreq   Number `xml:"totalFreq,attr"`
+
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="Counts">
+
     <xs:complexType>
       <xs:attribute name="cardinality" type="xs:nonNegativeInteger"/>
       <xs:attribute name="invalidFreq" type="NUMBER"/>
@@ -1488,47 +2200,79 @@ type CountTable CountTableType
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Counts struct {
-	Cardinality uint   `xml:"cardinality,attr"`
-	InvalidFreq Number `xml:"invalidFreq,attr"`
-	MissingFreq Number `xml:"missingFreq,attr"`
-	TotalFreq   Number `xml:"totalFreq,attr"`
 
+</xs:element>
+
+#### type Covariances
+
+```go
+type Covariances struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Covariances">
+<xs:element name="Covariances">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:element ref="Matrix"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Covariances struct {
+
+</xs:element>
+
+#### type CovariateList
+
+```go
+type CovariateList struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="CovariateList">
+<xs:element name="CovariateList">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Predictor"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type CovariateList struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-/*
-  <xs:element name="DataDictionary">
+</xs:element>
+
+#### type CumulativeLinkFunction
+
+```go
+type CumulativeLinkFunction string
+```
+
+<xs:simpleType name="CUMULATIVE-LINK-FUNCTION">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="cauchit"/>
+      <xs:enumeration value="cloglog"/>
+      <xs:enumeration value="logit"/>
+      <xs:enumeration value="loglog"/>
+      <xs:enumeration value="probit"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type DataDictionary
+
+```go
+type DataDictionary struct {
+	NumberOfFields uint `xml:"numberOfFields,attr"`
+
+	DataFields []DataField `xml:"DataField"`
+	Extensions []Extension `xml:"Extension"`
+	Taxonomies []Taxonomy  `xml:"Taxonomy"`
+}
+```
+
+<xs:element name="DataDictionary">
+
     <xs:complexType>
       <xs:attribute name="numberOfFields" type="xs:nonNegativeInteger"/>
       <xs:sequence>
@@ -1537,18 +2281,28 @@ type CovariateList struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Taxonomy"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type DataDictionary struct {
-	NumberOfFields uint `xml:"numberOfFields,attr"`
 
-	DataFields []DataField `xml:"DataField"`
+</xs:element>
+
+#### type DataField
+
+```go
+type DataField struct {
+	DataType    DataType  `xml:"dataType,attr"`
+	DisplayName string    `xml:"displayName,attr"`
+	IsCyclic    bool      `xml:"isCyclic,attr"`
+	Name        FieldName `xml:"name,attr"`
+	OpType      OpType    `xml:"optype,attr"`
+	Taxonomy    string    `xml:"taxonomy,attr"`
+
 	Extensions []Extension `xml:"Extension"`
-	Taxonomies []Taxonomy  `xml:"Taxonomy"`
+	Intervals  []Interval  `xml:"Interval"`
+	Values     []Value     `xml:"Value"`
 }
+```
 
-/*
-  <xs:element name="DataField">
+<xs:element name="DataField">
+
     <xs:complexType>
       <xs:attribute name="dataType" type="DATATYPE" use="required"/>
       <xs:attribute name="displayName" type="xs:string"/>
@@ -1571,23 +2325,49 @@ type DataDictionary struct {
         </xs:sequence>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type DataField struct {
-	DataType    DataType  `xml:"dataType,attr"`
-	DisplayName string    `xml:"displayName,attr"`
-	IsCyclic    bool      `xml:"isCyclic,attr"`
-	Name        FieldName `xml:"name,attr"`
-	OpType      OpType    `xml:"optype,attr"`
-	Taxonomy    string    `xml:"taxonomy,attr"`
 
+</xs:element>
+
+#### type DataType
+
+```go
+type DataType string
+```
+
+<xs:simpleType name="DATATYPE">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="boolean"/>
+      <xs:enumeration value="date"/>
+      <xs:enumeration value="dateDaysSince[0]"/>
+      <xs:enumeration value="dateDaysSince[1960]"/>
+      <xs:enumeration value="dateDaysSince[1970]"/>
+      <xs:enumeration value="dateDaysSince[1980]"/>
+      <xs:enumeration value="dateTime"/>
+      <xs:enumeration value="dateTimeSecondsSince[0]"/>
+      <xs:enumeration value="dateTimeSecondsSince[1960]"/>
+      <xs:enumeration value="dateTimeSecondsSince[1970]"/>
+      <xs:enumeration value="dateTimeSecondsSince[1980]"/>
+      <xs:enumeration value="double"/>
+      <xs:enumeration value="float"/>
+      <xs:enumeration value="integer"/>
+      <xs:enumeration value="string"/>
+      <xs:enumeration value="time"/>
+      <xs:enumeration value="timeSeconds"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type Decision
+
+```go
+type Decision struct {
 	Extensions []Extension `xml:"Extension"`
-	Intervals  []Interval  `xml:"Interval"`
-	Values     []Value     `xml:"Value"`
 }
+```
 
-/*
-  <xs:element name="Decision">
+<xs:element name="Decision">
+
     <xs:complexType>
       <xs:attribute name="description" type="xs:string"/>
       <xs:attribute name="displayValue" type="xs:string"/>
@@ -1596,14 +2376,19 @@ type DataField struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Decision struct {
+
+</xs:element>
+
+#### type DecisionTree
+
+```go
+type DecisionTree struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="DecisionTree">
+<xs:element name="DecisionTree">
+
     <xs:complexType>
       <xs:attribute name="algorithmName" type="xs:string"/>
       <xs:attribute name="functionName" type="MINING-FUNCTION" use="required"/>
@@ -1629,16 +2414,19 @@ type Decision struct {
         <xs:element minOccurs="0" ref="Targets"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type DecisionTree struct {
+
+</xs:element>
+
+#### type Decisions
+
+```go
+type Decisions struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*DecisionTree) embeddedModel() {}
+<xs:element name="Decisions">
 
-/*
-  <xs:element name="Decisions">
     <xs:complexType>
       <xs:attribute name="businessProblem" type="xs:string"/>
       <xs:attribute name="description" type="xs:string"/>
@@ -1647,14 +2435,25 @@ func (*DecisionTree) embeddedModel() {}
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Decisions struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-/*
-  <xs:element name="DefineFunction">
+</xs:element>
+
+#### type DefineFunction
+
+```go
+type DefineFunction struct {
+	DataType DataType `xml:"dataType,attr"`
+	Name     string   `xml:"name,attr"`
+	OpType   OpType   `xml:"optype,attr"`
+
+	Extensions      []Extension      `xml:"Extension"`
+	ParameterFields []ParameterField `xml:"ParameterField"`
+	Expression      Expression
+}
+```
+
+<xs:element name="DefineFunction">
+
     <xs:complexType>
       <xs:attribute name="dataType" type="DATATYPE"/>
       <xs:attribute name="name" type="xs:string" use="required"/>
@@ -1665,97 +2464,26 @@ type Decisions struct {
         <xs:group ref="EXPRESSION"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type DefineFunction struct {
-	DataType DataType `xml:"dataType,attr"`
-	Name     string   `xml:"name,attr"`
-	OpType   OpType   `xml:"optype,attr"`
 
-	Extensions      []Extension      `xml:"Extension"`
-	ParameterFields []ParameterField `xml:"ParameterField"`
-	Expression      Expression
+</xs:element>
+
+#### func (*DefineFunction) UnmarshalXML
+
+```go
+func (x *DefineFunction) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error
+```
+UnmarshalXML implements the xml.Unmarshaler interface.
+
+#### type Delimiter
+
+```go
+type Delimiter struct {
+	Extensions []Extension `xml:"Extension"`
 }
+```
 
-// UnmarshalXML implements the xml.Unmarshaler interface.
-func (x *DefineFunction) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
-	var err error
+<xs:element name="Delimiter">
 
-	for _, attr := range start.Attr {
-		switch attr.Name.Local {
-		case "dataType":
-			x.DataType = DataType(attr.Value)
-		case "name":
-			x.Name = attr.Value
-		case "optype":
-			x.OpType = OpType(attr.Value)
-		}
-	}
-
-	for {
-		var token xml.Token
-
-		token, err = decoder.Token()
-		if err != nil {
-			return err
-		}
-		switch tok := token.(type) {
-		case xml.StartElement:
-			var item Expression
-
-			switch tok.Name.Local {
-			case "Extension":
-				var e Extension
-				err = decoder.DecodeElement(&e, &tok)
-				if err != nil {
-					return err
-				}
-				x.Extensions = append(x.Extensions, e)
-			case "ParameterField":
-				var e ParameterField
-				err = decoder.DecodeElement(&e, &tok)
-				if err != nil {
-					return err
-				}
-				x.ParameterFields = append(x.ParameterFields, e)
-			case "Aggregate":
-				item = &Aggregate{}
-			case "Apply":
-				item = &Apply{}
-			case "Constant":
-				item = &Constant{}
-			case "Discretize":
-				item = &Discretize{}
-			case "FieldRef":
-				item = &FieldRef{}
-			case "Lag":
-				item = &Lag{}
-			case "MapValues":
-				item = &MapValues{}
-			case "NormContinuous":
-				item = &NormContinuous{}
-			case "NormDiscrete":
-				item = &NormDiscrete{}
-			case "TextIndex":
-				item = &TextIndex{}
-			}
-
-			if item != nil {
-				err = decoder.DecodeElement(item, &tok)
-				if err != nil {
-					return err
-				}
-
-				x.Expression = item
-			}
-		case xml.EndElement:
-			return nil
-		}
-	}
-}
-
-/*
-  <xs:element name="Delimiter">
     <xs:complexType>
       <xs:attribute name="delimiter" type="DELIMITER" use="required"/>
       <xs:attribute name="gap" type="GAP" use="required"/>
@@ -1763,14 +2491,41 @@ func (x *DefineFunction) UnmarshalXML(decoder *xml.Decoder, start xml.StartEleme
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Delimiter struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-/*
-  <xs:element name="DerivedField">
+</xs:element>
+
+#### type DelimiterType
+
+```go
+type DelimiterType string
+```
+
+<xs:simpleType name="DELIMITER">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="acrossTimeWindows"/>
+      <xs:enumeration value="sameTimeWindow"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type DerivedField
+
+```go
+type DerivedField struct {
+	DataType    DataType `xml:"dataType,attr"`
+	DisplayName string   `xml:"displayName,attr"`
+	Name        string   `xml:"name,attr"`
+	OpType      OpType   `xml:"optype,attr"`
+
+	Extensions []Extension `xml:"Extension"`
+	Values     []Value     `xml:"Value"`
+	Expression Expression
+}
+```
+
+<xs:element name="DerivedField">
+
     <xs:complexType>
       <xs:attribute name="dataType" type="DATATYPE" use="required"/>
       <xs:attribute name="displayName" type="xs:string"/>
@@ -1782,100 +2537,29 @@ type Delimiter struct {
         <xs:group ref="EXPRESSION"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type DerivedField struct {
-	DataType    DataType `xml:"dataType,attr"`
-	DisplayName string   `xml:"displayName,attr"`
-	Name        string   `xml:"name,attr"`
-	OpType      OpType   `xml:"optype,attr"`
 
+</xs:element>
+
+#### func (*DerivedField) UnmarshalXML
+
+```go
+func (x *DerivedField) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error
+```
+UnmarshalXML implements the xml.Unmarshaler interface.
+
+#### type DiscrStats
+
+```go
+type DiscrStats struct {
+	ModalValue string `xml:"modalValue,attr"`
+
+	Arrays     []Array     `xml:"Array"`
 	Extensions []Extension `xml:"Extension"`
-	Values     []Value     `xml:"Value"`
-	Expression Expression
 }
+```
 
-// UnmarshalXML implements the xml.Unmarshaler interface.
-func (x *DerivedField) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
-	var err error
+<xs:element name="DiscrStats">
 
-	for _, attr := range start.Attr {
-		switch attr.Name.Local {
-		case "dataType":
-			x.DataType = DataType(attr.Value)
-		case "displayName":
-			x.DisplayName = attr.Value
-		case "name":
-			x.Name = attr.Value
-		case "optype":
-			x.OpType = OpType(attr.Value)
-		}
-	}
-
-	for {
-		var token xml.Token
-
-		token, err = decoder.Token()
-		if err != nil {
-			return err
-		}
-		switch tok := token.(type) {
-		case xml.StartElement:
-			var item Expression
-
-			switch tok.Name.Local {
-			case "Extension":
-				var e Extension
-				err = decoder.DecodeElement(&e, &tok)
-				if err != nil {
-					return err
-				}
-				x.Extensions = append(x.Extensions, e)
-			case "Value":
-				var e Value
-				err = decoder.DecodeElement(&e, &tok)
-				if err != nil {
-					return err
-				}
-				x.Values = append(x.Values, e)
-			case "Aggregate":
-				item = &Aggregate{}
-			case "Apply":
-				item = &Apply{}
-			case "Constant":
-				item = &Constant{}
-			case "Discretize":
-				item = &Discretize{}
-			case "FieldRef":
-				item = &FieldRef{}
-			case "Lag":
-				item = &Lag{}
-			case "MapValues":
-				item = &MapValues{}
-			case "NormContinuous":
-				item = &NormContinuous{}
-			case "NormDiscrete":
-				item = &NormDiscrete{}
-			case "TextIndex":
-				item = &TextIndex{}
-			}
-
-			if item != nil {
-				err = decoder.DecodeElement(item, &tok)
-				if err != nil {
-					return err
-				}
-
-				x.Expression = item
-			}
-		case xml.EndElement:
-			return nil
-		}
-	}
-}
-
-/*
-  <xs:element name="DiscrStats">
     <xs:complexType>
       <xs:attribute name="modalValue" type="xs:string"/>
       <xs:sequence>
@@ -1883,17 +2567,19 @@ func (x *DerivedField) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type DiscrStats struct {
-	ModalValue string `xml:"modalValue,attr"`
 
-	Arrays     []Array     `xml:"Array"`
+</xs:element>
+
+#### type DiscreteConditionalProbability
+
+```go
+type DiscreteConditionalProbability struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="DiscreteConditionalProbability">
+<xs:element name="DiscreteConditionalProbability">
+
     <xs:complexType>
       <xs:attribute name="count" type="REAL-NUMBER" use="optional"/>
       <xs:sequence>
@@ -1902,14 +2588,36 @@ type DiscrStats struct {
         <xs:element maxOccurs="unbounded" minOccurs="1" ref="ValueProbability"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type DiscreteConditionalProbability struct {
+
+</xs:element>
+
+#### type DiscreteDistributionType
+
+```go
+type DiscreteDistributionType interface {
+}
+```
+
+<xs:group name="DISCRETE-DISTRIBUTION-TYPES">
+
+    <xs:choice>
+      <xs:element ref="CountTable"/>
+      <xs:element maxOccurs="unbounded" minOccurs="2" ref="FieldRef"/>
+      <xs:element ref="NormalizedCountTable"/>
+    </xs:choice>
+
+</xs:group>
+
+#### type DiscreteNode
+
+```go
+type DiscreteNode struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="DiscreteNode">
+<xs:element name="DiscreteNode">
+
     <xs:complexType>
       <xs:attribute name="count" type="REAL-NUMBER" use="optional"/>
       <xs:attribute name="name" type="FIELD-NAME" use="required"/>
@@ -1922,14 +2630,19 @@ type DiscreteConditionalProbability struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type DiscreteNode struct {
+
+</xs:element>
+
+#### type Discretize
+
+```go
+type Discretize struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Discretize">
+<xs:element name="Discretize">
+
     <xs:complexType>
       <xs:attribute name="dataType" type="DATATYPE"/>
       <xs:attribute name="defaultValue" type="xs:string"/>
@@ -1940,16 +2653,19 @@ type DiscreteNode struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Discretize struct {
+
+</xs:element>
+
+#### type DiscretizeBin
+
+```go
+type DiscretizeBin struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*Discretize) expression() {}
+<xs:element name="DiscretizeBin">
 
-/*
-  <xs:element name="DiscretizeBin">
     <xs:complexType>
       <xs:attribute name="binValue" type="xs:string" use="required"/>
       <xs:sequence>
@@ -1957,28 +2673,107 @@ func (*Discretize) expression() {}
         <xs:element ref="Interval"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type DiscretizeBin struct {
+
+</xs:element>
+
+#### type DocumentTermMatrix
+
+```go
+type DocumentTermMatrix struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="DocumentTermMatrix">
+<xs:element name="DocumentTermMatrix">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:element ref="Matrix"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type DocumentTermMatrix struct {
+
+</xs:element>
+
+#### type ElementID
+
+```go
+type ElementID string
+```
+
+<xs:simpleType name="ELEMENT-ID">
+
+    <xs:restriction base="xs:string"/>
+
+</xs:simpleType>
+
+#### type EmbeddedModel
+
+```go
+type EmbeddedModel interface {
+	// contains filtered or unexported methods
+}
+```
+
+<xs:group name="EmbeddedModel">
+
+    <xs:sequence>
+      <xs:choice>
+        <xs:element ref="DecisionTree"/>
+        <xs:element ref="Regression"/>
+      </xs:choice>
+      <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+    </xs:sequence>
+
+</xs:group>
+
+#### func  GetEmbeddedModel
+
+```go
+func GetEmbeddedModel(name string) (EmbeddedModel, bool)
+```
+
+#### type Error
+
+```go
+type Error string
+```
+
+
+#### func (Error) Error
+
+```go
+func (err Error) Error() string
+```
+
+#### type Euclidean
+
+```go
+type Euclidean struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="EventValues">
+<xs:element name="euclidean">
+
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+      </xs:sequence>
+    </xs:complexType>
+
+</xs:element>
+
+#### type EventValues
+
+```go
+type EventValues struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="EventValues">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
@@ -1986,14 +2781,18 @@ type DocumentTermMatrix struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Value"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type EventValues struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-/*
-  <xs:element name="ExponentialSmoothing">
+</xs:element>
+
+#### type ExponentialSmoothing
+
+```go
+type ExponentialSmoothing struct {
+}
+```
+
+<xs:element name="ExponentialSmoothing">
+
     <xs:complexType>
       <xs:attribute name="RMSE" type="REAL-NUMBER"/>
       <xs:attribute default="none" name="transformation">
@@ -2012,13 +2811,52 @@ type EventValues struct {
         <xs:element maxOccurs="1" minOccurs="0" ref="Trend_ExpoSmooth"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ExponentialSmoothing struct {
-}
 
-/*
-  <xs:element name="Extension">
+</xs:element>
+
+#### type Expression
+
+```go
+type Expression interface {
+	// contains filtered or unexported methods
+}
+```
+
+<xs:group name="EXPRESSION">
+
+    <xs:choice>
+      <xs:element ref="Aggregate"/>
+      <xs:element ref="Apply"/>
+      <xs:element ref="Constant"/>
+      <xs:element ref="Discretize"/>
+      <xs:element ref="FieldRef"/>
+      <xs:element ref="Lag"/>
+      <xs:element ref="MapValues"/>
+      <xs:element ref="NormContinuous"/>
+      <xs:element ref="NormDiscrete"/>
+      <xs:element ref="TextIndex"/>
+    </xs:choice>
+
+</xs:group>
+
+#### func  GetExpression
+
+```go
+func GetExpression(name string) (Expression, bool)
+```
+
+#### type Extension
+
+```go
+type Extension struct {
+	Extender *string `xml:"extender,attr"`
+	Name     *string `xml:"name,attr"`
+	Value    *string `xml:"value,attr"`
+}
+```
+
+<xs:element name="Extension">
+
     <xs:complexType>
       <xs:complexContent mixed="true">
         <xs:restriction base="xs:anyType">
@@ -2031,45 +2869,56 @@ type ExponentialSmoothing struct {
         </xs:restriction>
       </xs:complexContent>
     </xs:complexType>
-  </xs:element>
-*/
-type Extension struct {
-	Extender *string `xml:"extender,attr"`
-	Name     *string `xml:"name,attr"`
-	Value    *string `xml:"value,attr"`
-}
 
-/*
-  <xs:element name="FactorList">
+</xs:element>
+
+#### type FactorList
+
+```go
+type FactorList struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="FactorList">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Predictor"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type FactorList struct {
+
+</xs:element>
+
+#### type False
+
+```go
+type False struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="False">
+<xs:element name="False">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type False struct {
+
+</xs:element>
+
+#### type FieldColumnPair
+
+```go
+type FieldColumnPair struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*False) predicate() {}
+<xs:element name="FieldColumnPair">
 
-/*
-  <xs:element name="FieldColumnPair">
     <xs:complexType>
       <xs:attribute name="column" type="xs:string" use="required"/>
       <xs:attribute name="field" type="FIELD-NAME" use="required"/>
@@ -2077,14 +2926,31 @@ func (*False) predicate() {}
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type FieldColumnPair struct {
+
+</xs:element>
+
+#### type FieldName
+
+```go
+type FieldName string
+```
+
+<xs:simpleType name="FIELD-NAME">
+
+    <xs:restriction base="xs:string"/>
+
+</xs:simpleType>
+
+#### type FieldRef
+
+```go
+type FieldRef struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="FieldRef">
+<xs:element name="FieldRef">
+
     <xs:complexType>
       <xs:attribute name="field" type="FIELD-NAME" use="required"/>
       <xs:attribute name="mapMissingTo" type="xs:string"/>
@@ -2092,16 +2958,40 @@ type FieldColumnPair struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type FieldRef struct {
+
+</xs:element>
+
+#### type FieldUsageType
+
+```go
+type FieldUsageType string
+```
+
+<xs:simpleType name="FIELD-USAGE-TYPE">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="active"/>
+      <xs:enumeration value="analysisWeight"/>
+      <xs:enumeration value="frequencyWeight"/>
+      <xs:enumeration value="group"/>
+      <xs:enumeration value="order"/>
+      <xs:enumeration value="predicted"/>
+      <xs:enumeration value="supplementary"/>
+      <xs:enumeration value="target"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type FieldValue
+
+```go
+type FieldValue struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*FieldRef) expression() {}
+<xs:element name="FieldValue">
 
-/*
-  <xs:element name="FieldValue">
     <xs:complexType>
       <xs:attribute name="field" type="FIELD-NAME" use="required"/>
       <xs:attribute name="value" use="required"/>
@@ -2113,14 +3003,23 @@ func (*FieldRef) expression() {}
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type FieldValue struct {
+
+</xs:element>
+
+#### type FieldValueCount
+
+```go
+type FieldValueCount struct {
+	Count Number    `xml:"count,attr"`
+	Field FieldName `xml:"field,attr"`
+	Value string    `xml:"value,attr"`
+
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="FieldValueCount">
+<xs:element name="FieldValueCount">
+
     <xs:complexType>
       <xs:attribute name="count" type="NUMBER" use="required"/>
       <xs:attribute name="field" type="FIELD-NAME" use="required"/>
@@ -2129,18 +3028,72 @@ type FieldValue struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type FieldValueCount struct {
-	Count Number    `xml:"count,attr"`
-	Field FieldName `xml:"field,attr"`
-	Value string    `xml:"value,attr"`
 
+</xs:element>
+
+#### type FollowSet
+
+```go
+type FollowSet struct {
+	Delimiter    Delimiter    `xml:"Delimiter"`
+	SetReference SetReference `xml:"SetReference"`
+	Time         *Time        `xml:"Time"`
+}
+```
+
+<xs:group name="FOLLOW-SET">
+
+    <xs:sequence>
+      <xs:element ref="Delimiter"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+      <xs:element ref="SetReference"/>
+      <xs:element minOccurs="0" ref="Time"/>
+    </xs:sequence>
+
+</xs:group>
+
+#### type FrequenciesType
+
+```go
+type FrequenciesType struct {
+	NumArrays []NumArray `xml:"Array"`
+}
+```
+
+<xs:group name="FrequenciesType">
+
+    <xs:sequence>
+      <xs:group maxOccurs="3" minOccurs="1" ref="NUM-ARRAY"/>
+    </xs:sequence>
+
+</xs:group>
+
+#### type Gap
+
+```go
+type Gap string
+```
+
+<xs:simpleType name="GAP">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="false"/>
+      <xs:enumeration value="true"/>
+      <xs:enumeration value="unknown"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type GaussianDistribution
+
+```go
+type GaussianDistribution struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="GaussianDistribution">
+<xs:element name="GaussianDistribution">
+
     <xs:complexType>
       <xs:attribute name="mean" type="REAL-NUMBER" use="required"/>
       <xs:attribute name="variance" type="REAL-NUMBER" use="required"/>
@@ -2148,16 +3101,19 @@ type FieldValueCount struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type GaussianDistribution struct {
+
+</xs:element>
+
+#### type GaussianProcessModel
+
+```go
+type GaussianProcessModel struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*GaussianDistribution) continuousDistributionType() {}
+<xs:element name="GaussianProcessModel">
 
-/*
-  <xs:element name="GaussianProcessModel">
     <xs:complexType>
       <xs:attribute name="functionName" type="MINING-FUNCTION" use="required"/>
       <xs:attribute default="true" name="isScorable" type="xs:boolean"/>
@@ -2184,16 +3140,19 @@ func (*GaussianDistribution) continuousDistributionType() {}
         </xs:sequence>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type GaussianProcessModel struct {
+
+</xs:element>
+
+#### type GeneralRegressionModel
+
+```go
+type GeneralRegressionModel struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*GaussianProcessModel) modelElement() {}
+<xs:element name="GeneralRegressionModel">
 
-/*
-  <xs:element name="GeneralRegressionModel">
     <xs:complexType>
       <xs:attribute name="algorithmName" type="xs:string"/>
       <xs:attribute name="baselineStrataVariable" type="FIELD-NAME"/>
@@ -2260,16 +3219,19 @@ func (*GaussianProcessModel) modelElement() {}
         <xs:element minOccurs="0" ref="Targets"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type GeneralRegressionModel struct {
+
+</xs:element>
+
+#### type GeneralizedExponentialKernel
+
+```go
+type GeneralizedExponentialKernel struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*GeneralRegressionModel) modelElement() {}
+<xs:element name="GeneralizedExponentialKernel">
 
-/*
-  <xs:element name="GeneralizedExponentialKernel">
     <xs:complexType>
       <xs:attribute default="1" name="degree" type="REAL-NUMBER" use="optional"/>
       <xs:attribute name="description" type="xs:string" use="optional"/>
@@ -2280,14 +3242,26 @@ func (*GeneralRegressionModel) modelElement() {}
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Lambda"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type GeneralizedExponentialKernel struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-/*
-  <xs:element name="Header">
+</xs:element>
+
+#### type Header
+
+```go
+type Header struct {
+	Copyright    string `xml:"copyright,attr"`
+	Description  string `xml:"description,attr"`
+	ModelVersion string `xml:"modelVersion,attr"`
+
+	Annotations []Annotation `xml:"Annotation"`
+	Application *Application `xml:"Application"`
+	Extensions  []Extension  `xml:"Extension"`
+	Timestamp   *Timestamp   `xml:"Timestamp"`
+}
+```
+
+<xs:element name="Header">
+
     <xs:complexType>
       <xs:attribute name="copyright" type="xs:string"/>
       <xs:attribute name="description" type="xs:string"/>
@@ -2299,31 +3273,133 @@ type GeneralizedExponentialKernel struct {
         <xs:element minOccurs="0" ref="Timestamp"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Header struct {
-	Copyright    string `xml:"copyright,attr"`
-	Description  string `xml:"description,attr"`
-	ModelVersion string `xml:"modelVersion,attr"`
 
-	Annotations []Annotation `xml:"Annotation"`
-	Application *Application `xml:"Application"`
-	Extensions  []Extension  `xml:"Extension"`
-	Timestamp   *Timestamp   `xml:"Timestamp"`
+</xs:element>
+
+#### type Indices
+
+```go
+type Indices struct {
 }
+```
 
-/*
-  <xs:element name="INT-Entries">
+<xs:element name="Indices">
+
     <xs:simpleType>
       <xs:list itemType="xs:int"/>
     </xs:simpleType>
-  </xs:element>
-*/
+
+</xs:element>
+
+#### type InlineTable
+
+```go
+type InlineTable struct {
+	Extensions []Extension `xml:"Extension"`
+	Rows       []Row       `xml:"row"`
+}
+```
+
+<xs:element name="InlineTable">
+
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="row"/>
+      </xs:sequence>
+    </xs:complexType>
+
+</xs:element>
+
+#### type InstanceField
+
+```go
+type InstanceField struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="InstanceField">
+
+    <xs:complexType>
+      <xs:attribute name="column" type="xs:string" use="optional"/>
+      <xs:attribute name="field" type="xs:string" use="required"/>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+      </xs:sequence>
+    </xs:complexType>
+
+</xs:element>
+
+#### type InstanceFields
+
+```go
+type InstanceFields struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="InstanceFields">
+
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+        <xs:element maxOccurs="unbounded" ref="InstanceField"/>
+      </xs:sequence>
+    </xs:complexType>
+
+</xs:element>
+
+#### type IntArray
+
+```go
+type IntArray Array
+```
+
+<xs:group name="INT-ARRAY">
+
+    <xs:choice>
+      <xs:element ref="Array"/>
+    </xs:choice>
+
+</xs:group>
+
+#### type IntegerEntries
+
+```go
 type IntegerEntries struct {
 }
+```
 
-/*
-  <xs:element name="INT-SparseArray">
+<xs:element name="INT-Entries">
+
+    <xs:simpleType>
+      <xs:list itemType="xs:int"/>
+    </xs:simpleType>
+
+</xs:element>
+
+#### type IntegerNumber
+
+```go
+type IntegerNumber int
+```
+
+<xs:simpleType name="INT-NUMBER">
+
+    <xs:restriction base="xs:integer"/>
+
+</xs:simpleType>
+
+#### type IntegerSparseArray
+
+```go
+type IntegerSparseArray struct {
+}
+```
+
+<xs:element name="INT-SparseArray">
+
     <xs:complexType>
       <xs:attribute default="0" name="defaultValue" type="INT-NUMBER" use="optional"/>
       <xs:attribute name="n" type="INT-NUMBER" use="optional"/>
@@ -2332,78 +3408,40 @@ type IntegerEntries struct {
         <xs:element minOccurs="0" ref="Indices"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type IntegerSparseArray struct {
-}
 
-/*
-  <xs:element name="Indices">
-    <xs:simpleType>
-      <xs:list itemType="xs:int"/>
-    </xs:simpleType>
-  </xs:element>
-*/
-type Indices struct {
-}
+</xs:element>
 
-/*
-  <xs:element name="InlineTable">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="row"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-*/
-type InlineTable struct {
-	Extensions []Extension `xml:"Extension"`
-	Rows       []Row       `xml:"row"`
-}
+#### type InterpolationMethod
 
-func (*InlineTable) table() {}
+```go
+type InterpolationMethod string
+```
 
-/*
-  <xs:element name="InstanceField">
-    <xs:complexType>
-      <xs:attribute name="column" type="xs:string" use="optional"/>
-      <xs:attribute name="field" type="xs:string" use="required"/>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-*/
-type InstanceField struct {
+<xs:simpleType name="INTERPOLATION-METHOD">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="cubicSpline"/>
+      <xs:enumeration value="exponentialSpline"/>
+      <xs:enumeration value="linear"/>
+      <xs:enumeration value="none"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type Interval
+
+```go
+type Interval struct {
+	Closure     IntervalType `xml:"closure,attr"`
+	LeftMargin  Number       `xml:"leftMargin,attr"`
+	RightMargin Number       `xml:"rightMargin,attr"`
+
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="InstanceFields">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
-        <xs:element maxOccurs="unbounded" ref="InstanceField"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-*/
-type InstanceFields struct {
-	Extensions []Extension `xml:"Extension"`
-}
+<xs:element name="Interval">
 
-type IntervalType string
-
-const (
-	IntervalTypeClosedClosed = IntervalType("closedClosed")
-	IntervalTypeClosedOpen   = IntervalType("closedOpen")
-	IntervalTypeOpenClosed   = IntervalType("openClosed")
-	IntervalTypeOpenOpen     = IntervalType("openOpen")
-)
-
-/*
-  <xs:element name="Interval">
     <xs:complexType>
       <xs:attribute name="closure" use="required">
         <xs:simpleType>
@@ -2421,18 +3459,42 @@ const (
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Interval struct {
-	Closure     IntervalType `xml:"closure,attr"`
-	LeftMargin  Number       `xml:"leftMargin,attr"`
-	RightMargin Number       `xml:"rightMargin,attr"`
 
+</xs:element>
+
+#### type IntervalType
+
+```go
+type IntervalType string
+```
+
+
+#### type InvalidValueTreatmentMethod
+
+```go
+type InvalidValueTreatmentMethod string
+```
+
+<xs:simpleType name="INVALID-VALUE-TREATMENT-METHOD">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="asIs"/>
+      <xs:enumeration value="asMissing"/>
+      <xs:enumeration value="returnInvalid"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type Item
+
+```go
+type Item struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Item">
+<xs:element name="Item">
+
     <xs:complexType>
       <xs:attribute name="category" type="xs:string"/>
       <xs:attribute name="field" type="FIELD-NAME"/>
@@ -2444,28 +3506,38 @@ type Interval struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Item struct {
+
+</xs:element>
+
+#### type ItemRef
+
+```go
+type ItemRef struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="ItemRef">
+<xs:element name="ItemRef">
+
     <xs:complexType>
       <xs:attribute name="itemRef" type="xs:string" use="required"/>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ItemRef struct {
+
+</xs:element>
+
+#### type Itemset
+
+```go
+type Itemset struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Itemset">
+<xs:element name="Itemset">
+
     <xs:complexType>
       <xs:attribute name="id" type="xs:string" use="required"/>
       <xs:attribute name="numberOfItems" type="xs:nonNegativeInteger"/>
@@ -2475,14 +3547,37 @@ type ItemRef struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="ItemRef"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Itemset struct {
+
+</xs:element>
+
+#### type Jaccard
+
+```go
+type Jaccard struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="KNNInput">
+<xs:element name="jaccard">
+
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+      </xs:sequence>
+    </xs:complexType>
+
+</xs:element>
+
+#### type KNNInput
+
+```go
+type KNNInput struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="KNNInput">
+
     <xs:complexType>
       <xs:attribute name="compareFunction" type="COMPARE-FUNCTION"/>
       <xs:attribute name="field" type="FIELD-NAME" use="required"/>
@@ -2491,28 +3586,38 @@ type Itemset struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type KNNInput struct {
+
+</xs:element>
+
+#### type KNNInputs
+
+```go
+type KNNInputs struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="KNNInputs">
+<xs:element name="KNNInputs">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:element maxOccurs="unbounded" ref="KNNInput"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type KNNInputs struct {
+
+</xs:element>
+
+#### type KohonenMap
+
+```go
+type KohonenMap struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="KohonenMap">
+<xs:element name="KohonenMap">
+
     <xs:complexType>
       <xs:attribute name="coord1" type="xs:float" use="optional"/>
       <xs:attribute name="coord2" type="xs:float" use="optional"/>
@@ -2521,14 +3626,19 @@ type KNNInputs struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type KohonenMap struct {
+
+</xs:element>
+
+#### type Lag
+
+```go
+type Lag struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Lag">
+<xs:element name="Lag">
+
     <xs:complexType>
       <xs:attribute name="field" type="FIELD-NAME" use="required"/>
       <xs:attribute default="1" name="n" type="xs:positiveInteger"/>
@@ -2537,42 +3647,55 @@ type KohonenMap struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Lag struct {
+
+</xs:element>
+
+#### type Lambda
+
+```go
+type Lambda struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*Lag) expression() {}
+<xs:element name="Lambda">
 
-/*
-  <xs:element name="Lambda">
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:group ref="REAL-ARRAY"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Lambda struct {
+
+</xs:element>
+
+#### type Level
+
+```go
+type Level struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Level">
+<xs:element name="Level">
+
     <xs:complexType>
       <xs:attribute name="alpha" type="REAL-NUMBER" use="optional"/>
       <xs:attribute name="smoothedValue" type="REAL-NUMBER"/>
     </xs:complexType>
-  </xs:element>
-*/
-type Level struct {
+
+</xs:element>
+
+#### type LiftData
+
+```go
+type LiftData struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="LiftData">
+<xs:element name="LiftData">
+
     <xs:complexType>
       <xs:attribute name="rankingQuality" type="NUMBER"/>
       <xs:attribute name="targetFieldDisplayValue" type="xs:string"/>
@@ -2584,14 +3707,19 @@ type Level struct {
         <xs:element minOccurs="0" ref="RandomLiftGraph"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type LiftData struct {
+
+</xs:element>
+
+#### type LiftGraph
+
+```go
+type LiftGraph struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="LiftGraph">
+<xs:element name="LiftGraph">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" ref="BoundaryValueMeans"/>
@@ -2601,28 +3729,38 @@ type LiftData struct {
         <xs:element ref="YCoordinates"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type LiftGraph struct {
+
+</xs:element>
+
+#### type LinearKernelType
+
+```go
+type LinearKernelType struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="LinearKernelType">
+<xs:element name="LinearKernelType">
+
     <xs:complexType>
       <xs:attribute name="description" type="xs:string" use="optional"/>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type LinearKernelType struct {
+
+</xs:element>
+
+#### type LinearNorm
+
+```go
+type LinearNorm struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="LinearNorm">
+<xs:element name="LinearNorm">
+
     <xs:complexType>
       <xs:attribute name="norm" type="NUMBER" use="required"/>
       <xs:attribute name="orig" type="NUMBER" use="required"/>
@@ -2630,29 +3768,62 @@ type LinearKernelType struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type LinearNorm struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-/*
-  <xs:element name="LocalTransformations">
+</xs:element>
+
+#### type LinkFunction
+
+```go
+type LinkFunction string
+```
+
+<xs:simpleType name="LINK-FUNCTION">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="cloglog"/>
+      <xs:enumeration value="identity"/>
+      <xs:enumeration value="log"/>
+      <xs:enumeration value="logc"/>
+      <xs:enumeration value="logit"/>
+      <xs:enumeration value="loglog"/>
+      <xs:enumeration value="negbin"/>
+      <xs:enumeration value="oddspower"/>
+      <xs:enumeration value="power"/>
+      <xs:enumeration value="probit"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type LocalTransformations
+
+```go
+type LocalTransformations struct {
+	DerivedFields []DerivedField `xml:"DerivedField"`
+	Extensions    []Extension    `xml:"Extension"`
+}
+```
+
+<xs:element name="LocalTransformations">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="DerivedField"/>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type LocalTransformations struct {
-	DerivedFields []DerivedField `xml:"DerivedField"`
-	Extensions    []Extension    `xml:"Extension"`
-}
 
-/*
-  <xs:element name="LognormalDistributionForBN">
+</xs:element>
+
+#### type LognormalDistributionForBN
+
+```go
+type LognormalDistributionForBN struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="LognormalDistributionForBN">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
@@ -2660,28 +3831,38 @@ type LocalTransformations struct {
         <xs:element maxOccurs="1" minOccurs="1" ref="Variance"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type LognormalDistributionForBN struct {
+
+</xs:element>
+
+#### type Lower
+
+```go
+type Lower struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Lower">
+<xs:element name="Lower">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:group ref="EXPRESSION"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Lower struct {
+
+</xs:element>
+
+#### type MapValues
+
+```go
+type MapValues struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="MapValues">
+<xs:element name="MapValues">
+
     <xs:complexType>
       <xs:attribute name="dataType" type="DATATYPE"/>
       <xs:attribute name="defaultValue" type="xs:string"/>
@@ -2696,16 +3877,18 @@ type Lower struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="FieldColumnPair"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type MapValues struct {
-	Extensions []Extension `xml:"Extension"`
+
+</xs:element>
+
+#### type MatCell
+
+```go
+type MatCell struct {
 }
+```
 
-func (*MapValues) expression() {}
+<xs:element name="MatCell">
 
-/*
-  <xs:element name="MatCell">
     <xs:complexType>
       <xs:simpleContent>
         <xs:extension base="xs:string">
@@ -2714,13 +3897,18 @@ func (*MapValues) expression() {}
         </xs:extension>
       </xs:simpleContent>
     </xs:complexType>
-  </xs:element>
-*/
-type MatCell struct {
-}
 
-/*
-  <xs:element name="Matrix">
+</xs:element>
+
+#### type Matrix
+
+```go
+type Matrix struct {
+}
+```
+
+<xs:element name="Matrix">
+
     <xs:complexType>
       <xs:attribute name="diagDefault" type="REAL-NUMBER" use="optional"/>
       <xs:attribute default="any" name="kind" use="optional">
@@ -2740,40 +3928,67 @@ type MatCell struct {
         <xs:group maxOccurs="unbounded" ref="NUM-ARRAY"/>
       </xs:choice>
     </xs:complexType>
-  </xs:element>
-*/
-type Matrix struct {
-}
 
-/*
-  <xs:element name="Mean">
+</xs:element>
+
+#### type Mean
+
+```go
+type Mean struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="Mean">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:group ref="EXPRESSION"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Mean struct {
+
+</xs:element>
+
+#### type MiningBuildTask
+
+```go
+type MiningBuildTask struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="MiningBuildTask">
+<xs:element name="MiningBuildTask">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type MiningBuildTask struct {
+
+</xs:element>
+
+#### type MiningField
+
+```go
+type MiningField struct {
+	HighValue               Number                      `xml:"highValue,attr"`
+	Importance              ProbNumber                  `xml:"importance,attr"`
+	InvalidValueTreatment   InvalidValueTreatmentMethod `xml:"invalidValueTreatment,attr"`
+	LowValue                Number                      `xml:"lowValue,attr"`
+	MissingValueReplacement string                      `xml:"missingValueReplacement"`
+	MissingValueTreatment   MissingValueTreatmentMethod `xml:"missingValueTreatment,attr"`
+	Name                    FieldName                   `xml:"name,attr"`
+	OpType                  OpType                      `xml:"optype,attr"`
+	Outliers                OutlierTreatmentMethod      `xml:"outliers,attr"`
+	UsageType               FieldUsageType              `xml:"usageType,attr"`
+
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="MiningField">
+<xs:element name="MiningField">
+
     <xs:complexType>
       <xs:attribute name="highValue" type="NUMBER"/>
       <xs:attribute name="importance" type="PROB-NUMBER"/>
@@ -2789,25 +4004,39 @@ type MiningBuildTask struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type MiningField struct {
-	HighValue               Number                      `xml:"highValue,attr"`
-	Importance              ProbNumber                  `xml:"importance,attr"`
-	InvalidValueTreatment   InvalidValueTreatmentMethod `xml:"invalidValueTreatment,attr"`
-	LowValue                Number                      `xml:"lowValue,attr"`
-	MissingValueReplacement string                      `xml:"missingValueReplacement"`
-	MissingValueTreatment   MissingValueTreatmentMethod `xml:"missingValueTreatment,attr"`
-	Name                    FieldName                   `xml:"name,attr"`
-	OpType                  OpType                      `xml:"optype,attr"`
-	Outliers                OutlierTreatmentMethod      `xml:"outliers,attr"`
-	UsageType               FieldUsageType              `xml:"usageType,attr"`
 
+</xs:element>
+
+#### type MiningFunction
+
+```go
+type MiningFunction string
+```
+
+<xs:simpleType name="MINING-FUNCTION">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="associationRules"/>
+      <xs:enumeration value="classification"/>
+      <xs:enumeration value="clustering"/>
+      <xs:enumeration value="mixed"/>
+      <xs:enumeration value="regression"/>
+      <xs:enumeration value="sequences"/>
+      <xs:enumeration value="timeSeries"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type MiningModel
+
+```go
+type MiningModel struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="MiningModel">
+<xs:element name="MiningModel">
+
     <xs:complexType>
       <xs:attribute name="algorithmName" type="xs:string" use="optional"/>
       <xs:attribute name="functionName" type="MINING-FUNCTION" use="required"/>
@@ -2830,45 +4059,155 @@ type MiningField struct {
         <xs:element minOccurs="0" ref="Targets"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type MiningModel struct {
-	Extensions []Extension `xml:"Extension"`
+
+</xs:element>
+
+#### type MiningSchema
+
+```go
+type MiningSchema struct {
+	Extensions   []Extension   `xml:"Extension"`
+	MiningFields []MiningField `xml:"MiningField"`
 }
+```
 
-func (*MiningModel) modelElement() {}
+<xs:element name="MiningSchema">
 
-/*
-  <xs:element name="MiningSchema">
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:element maxOccurs="unbounded" ref="MiningField"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type MiningSchema struct {
-	Extensions   []Extension   `xml:"Extension"`
-	MiningFields []MiningField `xml:"MiningField"`
-}
 
-/*
-  <xs:element name="MissingValueWeights">
+</xs:element>
+
+#### type Minkowski
+
+```go
+type Minkowski struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="minkowski">
+
+    <xs:complexType>
+      <xs:attribute name="p-parameter" type="NUMBER" use="required"/>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+      </xs:sequence>
+    </xs:complexType>
+
+</xs:element>
+
+#### type MissingValueStrategy
+
+```go
+type MissingValueStrategy string
+```
+
+<xs:simpleType name="MISSING-VALUE-STRATEGY">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="aggregateNodes"/>
+      <xs:enumeration value="defaultChild"/>
+      <xs:enumeration value="lastPrediction"/>
+      <xs:enumeration value="none"/>
+      <xs:enumeration value="nullPrediction"/>
+      <xs:enumeration value="weightedConfidence"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type MissingValueTreatmentMethod
+
+```go
+type MissingValueTreatmentMethod string
+```
+
+<xs:simpleType name="MISSING-VALUE-TREATMENT-METHOD">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="asIs"/>
+      <xs:enumeration value="asMean"/>
+      <xs:enumeration value="asMedian"/>
+      <xs:enumeration value="asMode"/>
+      <xs:enumeration value="asValue"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type MissingValueWeights
+
+```go
+type MissingValueWeights struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="MissingValueWeights">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:group ref="NUM-ARRAY"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type MissingValueWeights struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-/*
-  <xs:element name="ModelExplanation">
+</xs:element>
+
+#### type ModelElement
+
+```go
+type ModelElement interface {
+	// contains filtered or unexported methods
+}
+```
+
+<xs:group name="MODEL-ELEMENT">
+
+    <xs:choice>
+      <xs:element ref="AssociationModel"/>
+      <xs:element ref="BaselineModel"/>
+      <xs:element ref="BayesianNetworkModel"/>
+      <xs:element ref="ClusteringModel"/>
+      <xs:element ref="GaussianProcessModel"/>
+      <xs:element ref="GeneralRegressionModel"/>
+      <xs:element ref="MiningModel"/>
+      <xs:element ref="NaiveBayesModel"/>
+      <xs:element ref="NearestNeighborModel"/>
+      <xs:element ref="NeuralNetwork"/>
+      <xs:element ref="RegressionModel"/>
+      <xs:element ref="RuleSetModel"/>
+      <xs:element ref="Scorecard"/>
+      <xs:element ref="SequenceModel"/>
+      <xs:element ref="SupportVectorMachineModel"/>
+      <xs:element ref="TextModel"/>
+      <xs:element ref="TimeSeriesModel"/>
+      <xs:element ref="TreeModel"/>
+    </xs:choice>
+
+</xs:group>
+
+#### func  GetModelElement
+
+```go
+func GetModelElement(name string) (ModelElement, bool)
+```
+
+#### type ModelExplanation
+
+```go
+type ModelExplanation struct {
+	// TODO: ModelQuality
+	Correlations *Correlations `xml:"Correlations"`
+	Extensions   []Extension   `xml:"Extension"`
+}
+```
+
+<xs:element name="ModelExplanation">
+
     <xs:complexType>
       <xs:sequence>
         <xs:choice>
@@ -2879,30 +4218,40 @@ type MissingValueWeights struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ModelExplanation struct {
-	// TODO: ModelQuality
-	Correlations *Correlations `xml:"Correlations"`
-	Extensions   []Extension   `xml:"Extension"`
-}
 
-/*
-  <xs:element name="ModelLiftGraph">
+</xs:element>
+
+#### type ModelLiftGraph
+
+```go
+type ModelLiftGraph struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="ModelLiftGraph">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:element ref="LiftGraph"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ModelLiftGraph struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-/*
-  <xs:element name="ModelStats">
+</xs:element>
+
+#### type ModelStats
+
+```go
+type ModelStats struct {
+	Extensions        []Extension         `xml:"Extension"`
+	MultivariateStats []MultivariateStats `xml:"MultivariateStats"`
+	UnivariateStats   []UnivariateStats   `xml:"UnivariateStats"`
+}
+```
+
+<xs:element name="ModelStats">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
@@ -2910,16 +4259,24 @@ type ModelLiftGraph struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="UnivariateStats"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ModelStats struct {
-	Extensions        []Extension         `xml:"Extension"`
-	MultivariateStats []MultivariateStats `xml:"MultivariateStats"`
-	UnivariateStats   []UnivariateStats   `xml:"UnivariateStats"`
-}
 
-/*
-  <xs:element name="ModelVerification">
+</xs:element>
+
+#### type ModelVerification
+
+```go
+type ModelVerification struct {
+	FieldCount  IntegerNumber `xml:"fieldCount,attr"`
+	RecordCount IntegerNumber `xml:"recordCount,attr"`
+
+	Extensions         []Extension        `xml:"Extension"`
+	InlineTable        InlineTable        `xml:"InlineTable"`
+	VerificationFields VerificationFields `xml:"VerificationFields"`
+}
+```
+
+<xs:element name="ModelVerification">
+
     <xs:complexType>
       <xs:attribute name="fieldCount" type="INT-NUMBER" use="optional"/>
       <xs:attribute name="recordCount" type="INT-NUMBER" use="optional"/>
@@ -2929,19 +4286,42 @@ type ModelStats struct {
         <xs:element ref="VerificationFields"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ModelVerification struct {
-	FieldCount  IntegerNumber `xml:"fieldCount,attr"`
-	RecordCount IntegerNumber `xml:"recordCount,attr"`
 
-	Extensions         []Extension        `xml:"Extension"`
-	InlineTable        InlineTable        `xml:"InlineTable"`
-	VerificationFields VerificationFields `xml:"VerificationFields"`
+</xs:element>
+
+#### type MultipleModelMethod
+
+```go
+type MultipleModelMethod string
+```
+
+<xs:simpleType name="MULTIPLE-MODEL-METHOD">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="average"/>
+      <xs:enumeration value="majorityVote"/>
+      <xs:enumeration value="max"/>
+      <xs:enumeration value="median"/>
+      <xs:enumeration value="modelChain"/>
+      <xs:enumeration value="selectAll"/>
+      <xs:enumeration value="selectFirst"/>
+      <xs:enumeration value="sum"/>
+      <xs:enumeration value="weightedAverage"/>
+      <xs:enumeration value="weightedMajorityVote"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type MultivariateStat
+
+```go
+type MultivariateStat struct {
+	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="MultivariateStat">
+<xs:element name="MultivariateStat">
+
     <xs:complexType>
       <xs:attribute name="category" type="xs:string"/>
       <xs:attribute name="chiSquareValue" type="NUMBER"/>
@@ -2963,14 +4343,22 @@ type ModelVerification struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type MultivariateStat struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-/*
-  <xs:element name="MultivariateStats">
+</xs:element>
+
+#### type MultivariateStats
+
+```go
+type MultivariateStats struct {
+	TargetCategory string `xml:"targetCategory,attr"`
+
+	MultivariateStats []MultivariateStat `xml:"MultivariateStat"`
+	Extensions        []Extension        `xml:"Extension"`
+}
+```
+
+<xs:element name="MultivariateStats">
+
     <xs:complexType>
       <xs:attribute name="targetCategory" type="xs:string" use="optional"/>
       <xs:sequence>
@@ -2978,17 +4366,59 @@ type MultivariateStat struct {
         <xs:element maxOccurs="unbounded" ref="MultivariateStat"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type MultivariateStats struct {
-	TargetCategory string `xml:"targetCategory,attr"`
 
-	MultivariateStats []MultivariateStat `xml:"MultivariateStat"`
-	Extensions        []Extension        `xml:"Extension"`
+</xs:element>
+
+#### type NNNeuronID
+
+```go
+type NNNeuronID string
+```
+
+<xs:simpleType name="NN-NEURON-ID">
+
+    <xs:restriction base="xs:string"/>
+
+</xs:simpleType>
+
+#### type NNNeuronIDRef
+
+```go
+type NNNeuronIDRef string
+```
+
+<xs:simpleType name="NN-NEURON-IDREF">
+
+    <xs:restriction base="xs:string"/>
+
+</xs:simpleType>
+
+#### type NNNormalizationMethod
+
+```go
+type NNNormalizationMethod string
+```
+
+<xs:simpleType name="NN-NORMALIZATION-METHOD">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="none"/>
+      <xs:enumeration value="simplemax"/>
+      <xs:enumeration value="softmax"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type NaiveBayesModel
+
+```go
+type NaiveBayesModel struct {
+	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="NaiveBayesModel">
+<xs:element name="NaiveBayesModel">
+
     <xs:complexType>
       <xs:attribute name="algorithmName" type="xs:string"/>
       <xs:attribute name="functionName" type="MINING-FUNCTION" use="required"/>
@@ -3009,16 +4439,19 @@ type MultivariateStats struct {
         <xs:element minOccurs="0" ref="Targets"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type NaiveBayesModel struct {
+
+</xs:element>
+
+#### type NearestNeighborModel
+
+```go
+type NearestNeighborModel struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*NaiveBayesModel) modelElement() {}
+<xs:element name="NearestNeighborModel">
 
-/*
-  <xs:element name="NearestNeighborModel">
     <xs:complexType>
       <xs:attribute name="algorithmName" type="xs:string"/>
       <xs:attribute default="majorityVote" name="categoricalScoringMethod" type="CAT-SCORING-METHOD"/>
@@ -3044,16 +4477,19 @@ func (*NaiveBayesModel) modelElement() {}
         <xs:element ref="TrainingInstances"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type NearestNeighborModel struct {
+
+</xs:element>
+
+#### type NeuralInput
+
+```go
+type NeuralInput struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*NearestNeighborModel) modelElement() {}
+<xs:element name="NeuralInput">
 
-/*
-  <xs:element name="NeuralInput">
     <xs:complexType>
       <xs:attribute name="id" type="NN-NEURON-ID" use="required"/>
       <xs:sequence>
@@ -3061,14 +4497,19 @@ func (*NearestNeighborModel) modelElement() {}
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type NeuralInput struct {
+
+</xs:element>
+
+#### type NeuralInputs
+
+```go
+type NeuralInputs struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="NeuralInputs">
+<xs:element name="NeuralInputs">
+
     <xs:complexType>
       <xs:attribute name="numberOfInputs" type="xs:nonNegativeInteger"/>
       <xs:sequence>
@@ -3076,14 +4517,19 @@ type NeuralInput struct {
         <xs:element maxOccurs="unbounded" ref="NeuralInput"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type NeuralInputs struct {
+
+</xs:element>
+
+#### type NeuralLayer
+
+```go
+type NeuralLayer struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="NeuralLayer">
+<xs:element name="NeuralLayer">
+
     <xs:complexType>
       <xs:attribute name="activationFunction" type="ACTIVATION-FUNCTION"/>
       <xs:attribute name="altitude" type="REAL-NUMBER"/>
@@ -3096,14 +4542,19 @@ type NeuralInputs struct {
         <xs:element maxOccurs="unbounded" ref="Neuron"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type NeuralLayer struct {
+
+</xs:element>
+
+#### type NeuralNetwork
+
+```go
+type NeuralNetwork struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="NeuralNetwork">
+<xs:element name="NeuralNetwork">
+
     <xs:complexType>
       <xs:attribute name="activationFunction" type="ACTIVATION-FUNCTION" use="required"/>
       <xs:attribute name="algorithmName" type="xs:string"/>
@@ -3130,16 +4581,19 @@ type NeuralLayer struct {
         <xs:element minOccurs="0" ref="Targets"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type NeuralNetwork struct {
+
+</xs:element>
+
+#### type NeuralOutput
+
+```go
+type NeuralOutput struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*NeuralNetwork) modelElement() {}
+<xs:element name="NeuralOutput">
 
-/*
-  <xs:element name="NeuralOutput">
     <xs:complexType>
       <xs:attribute name="outputNeuron" type="NN-NEURON-IDREF" use="required"/>
       <xs:sequence>
@@ -3147,14 +4601,19 @@ func (*NeuralNetwork) modelElement() {}
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type NeuralOutput struct {
+
+</xs:element>
+
+#### type NeuralOutputs
+
+```go
+type NeuralOutputs struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="NeuralOutputs">
+<xs:element name="NeuralOutputs">
+
     <xs:complexType>
       <xs:attribute name="numberOfOutputs" type="xs:nonNegativeInteger"/>
       <xs:sequence>
@@ -3162,14 +4621,19 @@ type NeuralOutput struct {
         <xs:element maxOccurs="unbounded" ref="NeuralOutput"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type NeuralOutputs struct {
+
+</xs:element>
+
+#### type Neuron
+
+```go
+type Neuron struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Neuron">
+<xs:element name="Neuron">
+
     <xs:complexType>
       <xs:attribute name="altitude" type="REAL-NUMBER"/>
       <xs:attribute name="bias" type="REAL-NUMBER"/>
@@ -3180,14 +4644,44 @@ type NeuralOutputs struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Neuron struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-/*
-  <xs:element name="Node">
+</xs:element>
+
+#### type NoTrueChildStrategy
+
+```go
+type NoTrueChildStrategy string
+```
+
+<xs:simpleType name="NO-TRUE-CHILD-STRATEGY">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="returnLastPrediction"/>
+      <xs:enumeration value="returnNullPrediction"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type Node
+
+```go
+type Node struct {
+	DefaultChild string `xml:"defaultChild,attr"`
+	ID           string `xml:"id,attr"`
+	RecordCount  Number `xml:"recordCount,attr"`
+	Score        string `xml:"score,attr"`
+
+	EmbeddedModel      EmbeddedModel
+	Nodes              []Node              `xml:"Node"`
+	Partition          *Partition          `xml:"Partition"`
+	ScoreDistributions []ScoreDistribution `xml:"ScoreDistribution"`
+	Extensions         []Extension         `xml:"Extension"`
+	Predicate          Predicate
+}
+```
+
+<xs:element name="Node">
+
     <xs:complexType>
       <xs:attribute name="defaultChild" type="xs:string"/>
       <xs:attribute name="id" type="xs:string"/>
@@ -3206,106 +4700,26 @@ type Neuron struct {
         <xs:group ref="PREDICATE"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Node struct {
-	DefaultChild string `xml:"defaultChild,attr"`
-	ID           string `xml:"id,attr"`
-	RecordCount  Number `xml:"recordCount,attr"`
-	Score        string `xml:"score,attr"`
 
-	EmbeddedModel      EmbeddedModel
-	Nodes              []Node              `xml:"Node"`
-	Partition          *Partition          `xml:"Partition"`
-	ScoreDistributions []ScoreDistribution `xml:"ScoreDistribution"`
-	Extensions         []Extension         `xml:"Extension"`
-	Predicate          Predicate
+</xs:element>
+
+#### func (*Node) UnmarshalXML
+
+```go
+func (x *Node) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error
+```
+UnmarshalXML implements the xml.Unmarshaler interface.
+
+#### type NormContinuous
+
+```go
+type NormContinuous struct {
+	Extensions []Extension `xml:"Extension"`
 }
+```
 
-// UnmarshalXML implements the xml.Unmarshaler interface.
-func (x *Node) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
-	var err error
+<xs:element name="NormContinuous">
 
-	for _, attr := range start.Attr {
-		switch attr.Name.Local {
-		case "defaultChild":
-			x.DefaultChild = attr.Value
-		case "id":
-			x.ID = attr.Value
-		case "recordCount":
-			if len(attr.Value) > 0 {
-				v, err := strconv.ParseFloat(attr.Value, 64)
-				if err != nil {
-					return err
-				}
-
-				x.RecordCount = Number(v)
-			}
-		case "score":
-			x.Score = attr.Value
-		}
-	}
-
-	for {
-		var token xml.Token
-
-		token, err = decoder.Token()
-		if err != nil {
-			return err
-		}
-		switch tok := token.(type) {
-		case xml.StartElement:
-			switch tok.Name.Local {
-			case "Extension":
-				var e Extension
-				err = decoder.DecodeElement(&e, &tok)
-				if err != nil {
-					return err
-				}
-				x.Extensions = append(x.Extensions, e)
-			case "Node":
-				var node Node
-				err = decoder.DecodeElement(&node, &tok)
-				if err != nil {
-					return err
-				}
-				x.Nodes = append(x.Nodes, node)
-			case "ScoreDistribution":
-				var node ScoreDistribution
-				err = decoder.DecodeElement(&node, &tok)
-				if err != nil {
-					return err
-				}
-				x.ScoreDistributions = append(x.ScoreDistributions, node)
-			case "Partition":
-				err = decoder.DecodeElement(&x.Partition, &tok)
-				if err != nil {
-					return err
-				}
-			default:
-				if item, ok := GetPredicate(tok.Name.Local); ok {
-					err = decoder.DecodeElement(item, &tok)
-					if err != nil {
-						return err
-					}
-					x.Predicate = item
-				} else if item, ok := GetEmbeddedModel(tok.Name.Local); ok {
-					err = decoder.DecodeElement(item, &tok)
-					if err != nil {
-						return err
-					}
-					x.EmbeddedModel = item
-				}
-			}
-
-		case xml.EndElement:
-			return nil
-		}
-	}
-}
-
-/*
-  <xs:element name="NormContinuous">
     <xs:complexType>
       <xs:attribute name="field" type="FIELD-NAME" use="required"/>
       <xs:attribute name="mapMissingTo" type="NUMBER"/>
@@ -3315,16 +4729,19 @@ func (x *Node) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error 
         <xs:element maxOccurs="unbounded" minOccurs="2" ref="LinearNorm"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type NormContinuous struct {
+
+</xs:element>
+
+#### type NormDiscrete
+
+```go
+type NormDiscrete struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*NormContinuous) expression() {}
+<xs:element name="NormDiscrete">
 
-/*
-  <xs:element name="NormDiscrete">
     <xs:complexType>
       <xs:attribute name="field" type="FIELD-NAME" use="required"/>
       <xs:attribute name="mapMissingTo" type="NUMBER"/>
@@ -3333,16 +4750,19 @@ func (*NormContinuous) expression() {}
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type NormDiscrete struct {
+
+</xs:element>
+
+#### type NormalDistributionForBN
+
+```go
+type NormalDistributionForBN struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*NormDiscrete) expression() {}
+<xs:element name="NormalDistributionForBN">
 
-/*
-  <xs:element name="NormalDistributionForBN">
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
@@ -3350,19 +4770,61 @@ func (*NormDiscrete) expression() {}
         <xs:element maxOccurs="1" minOccurs="1" ref="Variance"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type NormalDistributionForBN struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-/*
-  <xs:element name="NormalizedCountTable" type="COUNT-TABLE-TYPE"/>
-*/
+</xs:element>
+
+#### type NormalizedCountTable
+
+```go
 type NormalizedCountTable CountTableType
+```
 
-/*
-  <xs:element name="NumericInfo">
+<xs:element name="NormalizedCountTable" type="COUNT-TABLE-TYPE"/>
+
+#### type NumArray
+
+```go
+type NumArray Array
+```
+
+<xs:group name="NUM-ARRAY">
+
+    <xs:choice>
+      <xs:element ref="Array"/>
+    </xs:choice>
+
+</xs:group>
+
+#### type Number
+
+```go
+type Number float64
+```
+
+<xs:simpleType name="NUMBER">
+
+    <xs:restriction base="xs:double"/>
+
+</xs:simpleType>
+
+#### type NumericInfo
+
+```go
+type NumericInfo struct {
+	InterQuartileRange Number `xml:"interQuartileRange,attr"`
+	Maximum            Number `xml:"maximum,attr"`
+	Mean               Number `xml:"mean,attr"`
+	Median             Number `xml:"median,attr"`
+	Minimum            Number `xml:"minimum,attr"`
+	StandardDeviation  Number `xml:"standardDeviation"`
+
+	Extensions []Extension `xml:"Extension"`
+	Quantiles  []Quantile  `xml:"Quantile"`
+}
+```
+
+<xs:element name="NumericInfo">
+
     <xs:complexType>
       <xs:attribute name="interQuartileRange" type="NUMBER"/>
       <xs:attribute name="maximum" type="NUMBER"/>
@@ -3375,22 +4837,19 @@ type NormalizedCountTable CountTableType
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Quantile"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type NumericInfo struct {
-	InterQuartileRange Number `xml:"interQuartileRange,attr"`
-	Maximum            Number `xml:"maximum,attr"`
-	Mean               Number `xml:"mean,attr"`
-	Median             Number `xml:"median,attr"`
-	Minimum            Number `xml:"minimum,attr"`
-	StandardDeviation  Number `xml:"standardDeviation"`
 
+</xs:element>
+
+#### type NumericPredictor
+
+```go
+type NumericPredictor struct {
 	Extensions []Extension `xml:"Extension"`
-	Quantiles  []Quantile  `xml:"Quantile"`
 }
+```
 
-/*
-  <xs:element name="NumericPredictor">
+<xs:element name="NumericPredictor">
+
     <xs:complexType>
       <xs:attribute name="coefficient" type="REAL-NUMBER" use="required"/>
       <xs:attribute default="1" name="exponent" type="INT-NUMBER"/>
@@ -3399,43 +4858,90 @@ type NumericInfo struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type NumericPredictor struct {
+
+</xs:element>
+
+#### type OpType
+
+```go
+type OpType string
+```
+
+<xs:simpleType name="OPTYPE">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="categorical"/>
+      <xs:enumeration value="continuous"/>
+      <xs:enumeration value="ordinal"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type OptimumLiftGraph
+
+```go
+type OptimumLiftGraph struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="OptimumLiftGraph">
+<xs:element name="OptimumLiftGraph">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:element ref="LiftGraph"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type OptimumLiftGraph struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-/*
-  <xs:element name="Output">
+</xs:element>
+
+#### type OutlierTreatmentMethod
+
+```go
+type OutlierTreatmentMethod string
+```
+
+<xs:simpleType name="OUTLIER-TREATMENT-METHOD">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="asExtremeValues"/>
+      <xs:enumeration value="asIs"/>
+      <xs:enumeration value="asMissingValues"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type Output
+
+```go
+type Output struct {
+	Extensions []Extension   `xml:"Extension"`
+	Fields     []OutputField `xml:"OutputField"`
+}
+```
+
+<xs:element name="Output">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:element maxOccurs="unbounded" minOccurs="1" ref="OutputField"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Output struct {
-	Extensions []Extension   `xml:"Extension"`
-	Fields     []OutputField `xml:"OutputField"`
-}
 
-/*
-  <xs:element name="OutputField">
+</xs:element>
+
+#### type OutputField
+
+```go
+type OutputField struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="OutputField">
+
     <xs:complexType>
       <xs:attribute default="exclusiveRecommendation" name="algorithm">
         <xs:simpleType>
@@ -3484,53 +4990,19 @@ type Output struct {
         </xs:sequence>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type OutputField struct {
-	Algorithm     OutputFieldAlgorithm `xml:"algorithm,attr"`
-	DataType      DataType             `xml:"dataType,attr"`
-	DisplayName   string               `xml:"displayName,attr"`
-	Feature       ResultFeature        `xml:"feature,attr"`
-	IsMultiValued int                  `xml:"isMultiValued,attr"`
-	Name          FieldName            `xml:"name,attr"`
-	OpType        OpType               `xml:"opType,attr"`
-	Rank          int                  `xml:"rank,attr"`
-	RankBasis     RankBasis            `xml:"rankBasis,attr"`
-	RankOrder     RankOrder            `xml:"rankOrder,attr"`
-	RuleFeature   RuleFeature          `xml:"ruleFeature,attr"`
-	SegmentID     string               `xml:"segmentId,attr"`
-	TargetField   FieldName            `xml:"targetField,attr"`
-	Value         string               `xml:"value,attr"`
-	Extensions    []Extension          `xml:"Extension"`
+
+</xs:element>
+
+#### type PCell
+
+```go
+type PCell struct {
+	Extensions []Extension `xml:"Extension"`
 }
+```
 
-type RankOrder string
+<xs:element name="PCell">
 
-const (
-	RankOrderAscending  = RankOrder("ascending")
-	RankOrderDescending = RankOrder("descending")
-)
-
-type RankBasis string
-
-const (
-	RankBasisAffinity   = RankBasis("affinity")
-	RankBasisConfidence = RankBasis("confidence")
-	RankBasisLeverage   = RankBasis("leverage")
-	RankBasisLift       = RankBasis("lift")
-	RankBasisSupport    = RankBasis("support")
-)
-
-type OutputFieldAlgorithm string
-
-const (
-	OutputFieldAlgorithmExclusiveRecommendation = OutputFieldAlgorithm("exclusiveRecommendation")
-	OutputFieldAlgorithmRecommendation          = OutputFieldAlgorithm("recommendation")
-	OutputFieldAlgorithmRuleAssociation         = OutputFieldAlgorithm("ruleAssociation")
-)
-
-/*
-  <xs:element name="PCell">
     <xs:complexType>
       <xs:attribute name="beta" type="REAL-NUMBER" use="required"/>
       <xs:attribute name="df" type="INT-NUMBER"/>
@@ -3540,14 +5012,19 @@ const (
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type PCell struct {
+
+</xs:element>
+
+#### type PCovCell
+
+```go
+type PCovCell struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="PCovCell">
+<xs:element name="PCovCell">
+
     <xs:complexType>
       <xs:attribute name="pCol" type="xs:string" use="required"/>
       <xs:attribute name="pRow" type="xs:string" use="required"/>
@@ -3559,14 +5036,19 @@ type PCell struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type PCovCell struct {
+
+</xs:element>
+
+#### type PCovMatrix
+
+```go
+type PCovMatrix struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="PCovMatrix">
+<xs:element name="PCovMatrix">
+
     <xs:complexType>
       <xs:attribute name="type">
         <xs:simpleType>
@@ -3581,14 +5063,26 @@ type PCovCell struct {
         <xs:element maxOccurs="unbounded" ref="PCovCell"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type PCovMatrix struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-/*
-  <xs:element name="PMML">
+</xs:element>
+
+#### type PMML
+
+```go
+type PMML struct {
+	Version string `xml:"version,attr"`
+
+	DataDictionary           DataDictionary            `xml:"DataDictionary"`
+	Extensions               []Extension               `xml:"Extension"`
+	Header                   Header                    `xml:"Header"`
+	MiningBuildTask          *MiningBuildTask          `xml:"MiningBuildTask"`
+	TransformationDictionary *TransformationDictionary `xml:"TransformationDictionary"`
+	Models                   []ModelElement
+}
+```
+
+<xs:element name="PMML">
+
     <xs:complexType>
       <xs:attribute name="version" type="xs:string" use="required"/>
       <xs:sequence>
@@ -3602,72 +5096,25 @@ type PCovMatrix struct {
         </xs:sequence>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type PMML struct {
-	Version string `xml:"version,attr"`
 
-	DataDictionary           DataDictionary            `xml:"DataDictionary"`
-	Extensions               []Extension               `xml:"Extension"`
-	Header                   Header                    `xml:"Header"`
-	MiningBuildTask          *MiningBuildTask          `xml:"MiningBuildTask"`
-	TransformationDictionary *TransformationDictionary `xml:"TransformationDictionary"`
-	Models                   []ModelElement
+</xs:element>
+
+#### func (*PMML) UnmarshalXML
+
+```go
+func (x *PMML) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error
+```
+
+#### type PPCell
+
+```go
+type PPCell struct {
+	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (x *PMML) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
-	var err error
+<xs:element name="PPCell">
 
-	for _, attr := range start.Attr {
-		switch attr.Name.Local {
-		case "version":
-			x.Version = attr.Value
-		}
-	}
-
-	for {
-		var token xml.Token
-
-		token, err = decoder.Token()
-		if err != nil {
-			return err
-		}
-		switch tok := token.(type) {
-		case xml.StartElement:
-			switch tok.Name.Local {
-			case "Header":
-				err = decoder.DecodeElement(&x.Header, &tok)
-				if err != nil {
-					return err
-				}
-			case "DataDictionary":
-				err = decoder.DecodeElement(&x.DataDictionary, &tok)
-				if err != nil {
-					return err
-				}
-			case "TransformationDictionary":
-				err = decoder.DecodeElement(&x.TransformationDictionary, &tok)
-				if err != nil {
-					return err
-				}
-			default:
-				if model, ok := GetModelElement(tok.Name.Local); ok {
-					err = decoder.DecodeElement(model, &tok)
-					if err != nil {
-						return err
-					}
-
-					x.Models = append(x.Models, model)
-				}
-			}
-		case xml.EndElement:
-			return nil
-		}
-	}
-}
-
-/*
-  <xs:element name="PPCell">
     <xs:complexType>
       <xs:attribute name="parameterName" type="xs:string" use="required"/>
       <xs:attribute name="predictorName" type="FIELD-NAME" use="required"/>
@@ -3677,28 +5124,38 @@ func (x *PMML) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error 
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type PPCell struct {
+
+</xs:element>
+
+#### type PPMatrix
+
+```go
+type PPMatrix struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="PPMatrix">
+<xs:element name="PPMatrix">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="PPCell"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type PPMatrix struct {
+
+</xs:element>
+
+#### type PairCounts
+
+```go
+type PairCounts struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="PairCounts">
+<xs:element name="PairCounts">
+
     <xs:complexType>
       <xs:attribute name="value" type="xs:string" use="required"/>
       <xs:sequence>
@@ -3706,28 +5163,38 @@ type PPMatrix struct {
         <xs:element ref="TargetValueCounts"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type PairCounts struct {
+
+</xs:element>
+
+#### type ParamMatrix
+
+```go
+type ParamMatrix struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="ParamMatrix">
+<xs:element name="ParamMatrix">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="PCell"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ParamMatrix struct {
+
+</xs:element>
+
+#### type Parameter
+
+```go
+type Parameter struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Parameter">
+<xs:element name="Parameter">
+
     <xs:complexType>
       <xs:attribute name="label" type="xs:string"/>
       <xs:attribute name="name" type="xs:string" use="required"/>
@@ -3736,40 +5203,55 @@ type ParamMatrix struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Parameter struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-/*
-  <xs:element name="ParameterField">
+</xs:element>
+
+#### type ParameterField
+
+```go
+type ParameterField struct {
+}
+```
+
+<xs:element name="ParameterField">
+
     <xs:complexType>
       <xs:attribute name="dataType" type="DATATYPE"/>
       <xs:attribute name="name" type="xs:string" use="required"/>
       <xs:attribute name="optype" type="OPTYPE"/>
     </xs:complexType>
-  </xs:element>
-*/
-type ParameterField struct {
-}
 
-/*
-  <xs:element name="ParameterList">
+</xs:element>
+
+#### type ParameterList
+
+```go
+type ParameterList struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="ParameterList">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Parameter"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ParameterList struct {
+
+</xs:element>
+
+#### type ParentValue
+
+```go
+type ParentValue struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="ParentValue">
+<xs:element name="ParentValue">
+
     <xs:complexType>
       <xs:attribute name="parent" type="FIELD-NAME" use="required"/>
       <xs:attribute name="value" type="xs:string" use="required"/>
@@ -3777,14 +5259,19 @@ type ParameterList struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ParentValue struct {
+
+</xs:element>
+
+#### type Partition
+
+```go
+type Partition struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Partition">
+<xs:element name="Partition">
+
     <xs:complexType>
       <xs:attribute name="name" type="xs:string" use="required"/>
       <xs:attribute name="size" type="NUMBER"/>
@@ -3793,14 +5280,19 @@ type ParentValue struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="PartitionFieldStats"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Partition struct {
+
+</xs:element>
+
+#### type PartitionFieldStats
+
+```go
+type PartitionFieldStats struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="PartitionFieldStats">
+<xs:element name="PartitionFieldStats">
+
     <xs:complexType>
       <xs:attribute name="field" type="FIELD-NAME" use="required"/>
       <xs:attribute default="0" name="weighted">
@@ -3818,30 +5310,50 @@ type Partition struct {
         <xs:group minOccurs="0" ref="FrequenciesType"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type PartitionFieldStats struct {
+
+</xs:element>
+
+#### type PercentageNumber
+
+```go
+type PercentageNumber float64
+```
+
+<xs:simpleType name="PERCENTAGE-NUMBER">
+
+    <xs:restriction base="xs:double"/>
+
+</xs:simpleType>
+
+#### type PoissonDistribution
+
+```go
+type PoissonDistribution struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="PoissonDistribution">
+<xs:element name="PoissonDistribution">
+
     <xs:complexType>
       <xs:attribute name="mean" type="REAL-NUMBER" use="required"/>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type PoissonDistribution struct {
+
+</xs:element>
+
+#### type PolynomialKernelType
+
+```go
+type PolynomialKernelType struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*PoissonDistribution) continuousDistributionType() {}
+<xs:element name="PolynomialKernelType">
 
-/*
-  <xs:element name="PolynomialKernelType">
     <xs:complexType>
       <xs:attribute default="1" name="coef0" type="REAL-NUMBER" use="optional"/>
       <xs:attribute default="1" name="degree" type="REAL-NUMBER" use="optional"/>
@@ -3851,14 +5363,45 @@ func (*PoissonDistribution) continuousDistributionType() {}
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type PolynomialKernelType struct {
+
+</xs:element>
+
+#### type Predicate
+
+```go
+type Predicate interface {
+	// contains filtered or unexported methods
+}
+```
+
+<xs:group name="PREDICATE">
+
+    <xs:choice>
+      <xs:element ref="CompoundPredicate"/>
+      <xs:element ref="False"/>
+      <xs:element ref="SimplePredicate"/>
+      <xs:element ref="SimpleSetPredicate"/>
+      <xs:element ref="True"/>
+    </xs:choice>
+
+</xs:group>
+
+#### func  GetPredicate
+
+```go
+func GetPredicate(name string) (Predicate, bool)
+```
+
+#### type PredictiveModelQuality
+
+```go
+type PredictiveModelQuality struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="PredictiveModelQuality">
+<xs:element name="PredictiveModelQuality">
+
     <xs:complexType>
       <xs:attribute name="AIC" type="NUMBER" use="optional"/>
       <xs:attribute name="AICc" type="NUMBER" use="optional"/>
@@ -3894,14 +5437,19 @@ type PolynomialKernelType struct {
         <xs:element minOccurs="0" ref="ROC"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type PredictiveModelQuality struct {
+
+</xs:element>
+
+#### type Predictor
+
+```go
+type Predictor struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Predictor">
+<xs:element name="Predictor">
+
     <xs:complexType>
       <xs:attribute name="contrastMatrixType" type="xs:string"/>
       <xs:attribute name="name" type="FIELD-NAME" use="required"/>
@@ -3911,14 +5459,19 @@ type PredictiveModelQuality struct {
         <xs:element minOccurs="0" ref="Matrix"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Predictor struct {
+
+</xs:element>
+
+#### type PredictorTerm
+
+```go
+type PredictorTerm struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="PredictorTerm">
+<xs:element name="PredictorTerm">
+
     <xs:complexType>
       <xs:attribute name="coefficient" type="REAL-NUMBER" use="required"/>
       <xs:attribute name="name" type="FIELD-NAME"/>
@@ -3927,14 +5480,34 @@ type Predictor struct {
         <xs:element maxOccurs="unbounded" minOccurs="1" ref="FieldRef"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type PredictorTerm struct {
+
+</xs:element>
+
+#### type ProbNumber
+
+```go
+type ProbNumber float64
+```
+
+<xs:simpleType name="PROB-NUMBER">
+
+    <xs:restriction base="xs:double"/>
+
+</xs:simpleType>
+
+#### type Quantile
+
+```go
+type Quantile struct {
+	QuantileLimit PercentageNumber `xml:"quantileLimit,attr"`
+	QuantileValue Number           `xml:"quantileValue,attr"`
+
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Quantile">
+<xs:element name="Quantile">
+
     <xs:complexType>
       <xs:attribute name="quantileLimit" type="PERCENTAGE-NUMBER" use="required"/>
       <xs:attribute name="quantileValue" type="NUMBER" use="required"/>
@@ -3942,42 +5515,19 @@ type PredictorTerm struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Quantile struct {
-	QuantileLimit PercentageNumber `xml:"quantileLimit,attr"`
-	QuantileValue Number           `xml:"quantileValue,attr"`
 
+</xs:element>
+
+#### type ROC
+
+```go
+type ROC struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="REAL-Entries">
-    <xs:simpleType>
-      <xs:list itemType="xs:double"/>
-    </xs:simpleType>
-  </xs:element>
-*/
-type RealEntries struct {
-}
+<xs:element name="ROC">
 
-/*
-  <xs:element name="REAL-SparseArray">
-    <xs:complexType>
-      <xs:attribute default="0" name="defaultValue" type="REAL-NUMBER" use="optional"/>
-      <xs:attribute name="n" type="INT-NUMBER" use="optional"/>
-      <xs:sequence>
-        <xs:element minOccurs="0" ref="Indices"/>
-        <xs:element minOccurs="0" ref="REAL-Entries"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-*/
-type RealSparseArray struct {
-}
-
-/*
-  <xs:element name="ROC">
     <xs:complexType>
       <xs:attribute name="negativeTargetFieldDisplayValue" type="xs:string"/>
       <xs:attribute name="negativeTargetFieldValue" type="xs:string"/>
@@ -3988,14 +5538,19 @@ type RealSparseArray struct {
         <xs:element ref="ROCGraph"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ROC struct {
+
+</xs:element>
+
+#### type ROCGraph
+
+```go
+type ROCGraph struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="ROCGraph">
+<xs:element name="ROCGraph">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" ref="BoundaryValues"/>
@@ -4004,14 +5559,19 @@ type ROC struct {
         <xs:element ref="YCoordinates"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ROCGraph struct {
+
+</xs:element>
+
+#### type RadialBasisKernel
+
+```go
+type RadialBasisKernel struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="RadialBasisKernel">
+<xs:element name="RadialBasisKernel">
+
     <xs:complexType>
       <xs:attribute name="description" type="xs:string" use="optional"/>
       <xs:attribute default="1" name="gamma" type="REAL-NUMBER" use="optional"/>
@@ -4021,14 +5581,19 @@ type ROCGraph struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type RadialBasisKernel struct {
+
+</xs:element>
+
+#### type RadialBasisKernelType
+
+```go
+type RadialBasisKernelType struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="RadialBasisKernelType">
+<xs:element name="RadialBasisKernelType">
+
     <xs:complexType>
       <xs:attribute name="description" type="xs:string" use="optional"/>
       <xs:attribute default="1" name="gamma" type="REAL-NUMBER" use="optional"/>
@@ -4036,28 +5601,99 @@ type RadialBasisKernel struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type RadialBasisKernelType struct {
+
+</xs:element>
+
+#### type RandomLiftGraph
+
+```go
+type RandomLiftGraph struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="RandomLiftGraph">
+<xs:element name="RandomLiftGraph">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:element ref="LiftGraph"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type RandomLiftGraph struct {
+
+</xs:element>
+
+#### type RealArray
+
+```go
+type RealArray Array
+```
+
+<xs:group name="REAL-ARRAY">
+
+    <xs:choice>
+      <xs:element ref="Array"/>
+    </xs:choice>
+
+</xs:group>
+
+#### type RealEntries
+
+```go
+type RealEntries struct {
+}
+```
+
+<xs:element name="REAL-Entries">
+
+    <xs:simpleType>
+      <xs:list itemType="xs:double"/>
+    </xs:simpleType>
+
+</xs:element>
+
+#### type RealNumber
+
+```go
+type RealNumber float64
+```
+
+<xs:simpleType name="REAL-NUMBER">
+
+    <xs:restriction base="xs:double"/>
+
+</xs:simpleType>
+
+#### type RealSparseArray
+
+```go
+type RealSparseArray struct {
+}
+```
+
+<xs:element name="REAL-SparseArray">
+
+    <xs:complexType>
+      <xs:attribute default="0" name="defaultValue" type="REAL-NUMBER" use="optional"/>
+      <xs:attribute name="n" type="INT-NUMBER" use="optional"/>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="Indices"/>
+        <xs:element minOccurs="0" ref="REAL-Entries"/>
+      </xs:sequence>
+    </xs:complexType>
+
+</xs:element>
+
+#### type Regression
+
+```go
+type Regression struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Regression">
+<xs:element name="Regression">
+
     <xs:complexType>
       <xs:attribute name="algorithmName" type="xs:string"/>
       <xs:attribute name="functionName" type="MINING-FUNCTION" use="required"/>
@@ -4073,16 +5709,19 @@ type RandomLiftGraph struct {
         <xs:element minOccurs="0" ref="Targets"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Regression struct {
+
+</xs:element>
+
+#### type RegressionModel
+
+```go
+type RegressionModel struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*Regression) embeddedModel() {}
+<xs:element name="RegressionModel">
 
-/*
-  <xs:element name="RegressionModel">
     <xs:complexType>
       <xs:attribute name="algorithmName" type="xs:string"/>
       <xs:attribute name="functionName" type="MINING-FUNCTION" use="required"/>
@@ -4112,16 +5751,41 @@ func (*Regression) embeddedModel() {}
         <xs:element minOccurs="0" ref="Targets"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type RegressionModel struct {
+
+</xs:element>
+
+#### type RegressionNormalizationMethod
+
+```go
+type RegressionNormalizationMethod string
+```
+
+<xs:simpleType name="REGRESSIONNORMALIZATIONMETHOD">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="cauchit"/>
+      <xs:enumeration value="cloglog"/>
+      <xs:enumeration value="exp"/>
+      <xs:enumeration value="logit"/>
+      <xs:enumeration value="loglog"/>
+      <xs:enumeration value="none"/>
+      <xs:enumeration value="probit"/>
+      <xs:enumeration value="simplemax"/>
+      <xs:enumeration value="softmax"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type RegressionTable
+
+```go
+type RegressionTable struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*RegressionModel) modelElement() {}
+<xs:element name="RegressionTable">
 
-/*
-  <xs:element name="RegressionTable">
     <xs:complexType>
       <xs:attribute name="intercept" type="REAL-NUMBER" use="required"/>
       <xs:attribute name="targetCategory" type="xs:string"/>
@@ -4132,14 +5796,55 @@ func (*RegressionModel) modelElement() {}
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="PredictorTerm"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type RegressionTable struct {
+
+</xs:element>
+
+#### type ResultFeature
+
+```go
+type ResultFeature string
+```
+
+<xs:simpleType name="RESULT-FEATURE">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="affinity"/>
+      <xs:enumeration value="antecedent"/>
+      <xs:enumeration value="clusterAffinity"/>
+      <xs:enumeration value="clusterId"/>
+      <xs:enumeration value="confidence"/>
+      <xs:enumeration value="consequent"/>
+      <xs:enumeration value="decision"/>
+      <xs:enumeration value="entityAffinity"/>
+      <xs:enumeration value="entityId"/>
+      <xs:enumeration value="leverage"/>
+      <xs:enumeration value="lift"/>
+      <xs:enumeration value="predictedDisplayValue"/>
+      <xs:enumeration value="predictedValue"/>
+      <xs:enumeration value="probability"/>
+      <xs:enumeration value="reasonCode"/>
+      <xs:enumeration value="residual"/>
+      <xs:enumeration value="rule"/>
+      <xs:enumeration value="ruleId"/>
+      <xs:enumeration value="ruleValue"/>
+      <xs:enumeration value="standardError"/>
+      <xs:enumeration value="support"/>
+      <xs:enumeration value="transformedValue"/>
+      <xs:enumeration value="warning"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type ResultField
+
+```go
+type ResultField struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="ResultField">
+<xs:element name="ResultField">
+
     <xs:complexType>
       <xs:attribute name="dataType" type="DATATYPE"/>
       <xs:attribute name="displayName" type="xs:string"/>
@@ -4151,14 +5856,78 @@ type RegressionTable struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ResultField struct {
+
+</xs:element>
+
+#### type Row
+
+```go
+type Row struct {
+}
+```
+
+<xs:element name="row">
+
+    <xs:complexType>
+      <xs:complexContent mixed="true">
+        <xs:restriction base="xs:anyType">
+          <xs:sequence>
+            <xs:any maxOccurs="unbounded" minOccurs="2" processContents="skip"/>
+          </xs:sequence>
+        </xs:restriction>
+      </xs:complexContent>
+    </xs:complexType>
+
+</xs:element>
+
+#### type Rule
+
+```go
+type Rule interface {
+}
+```
+
+<xs:group name="Rule">
+
+    <xs:choice>
+      <xs:element ref="CompoundRule"/>
+      <xs:element ref="SimpleRule"/>
+    </xs:choice>
+
+</xs:group>
+
+#### type RuleFeature
+
+```go
+type RuleFeature string
+```
+
+<xs:simpleType name="RULE-FEATURE">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="affinity"/>
+      <xs:enumeration value="antecedent"/>
+      <xs:enumeration value="confidence"/>
+      <xs:enumeration value="consequent"/>
+      <xs:enumeration value="leverage"/>
+      <xs:enumeration value="lift"/>
+      <xs:enumeration value="rule"/>
+      <xs:enumeration value="ruleId"/>
+      <xs:enumeration value="support"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type RuleSelectionMethod
+
+```go
+type RuleSelectionMethod struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="RuleSelectionMethod">
+<xs:element name="RuleSelectionMethod">
+
     <xs:complexType>
       <xs:attribute name="criterion" use="required">
         <xs:simpleType>
@@ -4173,14 +5942,19 @@ type ResultField struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type RuleSelectionMethod struct {
+
+</xs:element>
+
+#### type RuleSet
+
+```go
+type RuleSet struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="RuleSet">
+<xs:element name="RuleSet">
+
     <xs:complexType>
       <xs:attribute name="defaultConfidence" type="NUMBER" use="optional"/>
       <xs:attribute name="defaultScore" type="xs:string" use="optional"/>
@@ -4193,14 +5967,19 @@ type RuleSelectionMethod struct {
         <xs:group maxOccurs="unbounded" minOccurs="0" ref="Rule"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type RuleSet struct {
+
+</xs:element>
+
+#### type RuleSetModel
+
+```go
+type RuleSetModel struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="RuleSetModel">
+<xs:element name="RuleSetModel">
+
     <xs:complexType>
       <xs:attribute name="algorithmName" type="xs:string" use="optional"/>
       <xs:attribute name="functionName" type="MINING-FUNCTION" use="required"/>
@@ -4219,16 +5998,49 @@ type RuleSet struct {
         <xs:element minOccurs="0" ref="Targets"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type RuleSetModel struct {
+
+</xs:element>
+
+#### type SVMClassificationMethod
+
+```go
+type SVMClassificationMethod string
+```
+
+<xs:simpleType name="SVM-CLASSIFICATION-METHOD">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="OneAgainstAll"/>
+      <xs:enumeration value="OneAgainstOne"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type SVMRepresentation
+
+```go
+type SVMRepresentation string
+```
+
+<xs:simpleType name="SVM-REPRESENTATION">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Coefficients"/>
+      <xs:enumeration value="SupportVectors"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type ScoreDistribution
+
+```go
+type ScoreDistribution struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*RuleSetModel) modelElement() {}
+<xs:element name="ScoreDistribution">
 
-/*
-  <xs:element name="ScoreDistribution">
     <xs:complexType>
       <xs:attribute name="confidence" type="PROB-NUMBER"/>
       <xs:attribute name="probability" type="PROB-NUMBER"/>
@@ -4238,14 +6050,19 @@ func (*RuleSetModel) modelElement() {}
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ScoreDistribution struct {
+
+</xs:element>
+
+#### type Scorecard
+
+```go
+type Scorecard struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Scorecard">
+<xs:element name="Scorecard">
+
     <xs:complexType>
       <xs:attribute name="algorithmName" type="xs:string"/>
       <xs:attribute default="other" name="baselineMethod">
@@ -4286,22 +6103,27 @@ type ScoreDistribution struct {
         <xs:element minOccurs="0" ref="Targets"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Scorecard struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-func (*Scorecard) modelElement() {}
+</xs:element>
 
-/*
-  <xs:element name="SeasonalTrendDecomposition"/>
-*/
+#### type SeasonalTrendDecomposition
+
+```go
 type SeasonalTrendDecomposition struct {
 }
+```
 
-/*
-  <xs:element name="Seasonality_ExpoSmooth">
+<xs:element name="SeasonalTrendDecomposition"/>
+
+#### type SeasonalityExpoSmooth
+
+```go
+type SeasonalityExpoSmooth struct {
+}
+```
+
+<xs:element name="Seasonality_ExpoSmooth">
+
     <xs:complexType>
       <xs:attribute name="delta" type="REAL-NUMBER" use="optional"/>
       <xs:attribute name="period" type="INT-NUMBER" use="required"/>
@@ -4319,13 +6141,19 @@ type SeasonalTrendDecomposition struct {
         <xs:group ref="REAL-ARRAY"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type SeasonalityExpoSmooth struct {
-}
 
-/*
-  <xs:element name="Segment">
+</xs:element>
+
+#### type Segment
+
+```go
+type Segment struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="Segment">
+
     <xs:complexType>
       <xs:attribute name="id" type="xs:string" use="optional"/>
       <xs:attribute default="1" name="weight" type="NUMBER" use="optional"/>
@@ -4335,14 +6163,19 @@ type SeasonalityExpoSmooth struct {
         <xs:group ref="PREDICATE"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Segment struct {
+
+</xs:element>
+
+#### type Segmentation
+
+```go
+type Segmentation struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Segmentation">
+<xs:element name="Segmentation">
+
     <xs:complexType>
       <xs:attribute name="multipleModelMethod" type="MULTIPLE-MODEL-METHOD" use="required"/>
       <xs:sequence>
@@ -4350,14 +6183,19 @@ type Segment struct {
         <xs:element maxOccurs="unbounded" ref="Segment"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Segmentation struct {
+
+</xs:element>
+
+#### type Sequence
+
+```go
+type Sequence struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Sequence">
+<xs:element name="Sequence">
+
     <xs:complexType>
       <xs:attribute name="id" type="ELEMENT-ID" use="required"/>
       <xs:attribute name="numberOfSets" type="INT-NUMBER"/>
@@ -4372,14 +6210,41 @@ type Segmentation struct {
         </xs:sequence>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Sequence struct {
+
+</xs:element>
+
+#### type SequenceGroup
+
+```go
+type SequenceGroup struct {
+	SequenceReference SequenceReference `xml:"SequenceReference"`
+	Time              *Time             `xml:"Time"`
+	Extensions        []Extension       `xml:"Extension"`
+}
+```
+
+<xs:group name="SEQUENCE">
+
+    <xs:sequence>
+      <xs:element ref="SequenceReference"/>
+      <xs:element minOccurs="0" ref="Time"/>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+      </xs:sequence>
+    </xs:sequence>
+
+</xs:group>
+
+#### type SequenceModel
+
+```go
+type SequenceModel struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="SequenceModel">
+<xs:element name="SequenceModel">
+
     <xs:complexType>
       <xs:attribute name="algorithmName" type="xs:string"/>
       <xs:attribute name="avgNumberOfItemsPerTransaction" type="REAL-NUMBER"/>
@@ -4405,30 +6270,38 @@ type Sequence struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="SetPredicate"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type SequenceModel struct {
+
+</xs:element>
+
+#### type SequenceReference
+
+```go
+type SequenceReference struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*SequenceModel) modelElement() {}
+<xs:element name="SequenceReference">
 
-/*
-  <xs:element name="SequenceReference">
     <xs:complexType>
       <xs:attribute name="seqId" type="ELEMENT-ID" use="required"/>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type SequenceReference struct {
+
+</xs:element>
+
+#### type SequenceRule
+
+```go
+type SequenceRule struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="SequenceRule">
+<xs:element name="SequenceRule">
+
     <xs:complexType>
       <xs:attribute name="confidence" type="REAL-NUMBER" use="required"/>
       <xs:attribute name="id" type="ELEMENT-ID" use="required"/>
@@ -4445,14 +6318,19 @@ type SequenceReference struct {
         <xs:element minOccurs="0" ref="Time"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type SequenceRule struct {
+
+</xs:element>
+
+#### type SetPredicate
+
+```go
+type SetPredicate struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="SetPredicate">
+<xs:element name="SetPredicate">
+
     <xs:complexType>
       <xs:attribute name="field" type="FIELD-NAME" use="required"/>
       <xs:attribute name="id" type="ELEMENT-ID" use="required"/>
@@ -4462,28 +6340,38 @@ type SequenceRule struct {
         <xs:group ref="STRING-ARRAY"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type SetPredicate struct {
+
+</xs:element>
+
+#### type SetReference
+
+```go
+type SetReference struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="SetReference">
+<xs:element name="SetReference">
+
     <xs:complexType>
       <xs:attribute name="setId" type="ELEMENT-ID" use="required"/>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type SetReference struct {
+
+</xs:element>
+
+#### type SigmoidKernelType
+
+```go
+type SigmoidKernelType struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="SigmoidKernelType">
+<xs:element name="SigmoidKernelType">
+
     <xs:complexType>
       <xs:attribute default="1" name="coef0" type="REAL-NUMBER" use="optional"/>
       <xs:attribute name="description" type="xs:string" use="optional"/>
@@ -4492,27 +6380,41 @@ type SetReference struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type SigmoidKernelType struct {
+
+</xs:element>
+
+#### type SimpleMatching
+
+```go
+type SimpleMatching struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-type SimplePredicateOperator string
+<xs:element name="simpleMatching">
 
-const (
-	SimplePredicateOperatorEqual          = SimplePredicateOperator("equal")
-	SimplePredicateOperatorGreaterOrEqual = SimplePredicateOperator("greaterOrEqual")
-	SimplePredicateOperatorGreaterThan    = SimplePredicateOperator("greaterThan")
-	SimplePredicateOperatorIsMissing      = SimplePredicateOperator("isMissing")
-	SimplePredicateOperatorIsNotMissing   = SimplePredicateOperator("isNotMissing")
-	SimplePredicateOperatorLessOrEqual    = SimplePredicateOperator("lessOrEqual")
-	SimplePredicateOperatorLessThan       = SimplePredicateOperator("lessThan")
-	SimplePredicateOperatorNotEqual       = SimplePredicateOperator("notEqual")
-)
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+      </xs:sequence>
+    </xs:complexType>
 
-/*
-  <xs:element name="SimplePredicate">
+</xs:element>
+
+#### type SimplePredicate
+
+```go
+type SimplePredicate struct {
+	Field    FieldName               `xml:"field,attr"`
+	Operator SimplePredicateOperator `xml:"operator,attr"`
+	Value    string                  `xml:"value,attr"`
+
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="SimplePredicate">
+
     <xs:complexType>
       <xs:attribute name="field" type="FIELD-NAME" use="required"/>
       <xs:attribute name="operator" use="required">
@@ -4534,20 +6436,26 @@ const (
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type SimplePredicate struct {
-	Field    FieldName               `xml:"field,attr"`
-	Operator SimplePredicateOperator `xml:"operator,attr"`
-	Value    string                  `xml:"value,attr"`
 
+</xs:element>
+
+#### type SimplePredicateOperator
+
+```go
+type SimplePredicateOperator string
+```
+
+
+#### type SimpleRule
+
+```go
+type SimpleRule struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*SimplePredicate) predicate() {}
+<xs:element name="SimpleRule">
 
-/*
-  <xs:element name="SimpleRule">
     <xs:complexType>
       <xs:attribute default="1" name="confidence" type="NUMBER" use="optional"/>
       <xs:attribute name="id" type="xs:string" use="optional"/>
@@ -4561,21 +6469,23 @@ func (*SimplePredicate) predicate() {}
         <xs:group ref="PREDICATE"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type SimpleRule struct {
+
+</xs:element>
+
+#### type SimpleSetPredicate
+
+```go
+type SimpleSetPredicate struct {
+	BooleanOperator SimpleSetPredicateOperator `xml:"booleanOperator,attr"`
+	Field           FieldName                  `xml:"field,attr"`
+
+	Array      Array       `xml:"Array"`
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-type SimpleSetPredicateOperator string
+<xs:element name="SimpleSetPredicate">
 
-const (
-	SimpleSetPredicateOperatorIsIn    = SimpleSetPredicateOperator("isIn")
-	SimpleSetPredicateOperatorIsNotIn = SimpleSetPredicateOperator("isNotIn")
-)
-
-/*
-  <xs:element name="SimpleSetPredicate">
     <xs:complexType>
       <xs:attribute name="booleanOperator" use="required">
         <xs:simpleType>
@@ -4591,40 +6501,86 @@ const (
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type SimpleSetPredicate struct {
-	BooleanOperator SimpleSetPredicateOperator `xml:"booleanOperator,attr"`
-	Field           FieldName                  `xml:"field,attr"`
 
-	Array      Array       `xml:"Array"`
-	Extensions []Extension `xml:"Extension"`
-}
+</xs:element>
 
-func (*SimpleSetPredicate) predicate() {}
+#### type SimpleSetPredicateOperator
 
-/*
-  <xs:element name="SpectralAnalysis"/>
-*/
+```go
+type SimpleSetPredicateOperator string
+```
+
+
+#### type SpectralAnalysis
+
+```go
 type SpectralAnalysis struct {
 }
+```
 
-/*
-  <xs:element name="SupportVector">
+<xs:element name="SpectralAnalysis"/>
+
+#### type SquaredEuclidean
+
+```go
+type SquaredEuclidean struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="squaredEuclidean">
+
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+      </xs:sequence>
+    </xs:complexType>
+
+</xs:element>
+
+#### type StringArray
+
+```go
+type StringArray Array
+```
+
+<xs:group name="STRING-ARRAY">
+
+    <xs:choice>
+      <xs:element ref="Array"/>
+    </xs:choice>
+
+</xs:group>
+
+#### type SupportVector
+
+```go
+type SupportVector struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="SupportVector">
+
     <xs:complexType>
       <xs:attribute name="vectorId" type="VECTOR-ID" use="required"/>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type SupportVector struct {
+
+</xs:element>
+
+#### type SupportVectorMachine
+
+```go
+type SupportVectorMachine struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="SupportVectorMachine">
+<xs:element name="SupportVectorMachine">
+
     <xs:complexType>
       <xs:attribute name="alternateTargetCategory" type="xs:string" use="optional"/>
       <xs:attribute name="targetCategory" type="xs:string" use="optional"/>
@@ -4635,14 +6591,19 @@ type SupportVector struct {
         <xs:element minOccurs="0" ref="SupportVectors"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type SupportVectorMachine struct {
+
+</xs:element>
+
+#### type SupportVectorMachineModel
+
+```go
+type SupportVectorMachineModel struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="SupportVectorMachineModel">
+<xs:element name="SupportVectorMachineModel">
+
     <xs:complexType>
       <xs:attribute name="algorithmName" type="xs:string" use="optional"/>
       <xs:attribute default="OneAgainstAll" name="classificationMethod" type="SVM-CLASSIFICATION-METHOD" use="optional"/>
@@ -4674,16 +6635,19 @@ type SupportVectorMachine struct {
         </xs:sequence>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type SupportVectorMachineModel struct {
+
+</xs:element>
+
+#### type SupportVectors
+
+```go
+type SupportVectors struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*SupportVectorMachineModel) modelElement() {}
+<xs:element name="SupportVectors">
 
-/*
-  <xs:element name="SupportVectors">
     <xs:complexType>
       <xs:attribute name="numberOfAttributes" type="INT-NUMBER" use="optional"/>
       <xs:attribute name="numberOfSupportVectors" type="INT-NUMBER" use="optional"/>
@@ -4692,37 +6656,85 @@ func (*SupportVectorMachineModel) modelElement() {}
         <xs:element maxOccurs="unbounded" ref="SupportVector"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type SupportVectors struct {
+
+</xs:element>
+
+#### type Table
+
+```go
+type Table interface {
+	// contains filtered or unexported methods
+}
+```
+
+<xs:choice>
+
+    <xs:element ref="InlineTable"/>
+    <xs:element ref="TableLocator"/>
+
+</xs:choice>
+
+#### func  GetTable
+
+```go
+func GetTable(name string) (Table, bool)
+```
+
+#### type TableLocator
+
+```go
+type TableLocator struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="TableLocator">
+<xs:element name="TableLocator">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TableLocator struct {
+
+</xs:element>
+
+#### type Tanimoto
+
+```go
+type Tanimoto struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*TableLocator) table() {}
+<xs:element name="tanimoto">
 
-type CastIntegerType string
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+      </xs:sequence>
+    </xs:complexType>
 
-const (
-	CastIntegerTypeCeiling = CastIntegerType("ceiling")
-	CastIntegerTypeFloor   = CastIntegerType("floor")
-	CastIntegerTypeRound   = CastIntegerType("round")
-)
+</xs:element>
 
-/*
-  <xs:element name="Target">
+#### type Target
+
+```go
+type Target struct {
+	CastInteger     CastIntegerType `xml:"castInteger,attr"`
+	Field           FieldName       `xml:"field,attr"`
+	Max             float64         `xml:"max,attr"`
+	Min             float64         `xml:"min,attr"`
+	OpType          OpType          `xml:"optype,attr"`
+	RescaleConstant *float64        `xml:"rescaleConstant,attr"`
+	RescaleFactor   *float64        `xml:"rescaleFactor,attr"`
+
+	Extensions   []Extension   `xml:"Extension"`
+	TargetValues []TargetValue `xml:"TargetValue"`
+}
+```
+
+<xs:element name="Target">
+
     <xs:complexType>
       <xs:attribute name="castInteger">
         <xs:simpleType>
@@ -4744,23 +6756,19 @@ const (
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="TargetValue"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Target struct {
-	CastInteger     CastIntegerType `xml:"castInteger,attr"`
-	Field           FieldName       `xml:"field,attr"`
-	Max             float64         `xml:"max,attr"`
-	Min             float64         `xml:"min,attr"`
-	OpType          OpType          `xml:"optype,attr"`
-	RescaleConstant *float64        `xml:"rescaleConstant,attr"`
-	RescaleFactor   *float64        `xml:"rescaleFactor,attr"`
 
-	Extensions   []Extension   `xml:"Extension"`
-	TargetValues []TargetValue `xml:"TargetValue"`
+</xs:element>
+
+#### type TargetValue
+
+```go
+type TargetValue struct {
+	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="TargetValue">
+<xs:element name="TargetValue">
+
     <xs:complexType>
       <xs:attribute name="defaultValue" type="NUMBER"/>
       <xs:attribute name="displayValue" type="xs:string"/>
@@ -4771,14 +6779,19 @@ type Target struct {
         <xs:element minOccurs="0" ref="Partition"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TargetValue struct {
+
+</xs:element>
+
+#### type TargetValueCount
+
+```go
+type TargetValueCount struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="TargetValueCount">
+<xs:element name="TargetValueCount">
+
     <xs:complexType>
       <xs:attribute name="count" type="REAL-NUMBER" use="required"/>
       <xs:attribute name="value" type="xs:string" use="required"/>
@@ -4786,28 +6799,38 @@ type TargetValue struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TargetValueCount struct {
+
+</xs:element>
+
+#### type TargetValueCounts
+
+```go
+type TargetValueCounts struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="TargetValueCounts">
+<xs:element name="TargetValueCounts">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:element maxOccurs="unbounded" ref="TargetValueCount"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TargetValueCounts struct {
+
+</xs:element>
+
+#### type TargetValueStat
+
+```go
+type TargetValueStat struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="TargetValueStat">
+<xs:element name="TargetValueStat">
+
     <xs:complexType>
       <xs:attribute name="value" type="xs:string" use="required"/>
       <xs:sequence>
@@ -4815,43 +6838,61 @@ type TargetValueCounts struct {
         <xs:group minOccurs="1" ref="CONTINUOUS-DISTRIBUTION-TYPES"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TargetValueStat struct {
+
+</xs:element>
+
+#### type TargetValueStats
+
+```go
+type TargetValueStats struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="TargetValueStats">
+<xs:element name="TargetValueStats">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:element maxOccurs="unbounded" ref="TargetValueStat"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TargetValueStats struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-/*
-  <xs:element name="Targets">
+</xs:element>
+
+#### type Targets
+
+```go
+type Targets struct {
+	Extensions []Extension `xml:"Extension"`
+	Targets    []Target    `xml:"Target"`
+}
+```
+
+<xs:element name="Targets">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:element maxOccurs="unbounded" ref="Target"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Targets struct {
-	Extensions []Extension `xml:"Extension"`
-	Targets    []Target    `xml:"Target"`
-}
 
-/*
-  <xs:element name="Taxonomy">
+</xs:element>
+
+#### type Taxonomy
+
+```go
+type Taxonomy struct {
+	Name string `xml:"name,attr"`
+
+	ChildParents []ChildParent `xml:"ChildParent"`
+	Extensions   []Extension   `xml:"Extension"`
+}
+```
+
+<xs:element name="Taxonomy">
+
     <xs:complexType>
       <xs:attribute name="name" type="xs:string" use="required"/>
       <xs:sequence>
@@ -4859,17 +6900,19 @@ type Targets struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Taxonomy struct {
-	Name string `xml:"name,attr"`
 
-	ChildParents []ChildParent `xml:"ChildParent"`
-	Extensions   []Extension   `xml:"Extension"`
+</xs:element>
+
+#### type TestDistributions
+
+```go
+type TestDistributions struct {
+	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="TestDistributions">
+<xs:element name="TestDistributions">
+
     <xs:complexType>
       <xs:attribute name="field" type="FIELD-NAME" use="required"/>
       <xs:attribute name="normalizationScheme" type="xs:string" use="optional"/>
@@ -4883,28 +6926,38 @@ type Taxonomy struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TestDistributions struct {
+
+</xs:element>
+
+#### type TextCorpus
+
+```go
+type TextCorpus struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="TextCorpus">
+<xs:element name="TextCorpus">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="TextDocument"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TextCorpus struct {
+
+</xs:element>
+
+#### type TextDictionary
+
+```go
+type TextDictionary struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="TextDictionary">
+<xs:element name="TextDictionary">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
@@ -4912,14 +6965,19 @@ type TextCorpus struct {
         <xs:group ref="STRING-ARRAY"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TextDictionary struct {
+
+</xs:element>
+
+#### type TextDocument
+
+```go
+type TextDocument struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="TextDocument">
+<xs:element name="TextDocument">
+
     <xs:complexType>
       <xs:attribute name="file" type="xs:string" use="optional"/>
       <xs:attribute name="id" type="xs:string" use="required"/>
@@ -4929,14 +6987,19 @@ type TextDictionary struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TextDocument struct {
+
+</xs:element>
+
+#### type TextIndex
+
+```go
+type TextIndex struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="TextIndex">
+<xs:element name="TextIndex">
+
     <xs:complexType>
       <xs:attribute default="allHits" name="countHits">
         <xs:simpleType>
@@ -4967,16 +7030,19 @@ type TextDocument struct {
         <xs:group ref="EXPRESSION"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TextIndex struct {
+
+</xs:element>
+
+#### type TextIndexNormalization
+
+```go
+type TextIndexNormalization struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*TextIndex) expression() {}
+<xs:element name="TextIndexNormalization">
 
-/*
-  <xs:element name="TextIndexNormalization">
     <xs:complexType>
       <xs:attribute default="string" name="inField" type="xs:string"/>
       <xs:attribute name="isCaseSensitive" type="xs:boolean"/>
@@ -4994,14 +7060,19 @@ func (*TextIndex) expression() {}
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TextIndexNormalization struct {
+
+</xs:element>
+
+#### type TextModel
+
+```go
+type TextModel struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="TextModel">
+<xs:element name="TextModel">
+
     <xs:complexType>
       <xs:attribute name="algorithmName" type="xs:string"/>
       <xs:attribute name="functionName" type="MINING-FUNCTION" use="required"/>
@@ -5026,16 +7097,19 @@ type TextIndexNormalization struct {
         <xs:element minOccurs="0" ref="TextModelSimiliarity"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TextModel struct {
+
+</xs:element>
+
+#### type TextModelNormalization
+
+```go
+type TextModelNormalization struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*TextModel) modelElement() {}
+<xs:element name="TextModelNormalization">
 
-/*
-  <xs:element name="TextModelNormalization">
     <xs:complexType>
       <xs:attribute default="none" name="documentNormalization">
         <xs:simpleType>
@@ -5070,14 +7144,19 @@ func (*TextModel) modelElement() {}
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TextModelNormalization struct {
+
+</xs:element>
+
+#### type TextModelSimiliarity
+
+```go
+type TextModelSimiliarity struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="TextModelSimiliarity">
+<xs:element name="TextModelSimiliarity">
+
     <xs:complexType>
       <xs:attribute name="similarityType">
         <xs:simpleType>
@@ -5091,14 +7170,19 @@ type TextModelNormalization struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TextModelSimiliarity struct {
+
+</xs:element>
+
+#### type Time
+
+```go
+type Time struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Time">
+<xs:element name="Time">
+
     <xs:complexType>
       <xs:attribute name="max" type="NUMBER"/>
       <xs:attribute name="mean" type="NUMBER"/>
@@ -5108,14 +7192,18 @@ type TextModelSimiliarity struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Time struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-/*
-  <xs:element name="TimeAnchor">
+</xs:element>
+
+#### type TimeAnchor
+
+```go
+type TimeAnchor struct {
+}
+```
+
+<xs:element name="TimeAnchor">
+
     <xs:complexType>
       <xs:attribute name="displayName" use="optional"/>
       <xs:attribute name="offset" type="INT-NUMBER"/>
@@ -5126,13 +7214,48 @@ type Time struct {
         <xs:element maxOccurs="2" minOccurs="0" ref="TimeException"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TimeAnchor struct {
-}
 
-/*
-  <xs:element name="TimeCycle">
+</xs:element>
+
+#### type TimeAnchorType
+
+```go
+type TimeAnchorType string
+```
+
+<xs:simpleType name="TIME-ANCHOR">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="dateDaysSince[0]"/>
+      <xs:enumeration value="dateDaysSince[1960]"/>
+      <xs:enumeration value="dateDaysSince[1970]"/>
+      <xs:enumeration value="dateDaysSince[1980]"/>
+      <xs:enumeration value="dateMonthsSince[0]"/>
+      <xs:enumeration value="dateMonthsSince[1960]"/>
+      <xs:enumeration value="dateMonthsSince[1970]"/>
+      <xs:enumeration value="dateMonthsSince[1980]"/>
+      <xs:enumeration value="dateTimeMillisecondsSince[0]"/>
+      <xs:enumeration value="dateTimeMillisecondsSince[1960]"/>
+      <xs:enumeration value="dateTimeMillisecondsSince[1970]"/>
+      <xs:enumeration value="dateTimeMillisecondsSince[1980]"/>
+      <xs:enumeration value="dateTimeSecondsSince[0]"/>
+      <xs:enumeration value="dateTimeSecondsSince[1960]"/>
+      <xs:enumeration value="dateTimeSecondsSince[1970]"/>
+      <xs:enumeration value="dateTimeSecondsSince[1980]"/>
+      <xs:enumeration value="dateYearsSince[0]"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type TimeCycle
+
+```go
+type TimeCycle struct {
+}
+```
+
+<xs:element name="TimeCycle">
+
     <xs:complexType>
       <xs:attribute name="displayName" use="optional"/>
       <xs:attribute name="length" type="INT-NUMBER"/>
@@ -5141,13 +7264,18 @@ type TimeAnchor struct {
         <xs:group maxOccurs="1" minOccurs="0" ref="INT-ARRAY"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TimeCycle struct {
-}
 
-/*
-  <xs:element name="TimeException">
+</xs:element>
+
+#### type TimeException
+
+```go
+type TimeException struct {
+}
+```
+
+<xs:element name="TimeException">
+
     <xs:complexType>
       <xs:attribute name="count" type="INT-NUMBER"/>
       <xs:attribute name="type" type="TIME-EXCEPTION-TYPE"/>
@@ -5155,13 +7283,33 @@ type TimeCycle struct {
         <xs:group minOccurs="1" ref="INT-ARRAY"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TimeException struct {
-}
 
-/*
-  <xs:element name="TimeSeries">
+</xs:element>
+
+#### type TimeExceptionType
+
+```go
+type TimeExceptionType string
+```
+
+<xs:simpleType name="TIME-EXCEPTION-TYPE">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="exclude"/>
+      <xs:enumeration value="include"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type TimeSeries
+
+```go
+type TimeSeries struct {
+}
+```
+
+<xs:element name="TimeSeries">
+
     <xs:complexType>
       <xs:attribute name="endTime" type="REAL-NUMBER"/>
       <xs:attribute default="none" name="interpolationMethod" type="INTERPOLATION-METHOD"/>
@@ -5172,13 +7320,36 @@ type TimeException struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="TimeValue"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TimeSeries struct {
-}
 
-/*
-  <xs:element name="TimeSeriesModel">
+</xs:element>
+
+#### type TimeSeriesAlgorithm
+
+```go
+type TimeSeriesAlgorithm string
+```
+
+<xs:simpleType name="TIMESERIES-ALGORITHM">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ARIMA"/>
+      <xs:enumeration value="ExponentialSmoothing"/>
+      <xs:enumeration value="SeasonalTrendDecomposition"/>
+      <xs:enumeration value="SpectralAnalysis"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type TimeSeriesModel
+
+```go
+type TimeSeriesModel struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="TimeSeriesModel">
+
     <xs:complexType>
       <xs:attribute name="algorithmName" type="xs:string" use="optional"/>
       <xs:attribute name="bestFit" type="TIMESERIES-ALGORITHM" use="required"/>
@@ -5201,16 +7372,34 @@ type TimeSeries struct {
         <xs:element maxOccurs="3" minOccurs="0" ref="TimeSeries"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TimeSeriesModel struct {
-	Extensions []Extension `xml:"Extension"`
+
+</xs:element>
+
+#### type TimeSeriesUsage
+
+```go
+type TimeSeriesUsage string
+```
+
+<xs:simpleType name="TIMESERIES-USAGE">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="logical"/>
+      <xs:enumeration value="original"/>
+      <xs:enumeration value="prediction"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type TimeValue
+
+```go
+type TimeValue struct {
 }
+```
 
-func (*TimeSeriesModel) modelElement() {}
+<xs:element name="TimeValue">
 
-/*
-  <xs:element name="TimeValue">
     <xs:complexType>
       <xs:attribute name="index" type="INT-NUMBER" use="optional"/>
       <xs:attribute name="standardError" type="REAL-NUMBER" use="optional"/>
@@ -5220,26 +7409,37 @@ func (*TimeSeriesModel) modelElement() {}
         <xs:element maxOccurs="1" minOccurs="0" ref="Timestamp"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TimeValue struct {
-}
 
-/*
-  <xs:element name="Timestamp">
+</xs:element>
+
+#### type Timestamp
+
+```go
+type Timestamp struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="Timestamp">
+
     <xs:complexType mixed="true">
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Timestamp struct {
+
+</xs:element>
+
+#### type TrainingInstances
+
+```go
+type TrainingInstances struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="TrainingInstances">
+<xs:element name="TrainingInstances">
+
     <xs:complexType>
       <xs:attribute name="fieldCount" type="INT-NUMBER" use="optional"/>
       <xs:attribute default="false" name="isTransformed" type="xs:boolean"/>
@@ -5253,14 +7453,21 @@ type Timestamp struct {
         <xs:element ref="InstanceFields"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TrainingInstances struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-/*
-  <xs:element name="TransformationDictionary">
+</xs:element>
+
+#### type TransformationDictionary
+
+```go
+type TransformationDictionary struct {
+	DefineFunctions []DefineFunction `xml:"DefineFunction"`
+	DerivedFields   []DerivedField   `xml:"DerivedField"`
+	Extensions      []Extension      `xml:"Extension"`
+}
+```
+
+<xs:element name="TransformationDictionary">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="DefineFunction"/>
@@ -5268,23 +7475,36 @@ type TrainingInstances struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TransformationDictionary struct {
-	DefineFunctions []DefineFunction `xml:"DefineFunction"`
-	DerivedFields   []DerivedField   `xml:"DerivedField"`
-	Extensions      []Extension      `xml:"Extension"`
+
+</xs:element>
+
+#### type TreeModel
+
+```go
+type TreeModel struct {
+	AlgorithmName        string                       `xml:"algorithmName,attr"`
+	FunctionName         MiningFunction               `xml:"functionName,attr"`
+	IsScorable           bool                         `xml:"isScorable,attr"`
+	MissingValuePenalty  ProbNumber                   `xml:"missingValuePenalty,attr"`
+	MissingValueStrategy MissingValueStrategy         `xml:"missingValueStrategy,attr"`
+	ModelName            string                       `xml:"modelName,attr"`
+	NoTrueChildStrategy  NoTrueChildStrategy          `xml:"noTrueChildStrategy,attr"`
+	SplitCharacteristic  TreeModelSplitCharacteristic `xml:"splitCharacteristic,attr"`
+
+	Extensions           []Extension          `xml:"Extension"`
+	LocalTransformations LocalTransformations `xml:"LocalTransformations"`
+	MiningSchema         MiningSchema         `xml:"MiningSchema"`
+	ModelExplanation     *ModelExplanation    `xml:"ModelExplanation"`
+	ModelStats           *ModelStats          `xml:"ModelStats"`
+	ModelVerification    *ModelVerification   `xml:"ModelVerification"`
+	Node                 Node                 `xml:"Node"`
+	Output               *Output              `xml:"Output"`
+	Targets              *Targets             `xml:"Targets"`
 }
+```
 
-type TreeModelSplitCharacteristic string
+<xs:element name="TreeModel">
 
-const (
-	TreeModelSplitCharacteristicBinarySplit = TreeModelSplitCharacteristic("binarySplit")
-	TreeModelSplitCharacteristicMultiSplit  = TreeModelSplitCharacteristic("multiSplit")
-)
-
-/*
-  <xs:element name="TreeModel">
     <xs:complexType>
       <xs:attribute name="algorithmName" type="xs:string"/>
       <xs:attribute name="functionName" type="MINING-FUNCTION" use="required"/>
@@ -5314,33 +7534,25 @@ const (
         <xs:element minOccurs="0" ref="Targets"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TreeModel struct {
-	AlgorithmName        string                       `xml:"algorithmName,attr"`
-	FunctionName         MiningFunction               `xml:"functionName,attr"`
-	IsScorable           bool                         `xml:"isScorable,attr"`
-	MissingValuePenalty  ProbNumber                   `xml:"missingValuePenalty,attr"`
-	MissingValueStrategy MissingValueStrategy         `xml:"missingValueStrategy,attr"`
-	ModelName            string                       `xml:"modelName,attr"`
-	NoTrueChildStrategy  NoTrueChildStrategy          `xml:"noTrueChildStrategy,attr"`
-	SplitCharacteristic  TreeModelSplitCharacteristic `xml:"splitCharacteristic,attr"`
 
-	Extensions           []Extension          `xml:"Extension"`
-	LocalTransformations LocalTransformations `xml:"LocalTransformations"`
-	MiningSchema         MiningSchema         `xml:"MiningSchema"`
-	ModelExplanation     *ModelExplanation    `xml:"ModelExplanation"`
-	ModelStats           *ModelStats          `xml:"ModelStats"`
-	ModelVerification    *ModelVerification   `xml:"ModelVerification"`
-	Node                 Node                 `xml:"Node"`
-	Output               *Output              `xml:"Output"`
-	Targets              *Targets             `xml:"Targets"`
+</xs:element>
+
+#### type TreeModelSplitCharacteristic
+
+```go
+type TreeModelSplitCharacteristic string
+```
+
+
+#### type TrendExpoSmooth
+
+```go
+type TrendExpoSmooth struct {
 }
+```
 
-func (*TreeModel) modelElement() {}
+<xs:element name="Trend_ExpoSmooth">
 
-/*
-  <xs:element name="Trend_ExpoSmooth">
     <xs:complexType>
       <xs:attribute name="gamma" type="REAL-NUMBER" use="optional"/>
       <xs:attribute default="1" name="phi" type="REAL-NUMBER" use="optional"/>
@@ -5360,13 +7572,19 @@ func (*TreeModel) modelElement() {}
         <xs:group minOccurs="0" ref="REAL-ARRAY"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TrendExpoSmooth struct {
-}
 
-/*
-  <xs:element name="TriangularDistributionForBN">
+</xs:element>
+
+#### type TriangularDistributionForBN
+
+```go
+type TriangularDistributionForBN struct {
+	Extensions []Extension `xml:"Extension"`
+}
+```
+
+<xs:element name="TriangularDistributionForBN">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
@@ -5375,29 +7593,37 @@ type TrendExpoSmooth struct {
         <xs:element maxOccurs="1" minOccurs="1" ref="Upper"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type TriangularDistributionForBN struct {
+
+</xs:element>
+
+#### type True
+
+```go
+type True struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="True">
+<xs:element name="True">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type True struct {
+
+</xs:element>
+
+#### type UniformDistribution
+
+```go
+type UniformDistribution struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*True) predicate() {}
+<xs:element name="UniformDistribution">
 
-/*
-  <xs:element name="UniformDistribution">
     <xs:complexType>
       <xs:attribute name="lower" type="REAL-NUMBER" use="required"/>
       <xs:attribute name="upper" type="REAL-NUMBER" use="required"/>
@@ -5405,16 +7631,19 @@ func (*True) predicate() {}
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type UniformDistribution struct {
+
+</xs:element>
+
+#### type UniformDistributionForBN
+
+```go
+type UniformDistributionForBN struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-func (*UniformDistribution) continuousDistributionType() {}
+<xs:element name="UniformDistributionForBN">
 
-/*
-  <xs:element name="UniformDistributionForBN">
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
@@ -5422,14 +7651,27 @@ func (*UniformDistribution) continuousDistributionType() {}
         <xs:element maxOccurs="1" minOccurs="1" ref="Upper"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type UniformDistributionForBN struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-/*
-  <xs:element name="UnivariateStats">
+</xs:element>
+
+#### type UnivariateStats
+
+```go
+type UnivariateStats struct {
+	Field    FieldName `xml:"field,attr"`
+	Weighted bool      `xml:"weighted,attr"`
+
+	Anova       *Anova       `xml:"Anova"`
+	ContStats   *ContStats   `xml:"ContStats"`
+	Counts      *Counts      `xml:"Counts"`
+	DiscrStats  *DiscrStats  `xml:"DiscrStats"`
+	Extensions  []Extension  `xml:"Extension"`
+	NumericInfo *NumericInfo `xml:"NumericInfo"`
+}
+```
+
+<xs:element name="UnivariateStats">
+
     <xs:complexType>
       <xs:attribute name="field" type="FIELD-NAME"/>
       <xs:attribute default="0" name="weighted">
@@ -5449,44 +7691,60 @@ type UniformDistributionForBN struct {
         <xs:element minOccurs="0" ref="NumericInfo"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type UnivariateStats struct {
-	Field    FieldName `xml:"field,attr"`
-	Weighted bool      `xml:"weighted,attr"`
 
-	Anova       *Anova       `xml:"Anova"`
-	ContStats   *ContStats   `xml:"ContStats"`
-	Counts      *Counts      `xml:"Counts"`
-	DiscrStats  *DiscrStats  `xml:"DiscrStats"`
-	Extensions  []Extension  `xml:"Extension"`
-	NumericInfo *NumericInfo `xml:"NumericInfo"`
+</xs:element>
+
+#### type Upper
+
+```go
+type Upper struct {
+	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Upper">
+<xs:element name="Upper">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:group ref="EXPRESSION"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Upper struct {
+
+</xs:element>
+
+#### type ValidTimeSpec
+
+```go
+type ValidTimeSpec string
+```
+
+<xs:simpleType name="VALID-TIME-SPEC">
+
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="excludeFromTo"/>
+      <xs:enumeration value="excludeSet"/>
+      <xs:enumeration value="includeAll"/>
+      <xs:enumeration value="includeFromTo"/>
+      <xs:enumeration value="includeSet"/>
+    </xs:restriction>
+
+</xs:simpleType>
+
+#### type Value
+
+```go
+type Value struct {
+	DisplayValue string     `xml:"displayValue,attr"`
+	Valid        ValueValid `xml:"valid,attr"`
+	Value        string     `xml:"value,attr"`
+
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-type ValueValid string
+<xs:element name="Value">
 
-const (
-	ValueValidInvalid = ValueValid("invalid")
-	ValueValidMissing = ValueValid("missing")
-	ValueValidValid   = ValueValid("valid")
-)
-
-/*
-  <xs:element name="Value">
     <xs:complexType>
       <xs:attribute name="displayValue" type="xs:string"/>
       <xs:attribute default="valid" name="property">
@@ -5503,18 +7761,19 @@ const (
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Value struct {
-	DisplayValue string     `xml:"displayValue,attr"`
-	Valid        ValueValid `xml:"valid,attr"`
-	Value        string     `xml:"value,attr"`
 
+</xs:element>
+
+#### type ValueProbability
+
+```go
+type ValueProbability struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="ValueProbability">
+<xs:element name="ValueProbability">
+
     <xs:complexType>
       <xs:attribute name="probability" type="PROB-NUMBER" use="required"/>
       <xs:attribute name="value" type="xs:string" use="required"/>
@@ -5522,28 +7781,45 @@ type Value struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type ValueProbability struct {
+
+</xs:element>
+
+#### type ValueValid
+
+```go
+type ValueValid string
+```
+
+
+#### type Variance
+
+```go
+type Variance struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="Variance">
+<xs:element name="Variance">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:group ref="EXPRESSION"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Variance struct {
+
+</xs:element>
+
+#### type VectorDictionary
+
+```go
+type VectorDictionary struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="VectorDictionary">
+<xs:element name="VectorDictionary">
+
     <xs:complexType>
       <xs:attribute name="numberOfVectors" type="INT-NUMBER" use="optional"/>
       <xs:sequence>
@@ -5552,14 +7828,19 @@ type Variance struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="VectorInstance"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type VectorDictionary struct {
+
+</xs:element>
+
+#### type VectorFields
+
+```go
+type VectorFields struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="VectorFields">
+<xs:element name="VectorFields">
+
     <xs:complexType>
       <xs:attribute name="numberOfFields" type="INT-NUMBER" use="optional"/>
       <xs:sequence>
@@ -5570,14 +7851,31 @@ type VectorDictionary struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type VectorFields struct {
+
+</xs:element>
+
+#### type VectorID
+
+```go
+type VectorID string
+```
+
+<xs:simpleType name="VECTOR-ID">
+
+    <xs:restriction base="xs:string"/>
+
+</xs:simpleType>
+
+#### type VectorInstance
+
+```go
+type VectorInstance struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="VectorInstance">
+<xs:element name="VectorInstance">
+
     <xs:complexType>
       <xs:attribute name="id" type="VECTOR-ID" use="required"/>
       <xs:sequence>
@@ -5588,14 +7886,19 @@ type VectorFields struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type VectorInstance struct {
+
+</xs:element>
+
+#### type VerificationField
+
+```go
+type VerificationField struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="VerificationField">
+<xs:element name="VerificationField">
+
     <xs:complexType>
       <xs:attribute name="column" type="xs:string" use="optional"/>
       <xs:attribute name="field" type="xs:string" use="required"/>
@@ -5605,193 +7908,63 @@ type VectorInstance struct {
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type VerificationField struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-/*
-  <xs:element name="VerificationFields">
+</xs:element>
+
+#### type VerificationFields
+
+```go
+type VerificationFields struct {
+	Extensions []Extension         `xml:"Extension"`
+	Fields     []VerificationField `xml:"VerificationField"`
+}
+```
+
+<xs:element name="VerificationFields">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:element maxOccurs="unbounded" ref="VerificationField"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type VerificationFields struct {
-	Extensions []Extension         `xml:"Extension"`
-	Fields     []VerificationField `xml:"VerificationField"`
-}
 
-/*
-  <xs:element name="XCoordinates">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
-        <xs:group ref="NUM-ARRAY"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-*/
+</xs:element>
+
+#### type XCoordinates
+
+```go
 type XCoordinates struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="YCoordinates">
+<xs:element name="XCoordinates">
+
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
         <xs:group ref="NUM-ARRAY"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
+
+</xs:element>
+
+#### type YCoordinates
+
+```go
 type YCoordinates struct {
 	Extensions []Extension `xml:"Extension"`
 }
+```
 
-/*
-  <xs:element name="binarySimilarity">
-    <xs:complexType>
-      <xs:attribute name="c00-parameter" type="NUMBER" use="required"/>
-      <xs:attribute name="c01-parameter" type="NUMBER" use="required"/>
-      <xs:attribute name="c10-parameter" type="NUMBER" use="required"/>
-      <xs:attribute name="c11-parameter" type="NUMBER" use="required"/>
-      <xs:attribute name="d00-parameter" type="NUMBER" use="required"/>
-      <xs:attribute name="d01-parameter" type="NUMBER" use="required"/>
-      <xs:attribute name="d10-parameter" type="NUMBER" use="required"/>
-      <xs:attribute name="d11-parameter" type="NUMBER" use="required"/>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-*/
-type BinarySimilarity struct {
-	Extensions []Extension `xml:"Extension"`
-}
+<xs:element name="YCoordinates">
 
-/*
-  <xs:element name="chebychev">
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
+        <xs:group ref="NUM-ARRAY"/>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-*/
-type Chebychev struct {
-	Extensions []Extension `xml:"Extension"`
-}
 
-/*
-  <xs:element name="cityBlock">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-*/
-type CityBlock struct {
-	Extensions []Extension `xml:"Extension"`
-}
-
-/*
-  <xs:element name="euclidean">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-*/
-type Euclidean struct {
-	Extensions []Extension `xml:"Extension"`
-}
-
-/*
-  <xs:element name="jaccard">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-*/
-type Jaccard struct {
-	Extensions []Extension `xml:"Extension"`
-}
-
-/*
-  <xs:element name="minkowski">
-    <xs:complexType>
-      <xs:attribute name="p-parameter" type="NUMBER" use="required"/>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-*/
-type Minkowski struct {
-	Extensions []Extension `xml:"Extension"`
-}
-
-/*
-  <xs:element name="row">
-    <xs:complexType>
-      <xs:complexContent mixed="true">
-        <xs:restriction base="xs:anyType">
-          <xs:sequence>
-            <xs:any maxOccurs="unbounded" minOccurs="2" processContents="skip"/>
-          </xs:sequence>
-        </xs:restriction>
-      </xs:complexContent>
-    </xs:complexType>
-  </xs:element>
-*/
-type Row struct {
-}
-
-/*
-  <xs:element name="simpleMatching">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-*/
-type SimpleMatching struct {
-	Extensions []Extension `xml:"Extension"`
-}
-
-/*
-  <xs:element name="squaredEuclidean">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-*/
-type SquaredEuclidean struct {
-	Extensions []Extension `xml:"Extension"`
-}
-
-/*
-  <xs:element name="tanimoto">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Extension"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-*/
-type Tanimoto struct {
-	Extensions []Extension `xml:"Extension"`
-}
+</xs:element>

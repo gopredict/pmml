@@ -17,6 +17,21 @@ type ContinuousDistributionType interface {
 	continuousDistributionType()
 }
 
+func GetContinuousDistributionType(name string) (ContinuousDistributionType, bool) {
+	switch name {
+	case "AnyDistribution":
+		return &AnyDistribution{}, true
+	case "GaussianDistribution":
+		return &GaussianDistribution{}, true
+	case "PoissonDistribution":
+		return &PoissonDistribution{}, true
+	case "UniformDistribution":
+		return &UniformDistribution{}, true
+	}
+
+	return nil, false
+}
+
 /*
   <xs:group name="DISCRETE-DISTRIBUTION-TYPES">
     <xs:choice>
@@ -49,6 +64,33 @@ type Expression interface {
 	expression()
 }
 
+func GetExpression(name string) (Expression, bool) {
+	switch name {
+	case "Aggregate":
+		return &Aggregate{}, true
+	case "Apply":
+		return &Apply{}, true
+	case "Constant":
+		return &Constant{}, true
+	case "Discretize":
+		return &Discretize{}, true
+	case "FieldRef":
+		return &FieldRef{}, true
+	case "Lag":
+		return &Lag{}, true
+	case "MapValues":
+		return &MapValues{}, true
+	case "NormContinuous":
+		return &NormContinuous{}, true
+	case "NormDiscrete":
+		return &NormDiscrete{}, true
+	case "TextIndex":
+		return &TextIndex{}, true
+	}
+
+	return nil, false
+}
+
 /*
   <xs:group name="EmbeddedModel">
     <xs:sequence>
@@ -61,6 +103,18 @@ type Expression interface {
   </xs:group>
 */
 type EmbeddedModel interface {
+	embeddedModel()
+}
+
+func GetEmbeddedModel(name string) (EmbeddedModel, bool) {
+	switch name {
+	case "DecisionTree":
+		return &DecisionTree{}, true
+	case "Regression":
+		return &Regression{}, true
+	}
+
+	return nil, false
 }
 
 /*
@@ -127,6 +181,49 @@ type ModelElement interface {
 	modelElement()
 }
 
+func GetModelElement(name string) (ModelElement, bool) {
+	switch name {
+	case "AssociationModel":
+		return &AssociationModel{}, true
+	case "BaselineModel":
+		return &BaselineModel{}, true
+	case "BayesianNetworkModel":
+		return &BayesianNetworkModel{}, true
+	case "ClusteringModel":
+		return &ClusteringModel{}, true
+	case "GaussianProcessModel":
+		return &GaussianProcessModel{}, true
+	case "GeneralRegressionModel":
+		return &GeneralRegressionModel{}, true
+	case "MiningModel":
+		return &MiningModel{}, true
+	case "NaiveBayesModel":
+		return &NaiveBayesModel{}, true
+	case "NearestNeighborModel":
+		return &NearestNeighborModel{}, true
+	case "NeuralNetwork":
+		return &NeuralNetwork{}, true
+	case "RegressionModel":
+		return &RegressionModel{}, true
+	case "RuleSetModel":
+		return &RuleSetModel{}, true
+	case "Scorecard":
+		return &Scorecard{}, true
+	case "SequenceModel":
+		return &SequenceModel{}, true
+	case "SupportVectorMachineModel":
+		return &SupportVectorMachineModel{}, true
+	case "TextModel":
+		return &TextModel{}, true
+	case "TimeSeriesModel":
+		return &TimeSeriesModel{}, true
+	case "TreeModel":
+		return &TreeModel{}, true
+	}
+
+	return nil, false
+}
+
 /*
   <xs:group name="NUM-ARRAY">
     <xs:choice>
@@ -148,6 +245,24 @@ type NumArray Array
   </xs:group>
 */
 type Predicate interface {
+	predicate()
+}
+
+func GetPredicate(name string) (Predicate, bool) {
+	switch name {
+	case "CompoundPredicate":
+		return &CompoundPredicate{}, true
+	case "False":
+		return &False{}, true
+	case "SimplePredicate":
+		return &SimplePredicate{}, true
+	case "SimpleSetPredicate":
+		return &SimpleSetPredicate{}, true
+	case "True":
+		return &True{}, true
+	}
+
+	return nil, false
 }
 
 /*
@@ -204,4 +319,15 @@ type StringArray Array
 */
 type Table interface {
 	table()
+}
+
+func GetTable(name string) (Table, bool) {
+	switch name {
+	case "InlineTable":
+		return &InlineTable{}, true
+	case "TableLocator":
+		return &TableLocator{}, true
+	}
+
+	return nil, false
 }
