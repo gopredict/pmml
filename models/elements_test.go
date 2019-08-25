@@ -24,7 +24,8 @@ func TestAnnotation(t *testing.T) {
 		Data: "This is a churn model for 1999 customers who\n\t\t\n\t",
 		Extensions: []models.Extension{
 			models.Extension{
-				Name: models.String("author"),
+				Name:     models.String("author"),
+				Contents: "John Doe",
 			},
 		},
 	}, item)

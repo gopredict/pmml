@@ -599,7 +599,18 @@ type BaselineCell struct {
   </xs:element>
 */
 type BaselineModel struct {
-	Extensions []Extension `xml:"Extension"`
+	AlgorithmName        string                `xml:"algorithmName,attr"`
+	FunctionName         MiningFunction        `xml:"functionName,attr"`
+	IsScorable           bool                  `xml:"isScorable,attr" default:"true"`
+	ModelName            string                `xml:"modelName,attr"`
+	LocalTransformations *LocalTransformations `xml:"LocalTransformations"`
+	MiningSchema         MiningSchema          `xml:"MiningSchema"`
+	ModelExplanation     *ModelExplanation     `xml:"ModelExplanation"`
+	ModelVerification    *ModelVerification    `xml:"ModelVerification"`
+	Targets              *Targets              `xml:"Targets"`
+	Output               *Output               `xml:"Output"`
+	ModelStats           *ModelStats           `xml:"ModelStats"`
+	Extensions           []Extension           `xml:"Extension"`
 }
 
 func (*BaselineModel) modelElement() {}
@@ -618,7 +629,11 @@ func (*BaselineModel) modelElement() {}
   </xs:element>
 */
 type BaselineStratum struct {
-	Extensions []Extension `xml:"Extension"`
+	Label        string         `xml:"label,attr"`
+	MaxTime      RealNumber     `xml:"maxTime,attr"`
+	Value        string         `xml:"value,attr"`
+	BaselineCell []BaselineCell `xml:"BaselineCell"`
+	Extensions   []Extension    `xml:"Extension"`
 }
 
 /*
@@ -707,7 +722,19 @@ type BayesOutput struct {
   </xs:element>
 */
 type BayesianNetworkModel struct {
-	Extensions []Extension `xml:"Extension"`
+	AlgorithmName        string                `xml:"algorithmName,attr"`
+	FunctionName         MiningFunction        `xml:"functionName,attr"`
+	IsScorable           bool                  `xml:"isScorable,attr" default:"true"`
+	ModelName            string                `xml:"modelName,attr"`
+	BayesianNetworkNodes BayesianNetworkNodes  `xml:"BayesianNetworkNodes"`
+	LocalTransformations *LocalTransformations `xml:"LocalTransformations"`
+	MiningSchema         MiningSchema          `xml:"MiningSchema"`
+	ModelExplanation     *ModelExplanation     `xml:"ModelExplanation"`
+	ModelStats           *ModelStats           `xml:"ModelStats"`
+	ModelVerification    *ModelVerification    `xml:"ModelVerification"`
+	Output               *Output               `xml:"Output"`
+	Targets              *Targets              `xml:"Targets"`
+	Extensions           []Extension           `xml:"Extension"`
 }
 
 func (*BayesianNetworkModel) modelElement() {}
@@ -737,6 +764,7 @@ type BayesianNetworkNodes struct {
   </xs:element>
 */
 type BlockIndicator struct {
+	Field FieldName `xml:"field,attr"`
 }
 
 /*
@@ -750,6 +778,7 @@ type BlockIndicator struct {
   </xs:element>
 */
 type BoundaryValueMeans struct {
+	NumArray   NumArray    `xml:"Array"`
 	Extensions []Extension `xml:"Extension"`
 }
 
@@ -764,6 +793,7 @@ type BoundaryValueMeans struct {
   </xs:element>
 */
 type BoundaryValues struct {
+	NumArray   NumArray    `xml:"Array"`
 	Extensions []Extension `xml:"Extension"`
 }
 
@@ -780,7 +810,10 @@ type BoundaryValues struct {
   </xs:element>
 */
 type CategoricalPredictor struct {
-	Extensions []Extension `xml:"Extension"`
+	Coefficient RealNumber  `xml:"coefficient,attr"`
+	Name        FieldName   `xml:"fieldName,attr"`
+	Value       string      `xml:"value,attr"`
+	Extensions  []Extension `xml:"Extension"`
 }
 
 /*
@@ -2038,6 +2071,7 @@ type Extension struct {
 	Extender *string `xml:"extender,attr"`
 	Name     *string `xml:"name,attr"`
 	Value    *string `xml:"value,attr"`
+	Contents string  `xml:",innerxml"`
 }
 
 /*

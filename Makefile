@@ -32,6 +32,7 @@ go-doc:
 	@gfind -type d -printf '%d\t%P\n' | sort -r -nk1 | cut -f2- | \
 		grep -v '^\.' | \
 		grep -v '\/\.' | \
+		grep -v '^localdocs$$' | \
 		grep -v '^docs$$' | \
 		grep -v '^vendor' | \
 		xargs -I{} bash -c "godocdown {} > {}/README.md"
