@@ -18,6 +18,14 @@
   version = "v1.0.6"
 
 [[projects]]
+  digest = "1:0a250ca075dc4bda085efa1be1e9b2a82eeb1c42a9fed53332304b690d1bfad3"
+  name = "github.com/mcuadros/go-defaults"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "ac8540f0fc7e0fb5f1eb9e25c6fd0b8db8f97eed"
+  version = "v1.1.0"
+
+[[projects]]
   digest = "1:14715f705ff5dfe0ffd6571d7d201dd8e921030f8070321a79380d8ca4ec1a24"
   name = "github.com/pkg/errors"
   packages = ["."]
@@ -49,6 +57,7 @@
   analyzer-version = 1
   input-imports = [
     "github.com/mattn/go-shellwords",
+    "github.com/mcuadros/go-defaults",
     "github.com/pkg/errors",
     "github.com/stretchr/testify/assert",
     "github.com/stretchr/testify/require",

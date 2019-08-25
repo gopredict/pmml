@@ -5,6 +5,8 @@ import (
 	"encoding/xml"
 	"strconv"
 
+	"github.com/mcuadros/go-defaults"
+
 	"github.com/pkg/errors"
 )
 
@@ -333,10 +335,10 @@ type Application struct {
   </xs:element>
 */
 type Apply struct {
-	DefaultValue          string                      `xml:"defaultValue,attr"`
+	DefaultValue          *string                     `xml:"defaultValue,attr"`
 	Function              string                      `xml:"function,attr"`
-	InvalidValueTreatment InvalidValueTreatmentMethod `xml:"returnInvalid,attr"`
-	MapMissingTo          string                      `xml:"mapMissingTo,attr"`
+	InvalidValueTreatment InvalidValueTreatmentMethod `xml:"returnInvalid,attr" default:"returnInvalid"`
+	MapMissingTo          *string                     `xml:"mapMissingTo,attr"`
 
 	Extensions  []Extension `xml:"Extension"`
 	Expressions []Expression
@@ -347,16 +349,20 @@ func (*Apply) expression() {}
 func (x *Apply) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
 	var err error
 
+	defaults.SetDefaults(x)
+
 	for _, attr := range start.Attr {
 		switch attr.Name.Local {
 		case "defaultValue":
-			x.DefaultValue = attr.Value
+			val := attr.Value
+			x.DefaultValue = &val
 		case "function":
 			x.Function = attr.Value
 		case "returnInvalid":
 			x.InvalidValueTreatment = InvalidValueTreatmentMethod(attr.Value)
 		case "mapMissingTo":
-			x.MapMissingTo = attr.Value
+			val := attr.Value
+			x.MapMissingTo = &val
 		}
 	}
 
@@ -1329,6 +1335,8 @@ type ConsequentSequence struct {
   </xs:element>
 */
 type Constant struct {
+	DataType DataType `xml:"dataType,attr"`
+	Value    string   `xml:",innerxml"`
 }
 
 func (*Constant) expression() {}
@@ -2120,7 +2128,9 @@ type FieldColumnPair struct {
   </xs:element>
 */
 type FieldRef struct {
-	Extensions []Extension `xml:"Extension"`
+	Field        FieldName   `xml:"field,attr"`
+	MapMissingTo *string     `xml:"mapMissingTo,attr"`
+	Extensions   []Extension `xml:"Extension"`
 }
 
 func (*FieldRef) expression() {}

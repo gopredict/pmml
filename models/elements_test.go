@@ -136,3 +136,50 @@ func TestAnova(t *testing.T) {
 		},
 	}, item)
 }
+
+func TestApply(t *testing.T) {
+	data := []byte(`
+	<Apply function="if">
+		<Apply function="greaterThan">
+			<FieldRef field="score"/>
+			<Constant dataType="double">1</Constant>
+		</Apply>
+		<!-- Then case -->
+		<Constant dataType="string">True</Constant>
+		<!-- Else case -->
+		<Constant dataType="string">False</Constant>
+	</Apply>`)
+
+	var item models.Apply
+
+	err := xml.Unmarshal(data, &item)
+	require.NoError(t, err)
+
+	assert.Equal(t, models.Apply{
+		Function:              "if",
+		InvalidValueTreatment: models.InvalidValueTreatmentMethodReturnInvalid,
+		Expressions: []models.Expression{
+			&models.Apply{
+				Function:              "greaterThan",
+				InvalidValueTreatment: models.InvalidValueTreatmentMethodReturnInvalid,
+				Expressions: []models.Expression{
+					&models.FieldRef{
+						Field: models.FieldName("score"),
+					},
+					&models.Constant{
+						DataType: models.DataTypeDouble,
+						Value:    "1",
+					},
+				},
+			},
+			&models.Constant{
+				DataType: models.DataTypeString,
+				Value:    "True",
+			},
+			&models.Constant{
+				DataType: models.DataTypeString,
+				Value:    "False",
+			},
+		},
+	}, item)
+}

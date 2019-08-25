@@ -825,10 +825,10 @@ type Application struct {
 
 ```go
 type Apply struct {
-	DefaultValue          string                      `xml:"defaultValue,attr"`
+	DefaultValue          *string                     `xml:"defaultValue,attr"`
 	Function              string                      `xml:"function,attr"`
-	InvalidValueTreatment InvalidValueTreatmentMethod `xml:"returnInvalid,attr"`
-	MapMissingTo          string                      `xml:"mapMissingTo,attr"`
+	InvalidValueTreatment InvalidValueTreatmentMethod `xml:"returnInvalid,attr" default:"returnInvalid"`
+	MapMissingTo          *string                     `xml:"mapMissingTo,attr"`
 
 	Extensions  []Extension `xml:"Extension"`
 	Expressions []Expression
@@ -2009,6 +2009,8 @@ type ConsequentSequence struct {
 
 ```go
 type Constant struct {
+	DataType DataType `xml:"dataType,attr"`
+	Value    string   `xml:",innerxml"`
 }
 ```
 
@@ -3067,7 +3069,9 @@ type FieldName string
 
 ```go
 type FieldRef struct {
-	Extensions []Extension `xml:"Extension"`
+	Field        FieldName   `xml:"field,attr"`
+	MapMissingTo *string     `xml:"mapMissingTo,attr"`
+	Extensions   []Extension `xml:"Extension"`
 }
 ```
 
