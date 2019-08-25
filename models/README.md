@@ -470,12 +470,6 @@ const (
 )
 ```
 
-```go
-const (
-	ErrNotImplemented = Error("models: not implemented")
-)
-```
-
 #### func  String
 
 ```go
@@ -2871,19 +2865,6 @@ type EmbeddedModel interface {
 
 ```go
 func GetEmbeddedModel(name string) (EmbeddedModel, bool)
-```
-
-#### type Error
-
-```go
-type Error string
-```
-
-
-#### func (Error) Error
-
-```go
-func (err Error) Error() string
 ```
 
 #### type Euclidean

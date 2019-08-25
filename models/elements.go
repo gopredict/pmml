@@ -8,16 +8,6 @@ import (
 	"github.com/pkg/errors"
 )
 
-type Error string
-
-func (err Error) Error() string {
-	return string(err)
-}
-
-const (
-	ErrNotImplemented = Error("models: not implemented")
-)
-
 /*
 ARDSquaredExponentialKernel is the Automatic Relevance Determination (ARD) squared exponential basis
 function. This covariance function is the squared exponential kernel function with a separate
