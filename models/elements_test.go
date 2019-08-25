@@ -56,3 +56,18 @@ func TestARDSquaredExponentialKernel(t *testing.T) {
 
 	assert.Equal(t, []float64{1.5164, 59.3113}, vals)
 }
+
+func TestAggregate(t *testing.T) {
+	data := []byte(`<Aggregate field="item" function="multiset" groupField="transaction"/>`)
+
+	var item models.Aggregate
+
+	err := xml.Unmarshal(data, &item)
+	require.NoError(t, err)
+
+	assert.Equal(t, models.Aggregate{
+		Field:      models.FieldName("item"),
+		Function:   models.AggregateFunctionTypeMultiset,
+		GroupField: "transaction",
+	}, item)
+}
