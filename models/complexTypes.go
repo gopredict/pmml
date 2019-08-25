@@ -1,5 +1,12 @@
 package models
 
+import (
+	"strconv"
+
+	"github.com/mattn/go-shellwords"
+	"github.com/pkg/errors"
+)
+
 type ArrayTypeType string
 
 const (
@@ -27,6 +34,84 @@ type ArrayType struct {
 	Type ArrayTypeType `xml:"type,attr"`
 
 	RawValue string `xml:",innerxml"`
+
+	s []string
+	i []int64
+	f []float64
+}
+
+func (at *ArrayType) Strings() ([]string, error) {
+	if at.Type != ArrayTypeTypeString {
+		return nil, errors.New("not a string array")
+	}
+
+	if at.s != nil {
+		return at.s, nil
+	}
+
+	var err error
+	at.s, err = shellwords.Parse(at.RawValue)
+	return at.s, err
+}
+
+func (at *ArrayType) Int64s() ([]int64, error) {
+	if at.Type != ArrayTypeTypeInt {
+		return nil, errors.New("not an int array")
+	}
+
+	if at.i != nil {
+		return at.i, nil
+	}
+
+	ints, err := shellwords.Parse(at.RawValue)
+	if err != nil {
+		return nil, err
+	}
+
+	result := []int64{}
+
+	for i := range ints {
+		val, err := strconv.ParseInt(ints[i], 10, 64)
+		if err != nil {
+			return nil, err
+		}
+
+		result = append(result, val)
+	}
+
+	at.i = result
+
+	return at.i, err
+}
+
+func (at *ArrayType) Float64s() ([]float64, error) {
+	if at.Type != ArrayTypeTypeReal {
+		return nil, errors.New("not a float array")
+	}
+
+	if at.f != nil {
+		return at.f, nil
+	}
+
+	ints, err := shellwords.Parse(at.RawValue)
+	if err != nil {
+		return nil, err
+	}
+
+	result := []float64{}
+
+	for i := range ints {
+		val, err := strconv.ParseFloat(ints[i], 64)
+		if err != nil {
+			return nil, err
+		}
+
+		result = append(result, val)
+	}
+
+	at.f = result
+
+	return at.f, err
 }
 
 /*

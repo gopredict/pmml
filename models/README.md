@@ -896,6 +896,24 @@ type ArrayType struct {
 
 </xs:complexType>
 
+#### func (*ArrayType) Float64s
+
+```go
+func (at *ArrayType) Float64s() ([]float64, error)
+```
+
+#### func (*ArrayType) Int64s
+
+```go
+func (at *ArrayType) Int64s() ([]int64, error)
+```
+
+#### func (*ArrayType) Strings
+
+```go
+func (at *ArrayType) Strings() ([]string, error)
+```
+
 #### type ArrayTypeType
 
 ```go
