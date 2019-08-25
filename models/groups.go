@@ -266,15 +266,6 @@ func GetPredicate(name string) (Predicate, bool) {
 }
 
 /*
-  <xs:group name="REAL-ARRAY">
-    <xs:choice>
-      <xs:element ref="Array"/>
-    </xs:choice>
-  </xs:group>
-*/
-type RealArray Array
-
-/*
   <xs:group name="Rule">
     <xs:choice>
       <xs:element ref="CompoundRule"/>

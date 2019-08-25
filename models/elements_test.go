@@ -30,3 +30,29 @@ func TestAnnotation(t *testing.T) {
 		},
 	}, item)
 }
+
+func RealNumber(v models.RealNumber) *models.RealNumber {
+	return &v
+}
+
+func TestARDSquaredExponentialKernel(t *testing.T) {
+	data := []byte(`
+	<ARDSquaredExponentialKernel gamma="2.4890" noiseVariance="0.0110">
+		<Lambda>
+			<Array n="2" type="real">1.5164 59.3113</Array>
+		</Lambda>
+	</ARDSquaredExponentialKernel>`)
+
+	var item models.ARDSquaredExponentialKernel
+
+	err := xml.Unmarshal(data, &item)
+	require.NoError(t, err)
+
+	assert.Equal(t, RealNumber(2.4890), item.Gamma)
+	assert.Equal(t, RealNumber(0.0110), item.NoiseVariance)
+
+	vals, err := item.Lambda.Array.Float64s()
+	require.NoError(t, err)
+
+	assert.Equal(t, []float64{1.5164, 59.3113}, vals)
+}

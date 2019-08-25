@@ -3776,6 +3776,7 @@ type Lag struct {
 
 ```go
 type Lambda struct {
+	Array      ArrayType   `xml:"Array"`
 	Extensions []Extension `xml:"Extension"`
 }
 ```
@@ -5779,20 +5780,6 @@ type RankBasis string
 type RankOrder string
 ```
 
-
-#### type RealArray
-
-```go
-type RealArray Array
-```
-
-<xs:group name="REAL-ARRAY">
-
-    <xs:choice>
-      <xs:element ref="Array"/>
-    </xs:choice>
-
-</xs:group>
 
 #### type RealEntries
 

@@ -2581,6 +2581,7 @@ func (*Lag) expression() {}
   </xs:element>
 */
 type Lambda struct {
+	Array      ArrayType   `xml:"Array"`
 	Extensions []Extension `xml:"Extension"`
 }
 
