@@ -3210,6 +3210,8 @@ type Gap string
 
 ```go
 type GaussianDistribution struct {
+	Mean       RealNumber  `xml:"mean,attr"`
+	Variance   RealNumber  `xml:"variance,attr"`
 	Extensions []Extension `xml:"Extension"`
 }
 ```

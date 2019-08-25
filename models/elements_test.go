@@ -71,3 +71,22 @@ func TestAggregate(t *testing.T) {
 		GroupField: "transaction",
 	}, item)
 }
+
+func TestAlternate(t *testing.T) {
+	data := []byte(`
+	<Alternate>
+		<GaussianDistribution mean="460.4" variance="39.2"/>
+	</Alternate>`)
+
+	var item models.Alternate
+
+	err := xml.Unmarshal(data, &item)
+	require.NoError(t, err)
+
+	assert.Equal(t, models.Alternate{
+		Distribution: &models.GaussianDistribution{
+			Mean:     models.RealNumber(460.4),
+			Variance: models.RealNumber(39.2),
+		},
+	}, item)
+}

@@ -2176,6 +2176,8 @@ type FieldValueCount struct {
   </xs:element>
 */
 type GaussianDistribution struct {
+	Mean       RealNumber  `xml:"mean,attr"`
+	Variance   RealNumber  `xml:"variance,attr"`
 	Extensions []Extension `xml:"Extension"`
 }
 
