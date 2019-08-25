@@ -217,7 +217,7 @@ series models).
 http://dmg.org/pmml/v4-3/Statistics.html#xsdElement_Anova
 */
 type Anova struct {
-	Taget FieldName `xml:"target,attr"`
+	Target FieldName `xml:"target,attr"`
 
 	Rows       []AnovaRow  `xml:"AnovaRow"`
 	Extensions []Extension `xml:"Extension"`
@@ -258,9 +258,9 @@ http://dmg.org/pmml/v4-3/Statistics.html#xsdElement_AnovaRow
 */
 type AnovaRow struct {
 	DegreesOfFreedom Number       `xml:"degreesOfFreedom,attr"`
-	FValue           Number       `xml:"fValue,attr"`
-	MeanOfSquares    Number       `xml:"meanOfSquares,attr"`
-	PValue           ProbNumber   `xml:"pValue,attr"`
+	FValue           *Number      `xml:"fValue,attr"`
+	MeanOfSquares    *Number      `xml:"meanOfSquares,attr"`
+	PValue           *ProbNumber  `xml:"pValue,attr"`
 	SumOfSquares     Number       `xml:"sumOfSquares,attr"`
 	Type             AnovaRowType `xml:"type,attr"`
 

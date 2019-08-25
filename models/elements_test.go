@@ -9,6 +9,18 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func RealNumber(v models.RealNumber) *models.RealNumber {
+	return &v
+}
+
+func ProbNumber(v models.ProbNumber) *models.ProbNumber {
+	return &v
+}
+
+func Number(v models.Number) *models.Number {
+	return &v
+}
+
 func TestAnnotation(t *testing.T) {
 	data := []byte(`
 	<Annotation>This is a churn model for 1999 customers who
@@ -29,10 +41,6 @@ func TestAnnotation(t *testing.T) {
 			},
 		},
 	}, item)
-}
-
-func RealNumber(v models.RealNumber) *models.RealNumber {
-	return &v
 }
 
 func TestARDSquaredExponentialKernel(t *testing.T) {
@@ -87,6 +95,44 @@ func TestAlternate(t *testing.T) {
 		Distribution: &models.GaussianDistribution{
 			Mean:     models.RealNumber(460.4),
 			Variance: models.RealNumber(39.2),
+		},
+	}, item)
+}
+
+func TestAnova(t *testing.T) {
+	data := []byte(`
+	<Anova>
+		<AnovaRow type="Model" sumOfSquares="21389708" degreesOfFreedom="2" meanOfSquares="7129903" fValue="0.85" pValue="0.47" />
+		<AnovaRow type="Error" sumOfSquares="809210617" degreesOfFreedom="98" meanOfSquares="8342377"/>
+		<AnovaRow type="Total" sumOfSquares="830600325" degreesOfFreedom="100" />
+	</Anova>`)
+
+	var item models.Anova
+
+	err := xml.Unmarshal(data, &item)
+	require.NoError(t, err)
+
+	assert.Equal(t, models.Anova{
+		Rows: []models.AnovaRow{
+			models.AnovaRow{
+				Type:             models.AnovaRowTypeModel,
+				SumOfSquares:     models.Number(21389708),
+				DegreesOfFreedom: models.Number(2),
+				MeanOfSquares:    Number(7129903),
+				FValue:           Number(0.85),
+				PValue:           ProbNumber(0.47),
+			},
+			models.AnovaRow{
+				Type:             models.AnovaRowTypeError,
+				SumOfSquares:     models.Number(809210617),
+				DegreesOfFreedom: models.Number(98),
+				MeanOfSquares:    Number(8342377),
+			},
+			models.AnovaRow{
+				Type:             models.AnovaRowTypeTotal,
+				SumOfSquares:     models.Number(830600325),
+				DegreesOfFreedom: models.Number(100),
+			},
 		},
 	}, item)
 }
