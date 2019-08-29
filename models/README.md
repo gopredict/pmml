@@ -481,8 +481,8 @@ func String(v string) *string
 ```go
 type ARDSquaredExponentialKernel struct {
 	Description   *string     `xml:"description,attr"`
-	Gamma         *RealNumber `xml:"gamma,attr"`
-	NoiseVariance *RealNumber `xml:"noiseVariance,attr"`
+	Gamma         *RealNumber `xml:"gamma,attr" default:"1"`
+	NoiseVariance *RealNumber `xml:"noiseVariance,attr" default:"1"`
 
 	Extensions []Extension `xml:"Extension"`
 	Lambda     *Lambda     `xml:"Lambda"`
@@ -6185,7 +6185,11 @@ type SVMRepresentation string
 
 ```go
 type ScoreDistribution struct {
-	Extensions []Extension `xml:"Extension"`
+	Confidence  *ProbNumber `xml:"confidence,attr"`
+	Probability *ProbNumber `xml:"probability,attr"`
+	RecordCount Number      `xml:"recordCount,attr"`
+	Value       string      `xml:"value,attr"`
+	Extensions  []Extension `xml:"Extension"`
 }
 ```
 

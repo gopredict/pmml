@@ -5,8 +5,7 @@ import (
 	"encoding/xml"
 	"strconv"
 
-	"github.com/mcuadros/go-defaults"
-
+	defaults "github.com/mcuadros/go-defaults"
 	"github.com/pkg/errors"
 )
 
@@ -33,8 +32,8 @@ http://dmg.org/pmml/v4-3/GaussianProcess.html#xsdElement_ARDSquaredExponentialKe
 */
 type ARDSquaredExponentialKernel struct {
 	Description   *string     `xml:"description,attr"`
-	Gamma         *RealNumber `xml:"gamma,attr"`
-	NoiseVariance *RealNumber `xml:"noiseVariance,attr"`
+	Gamma         *RealNumber `xml:"gamma,attr" default:"1"`
+	NoiseVariance *RealNumber `xml:"noiseVariance,attr" default:"1"`
 
 	Extensions []Extension `xml:"Extension"`
 	Lambda     *Lambda     `xml:"Lambda"`
@@ -152,6 +151,7 @@ type Alternate struct {
 
 func (x *Alternate) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
 	var err error
+	defaults.SetDefaults(x)
 
 	for {
 		var token xml.Token
@@ -348,7 +348,6 @@ func (*Apply) expression() {}
 
 func (x *Apply) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
 	var err error
-
 	defaults.SetDefaults(x)
 
 	for _, attr := range start.Attr {
@@ -359,7 +358,9 @@ func (x *Apply) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error
 		case "function":
 			x.Function = attr.Value
 		case "returnInvalid":
-			x.InvalidValueTreatment = InvalidValueTreatmentMethod(attr.Value)
+			if attr.Value != "" {
+				x.InvalidValueTreatment = InvalidValueTreatmentMethod(attr.Value)
+			}
 		case "mapMissingTo":
 			val := attr.Value
 			x.MapMissingTo = &val
@@ -910,6 +911,7 @@ type ChildParent struct {
 // UnmarshalXML implements the xml.Unmarshaler interface.
 func (x *ChildParent) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
 	var err error
+	defaults.SetDefaults(x)
 
 	for _, attr := range start.Attr {
 		switch attr.Name.Local {
@@ -1223,6 +1225,7 @@ func (*CompoundPredicate) predicate() {}
 // UnmarshalXML implements the xml.Unmarshaler interface.
 func (x *CompoundPredicate) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
 	var err error
+	defaults.SetDefaults(x)
 
 	for _, attr := range start.Attr {
 		switch attr.Name.Local {
@@ -1712,6 +1715,7 @@ type DefineFunction struct {
 // UnmarshalXML implements the xml.Unmarshaler interface.
 func (x *DefineFunction) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
 	var err error
+	defaults.SetDefaults(x)
 
 	for _, attr := range start.Attr {
 		switch attr.Name.Local {
@@ -1830,6 +1834,7 @@ type DerivedField struct {
 // UnmarshalXML implements the xml.Unmarshaler interface.
 func (x *DerivedField) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
 	var err error
+	defaults.SetDefaults(x)
 
 	for _, attr := range start.Attr {
 		switch attr.Name.Local {
@@ -3263,6 +3268,7 @@ type Node struct {
 // UnmarshalXML implements the xml.Unmarshaler interface.
 func (x *Node) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
 	var err error
+	defaults.SetDefaults(x)
 
 	for _, attr := range start.Attr {
 		switch attr.Name.Local {
@@ -3655,6 +3661,7 @@ type PMML struct {
 
 func (x *PMML) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
 	var err error
+	defaults.SetDefaults(x)
 
 	for _, attr := range start.Attr {
 		switch attr.Name.Local {
@@ -4279,7 +4286,11 @@ func (*RuleSetModel) modelElement() {}
   </xs:element>
 */
 type ScoreDistribution struct {
-	Extensions []Extension `xml:"Extension"`
+	Confidence  *ProbNumber `xml:"confidence,attr"`
+	Probability *ProbNumber `xml:"probability,attr"`
+	RecordCount Number      `xml:"recordCount,attr"`
+	Value       string      `xml:"value,attr"`
+	Extensions  []Extension `xml:"Extension"`
 }
 
 /*

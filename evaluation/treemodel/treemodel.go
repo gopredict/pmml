@@ -2,6 +2,7 @@ package treemodel
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/gopredict/pmml/evaluation"
@@ -26,11 +27,21 @@ type TreeModel struct {
 
 type test func(evaluation.DataRow) predicateResult
 
+type scoreDist struct {
+	value       string
+	confidence  float64
+	probability float64
+	recordCount float64
+}
+
 type node struct {
 	children []node
 
+	scoreDist []scoreDist
+
 	test  test
-	score string
+	score scoreDist
+	m     *TreeModel
 }
 
 type predicateResult int
@@ -41,21 +52,42 @@ const (
 	f
 )
 
-func (n node) evaluate(input evaluation.DataRow) (score string, ok predicateResult) {
+func (n node) evaluate(input evaluation.DataRow) (scoreDist, predicateResult) {
 	result := n.test(input)
 
 	if result == f {
-		return "", result
+		return scoreDist{}, result
+	}
+
+	if result == u && n.m.model.MissingValueStrategy == models.MissingValueStrategyNullPrediction {
+		return scoreDist{}, result
 	}
 
 	for _, c := range n.children {
-		childResult := c.test(input)
+		score, childResult := c.evaluate(input)
 		if childResult == t {
-			return c.score, childResult
+			return score, childResult
+		}
+
+		if childResult == u && n.m.model.MissingValueStrategy == models.MissingValueStrategyNullPrediction {
+			return scoreDist{}, childResult
 		}
 	}
 
-	return n.score, result
+	score := n.score
+	if score.value == "" {
+		selected := scoreDist{}
+
+		for _, sc := range n.scoreDist {
+			if sc.recordCount > selected.recordCount {
+				selected = sc
+			}
+		}
+
+		score = selected
+	}
+
+	return score, result
 }
 
 func NewTreeModel(dd *models.DataDictionary, td *models.TransformationDictionary, model *models.TreeModel) (*TreeModel, error) {
@@ -89,8 +121,40 @@ func (m *TreeModel) Validate() error {
 
 func newNode(m *TreeModel, modelNode models.Node) node {
 	n := node{
-		score: modelNode.Score,
+		m: m,
 	}
+
+	score := scoreDist{
+		value:       modelNode.Score,
+		recordCount: float64(modelNode.RecordCount),
+	}
+
+	totalRecords := float64(0.0)
+
+	for _, sc := range modelNode.ScoreDistributions {
+		totalRecords += float64(sc.RecordCount)
+	}
+
+	for _, sc := range modelNode.ScoreDistributions {
+		confidence := 0.0
+		if sc.Confidence != nil {
+			confidence = float64(*sc.Confidence)
+		}
+
+		probability := float64(sc.RecordCount) / totalRecords
+		if sc.Probability != nil {
+			probability = float64(*sc.Probability)
+		}
+
+		n.scoreDist = append(n.scoreDist, scoreDist{
+			confidence:  confidence,
+			probability: probability,
+			recordCount: float64(sc.RecordCount),
+			value:       sc.Value,
+		})
+	}
+
+	n.score = score
 
 	for _, child := range modelNode.Nodes {
 		n.children = append(n.children, newNode(m, child))
@@ -153,7 +217,7 @@ func evaluateSimplePredicate(p *models.SimplePredicate, input evaluation.DataRow
 			return t
 		}
 
-		return f
+		return u
 	}
 
 	switch p.Operator {
@@ -289,6 +353,8 @@ func evaluateCompoundPredicate(p *models.CompoundPredicate, input evaluation.Dat
 		if trueCount%2 == 1 {
 			return t
 		}
+	case models.CompoundPredicateOperatorSurrogate:
+		return u
 	}
 
 	return f
@@ -341,9 +407,11 @@ func (m *TreeModel) Evaluate(input evaluation.DataRow) (evaluation.DataRow, erro
 
 	score, result := m.root.evaluate(input)
 
+	println(fmt.Sprintf("%v", score))
+
 	if result == t {
 		return evaluation.DataRow{
-			string(m.outputField): evaluation.NewValue(score),
+			string(m.outputField): evaluation.NewValue(score.value),
 		}, nil
 	}
 
