@@ -52,25 +52,25 @@ const (
 	f
 )
 
-func (n node) evaluate(input evaluation.DataRow) (scoreDist, predicateResult) {
+func (n node) evaluate(input evaluation.DataRow) (scoreDist, predicateResult, float64) {
 	result := n.test(input)
 
 	if result == f {
-		return scoreDist{}, result
+		return scoreDist{}, result, 1.0
 	}
 
 	if result == u && n.m.model.MissingValueStrategy == models.MissingValueStrategyNullPrediction {
-		return scoreDist{}, result
+		return scoreDist{}, result, 1.0
 	}
 
 	for _, c := range n.children {
-		score, childResult := c.evaluate(input)
+		score, childResult, confidence := c.evaluate(input)
 		if childResult == t {
-			return score, childResult
+			return score, childResult, confidence
 		}
 
 		if childResult == u && n.m.model.MissingValueStrategy == models.MissingValueStrategyNullPrediction {
-			return scoreDist{}, childResult
+			return scoreDist{}, childResult, 1.0
 		}
 	}
 
@@ -87,7 +87,7 @@ func (n node) evaluate(input evaluation.DataRow) (scoreDist, predicateResult) {
 		score = selected
 	}
 
-	return score, result
+	return score, result, 1.0
 }
 
 func NewTreeModel(dd *models.DataDictionary, td *models.TransformationDictionary, model *models.TreeModel) (*TreeModel, error) {
@@ -405,13 +405,14 @@ func (m *TreeModel) Evaluate(input evaluation.DataRow) (evaluation.DataRow, erro
 		return nil, err
 	}
 
-	score, result := m.root.evaluate(input)
+	score, result, confidence := m.root.evaluate(input)
 
 	println(fmt.Sprintf("%v", score))
 
 	if result == t {
 		return evaluation.DataRow{
 			string(m.outputField): evaluation.NewValue(score.value),
+			"confidence":          evaluation.NewValue(confidence),
 		}, nil
 	}
 
