@@ -13,6 +13,7 @@ utilities: setup
 	@npm install -g semantic-release @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/changelog @semantic-release/git
 
 setup:
+	@go get -u github.com/robertkrimen/godocdown/godocdown
 	@go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
 
 go-test:
